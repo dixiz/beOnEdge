@@ -1,0 +1,23 @@
+.date-display {
+  font-size: clamp(46px, 5vw, 60px);
+  font-weight: 900;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  padding: 0 clamp(4px, 1vw, 8px);
+}
+
+.date-display--light {
+  color: #FFD600;
+}
+
+.date-display--dark {
+  color: #000000;
+}
+

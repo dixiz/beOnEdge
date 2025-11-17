@@ -1,0 +1,30 @@
+.icons-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  max-width: 100%;
+  width: fit-content;
+}
+
+.icon-wrapper {
+  border-radius: 4px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-wrapper--pc {
+  background-color: #FFD600;
+}
+
+.icon-wrapper--tg {
+  background-color: #0088cc;
+}
+
+.icon-wrapper--bcu {
+  background-color: #FF6600;
+}
+

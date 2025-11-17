@@ -1,0 +1,21 @@
+.commentator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.commentator-icon {
+  background-color: #FFD600;
+  border-radius: 4px;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.commentator-name {
+  font-size: clamp(16px, 1.875vw, 16.5px);
+  font-weight: 500;
+}
+

@@ -1,0 +1,22 @@
+.day-of-week-display {
+  font-size: clamp(36px, 3.375vw, 42px);
+  font-weight: 800;
+  margin-top: 16px;
+  text-align: center;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  padding: 0 clamp(4px, 1vw, 8px);
+}
+
+.day-of-week-display--light {
+  color: #FFD600;
+}
+
+.day-of-week-display--dark {
+  color: #000000;
+}
+

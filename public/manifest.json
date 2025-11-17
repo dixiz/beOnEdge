@@ -1,0 +1,15 @@
+{
+  "short_name": "BeOnEdge",
+  "name": "Be on Edge Schedule",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#FFD600",
+  "background_color": "#FFD600"
+}

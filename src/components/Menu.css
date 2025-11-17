@@ -1,0 +1,55 @@
+.menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+.menu--light {
+  background-color: #FFD600;
+}
+
+.menu--dark {
+  background-color: #181818;
+}
+
+.menu-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-zone-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.time-zone-text {
+  font-size: clamp(24px, 2vw, 28px);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.time-zone-text--light {
+  color: #000000;
+}
+
+.time-zone-text--dark {
+  color: #FFD600;
+}
+

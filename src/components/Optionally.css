@@ -1,0 +1,19 @@
+.optionally {
+  border: 2px solid #FFD600;
+  border-radius: 12px;
+  padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 16px);
+  margin-top: 12px;
+  font-size: clamp(14px, 2vw, 16px);
+  font-weight: 500;
+  color: #FFD600;
+  line-height: 1.4;
+}
+
+.optionally--light {
+  background-color: #000000;
+}
+
+.optionally--dark {
+  background-color: transparent;
+}
+
