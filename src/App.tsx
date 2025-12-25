@@ -67,12 +67,11 @@ function App() {
     setIsLightTheme(prev => !prev);
   }, []);
 
-  const handleToggleTime = useCallback(() => {
-    setUseLocalTime(prev => !prev);
+  const handleToggleTime = useCallback((useLocal: boolean) => {
+    setUseLocalTime(useLocal);
   }, []);
 
   const showMenu = !loading && !error && Object.keys(byDay).length > 0;
-  const currentTimeZone = useLocalTime ? userTimeZone : DEFAULT_TIMEZONE;
 
   return (
     <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
@@ -82,7 +81,6 @@ function App() {
           onToggleTheme={handleToggleTheme}
           useLocalTime={useLocalTime}
           onToggleTime={handleToggleTime}
-          currentTimeZone={currentTimeZone}
         />
       )}
       <div className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}>
@@ -99,7 +97,7 @@ function App() {
                 <DateDisplay date={date} isLightTheme={isLightTheme} />
                 <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
               </Header>
-              <div>
+              <div className="day-rows-container">
                 {rows.map((row) => {
                   const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage}_${row.session}_${row.place}`;
                   return (

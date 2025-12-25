@@ -54,12 +54,12 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   }, [stage]);
   
   return (
-    <div className={`schedule-row ${isLightTheme ? 'schedule-row--light' : 'schedule-row--dark'}`}>
+    <div className="schedule-row-wrapper">
       <div className="time-container">
         <div className="time">{normalizedTime}</div>
         <ScheduleIcons showPC={showPC} showTG={showTG} showBCU={showBCU} />
       </div>
-      <div className="content-container">
+      <div className={`content-container ${isLightTheme ? 'schedule-row--light' : 'schedule-row--dark'}`}>
         <div className="championship">
           {formatChampionship}
         </div>
