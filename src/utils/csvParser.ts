@@ -1,5 +1,6 @@
 import { ScheduleItem } from '../types/schedule';
 import { normalizeTime } from './timeUtils';
+import { getDayOfWeekFromDate } from './dateUtils';
 
 // Улучшенный парсер CSV строки (обрабатывает кавычки)
 function parseCSVLine(line: string): string[] {
@@ -36,7 +37,6 @@ function parseCSVLine(line: string): string[] {
 function validateScheduleItem(item: Partial<ScheduleItem>): item is ScheduleItem {
   return !!(
     item.date && 
-    item.day && 
     item.time && 
     item.championship &&
     item.stage &&
@@ -64,7 +64,8 @@ export function parseCSV(text: string): ScheduleItem[] {
     .filter(validateScheduleItem)
     .map(item => ({
       ...item,
-      time: normalizeTime(item.time)
+      time: normalizeTime(item.time),
+      day: getDayOfWeekFromDate(item.date) // Вычисляем день недели из даты
     })) as ScheduleItem[];
 }
 

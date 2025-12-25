@@ -5,11 +5,10 @@ interface MenuProps {
   isLightTheme?: boolean;
   onToggleTheme?: () => void;
   useLocalTime?: boolean;
-  onToggleTime?: () => void;
-  currentTimeZone?: string;
+  onToggleTime?: (useLocal: boolean) => void;
 }
 
-const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLocalTime = false, onToggleTime, currentTimeZone = 'GMT+3' }) => {
+const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLocalTime = false, onToggleTime }) => {
   const iconColor = isLightTheme ? '#000000' : '#FFD600'; // черная в светлой теме, желтая в темной
 
   return (
@@ -54,34 +53,21 @@ const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLoc
         </button>
       )}
       {onToggleTime && (
-        <div className="time-zone-container">
-          <button
-            onClick={onToggleTime}
-            className="menu-button"
-            title={useLocalTime ? 'Показать время GMT+3' : 'Показать локальное время'}
-          >
-            <svg
-              width="48"
-              height="48"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+        <div className="time-toggle-container">
+          <div className="time-toggle">
+            <button
+              onClick={() => onToggleTime && onToggleTime(false)}
+              className={`time-toggle-option ${!useLocalTime ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
             >
-              <circle cx="12" cy="12" r="10" stroke={iconColor} strokeWidth="2" fill="none" />
-              <path
-                d="M12 6V12L16 14"
-                stroke={iconColor}
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-              {useLocalTime && (
-                <circle cx="12" cy="12" r="2" fill={iconColor} />
-              )}
-            </svg>
-          </button>
-          <span className={`time-zone-text ${isLightTheme ? 'time-zone-text--light' : 'time-zone-text--dark'}`}>
-            {currentTimeZone}
-          </span>
+              МСК
+            </button>
+            <button
+              onClick={() => onToggleTime && onToggleTime(true)}
+              className={`time-toggle-option ${useLocalTime ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
+            >
+              Ваш часовой пояс
+            </button>
+          </div>
         </div>
       )}
     </div>

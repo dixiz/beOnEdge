@@ -33,23 +33,52 @@
   justify-content: center;
 }
 
-.time-zone-container {
+.time-toggle-container {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.time-zone-text {
-  font-size: clamp(24px, 2vw, 28px);
-  font-weight: 600;
-  white-space: nowrap;
+.time-toggle {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
 }
 
-.time-zone-text--light {
+.time-toggle-option {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: clamp(16px, 1.5vw, 18px);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.time-toggle-option--light {
   color: #000000;
 }
 
-.time-zone-text--dark {
+.time-toggle-option--dark {
   color: #FFD600;
+}
+
+.time-toggle-option--active {
+  background-color: #FFD600;
+  color: #000000;
+}
+
+.time-toggle-option--light.time-toggle-option--active {
+  background-color: #000000;
+  color: #FFD600;
+}
+
+.time-toggle-option--dark.time-toggle-option--active {
+  background-color: #FFD600;
+  color: #000000;
 }
 

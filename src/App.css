@@ -8,10 +8,12 @@
 
 .app-container--light {
   background: #FFD600;
+  --text-color: #000000;
 }
 
 .app-container--dark {
   background: #181818;
+  --text-color: white;
 }
 
 .schedule-container {
@@ -72,4 +74,13 @@
   width: clamp(300px, 30vw, 400px);
   flex-shrink: 0;
   box-sizing: border-box;
+}
+
+.day-rows-container {
+  display: grid;
+  grid-template-columns: clamp(80px, 10vw, 100px) 1fr;
+  gap: 0 clamp(12px, 2.4vw, 18px);
+  row-gap: clamp(12px, 2.4vw, 18px);
+  align-items: start;
+  margin-top: clamp(10px, 4vw, 20px);
 }

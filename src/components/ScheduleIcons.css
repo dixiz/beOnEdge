@@ -4,8 +4,9 @@
   align-items: center;
   gap: 8px;
   margin-top: 8px;
-  max-width: 100%;
   width: fit-content;
+  align-self: flex-start;
+  overflow: visible;
 }
 
 .icon-wrapper {

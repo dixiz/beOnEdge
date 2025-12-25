@@ -2,6 +2,29 @@ import { ScheduleItem } from '../types/schedule';
 import { DAYS_OF_WEEK } from '../constants';
 import { normalizeTime } from './timeUtils';
 
+// Функция для вычисления дня недели из даты в формате DD.MM.YY
+export function getDayOfWeekFromDate(dateStr: string): string {
+  try {
+    const [day, month, year] = dateStr.split('.');
+    const fullYear = '20' + year;
+    
+    // Создаем дату (без времени, используем полдень для избежания проблем с часовыми поясами)
+    const date = new Date(`${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T12:00:00`);
+    
+    // Проверяем, что дата валидна
+    if (isNaN(date.getTime())) {
+      console.error('Invalid date:', dateStr);
+      return 'неизвестно';
+    }
+    
+    // Возвращаем день недели
+    return DAYS_OF_WEEK[date.getDay()];
+  } catch (error) {
+    console.error('Error getting day of week from date:', error, dateStr);
+    return 'неизвестно';
+  }
+}
+
 // Функция конвертации времени из GMT+3 в локальный часовой пояс пользователя
 export function convertFromGMT3ToLocal(item: ScheduleItem): ScheduleItem {
   try {

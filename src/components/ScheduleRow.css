@@ -1,14 +1,9 @@
-.schedule-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  border-radius: 24px;
-  padding: clamp(12px, 2.8vw, 20px) 0;
-  margin: clamp(12px, 2.4vw, 18px) 0;
+.schedule-row-wrapper {
+  display: contents;
+}
+
+.schedule-row-wrapper > .content-container {
   max-width: 820px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
 
 .schedule-row--light {
@@ -20,11 +15,13 @@
 }
 
 .time-container {
-  min-width: clamp(50px, 8vw, 100px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   margin-right: 0;
+  padding-right: 8px;
+  width: clamp(80px, 10vw, 100px);
+  min-width: clamp(80px, 10vw, 100px);
 }
 
 .time {
@@ -33,10 +30,12 @@
   text-align: left;
   line-height: 1;
   margin-top: 0;
+  color: var(--text-color, white);
+  white-space: nowrap;
+  width: 100%;
 }
 
 .content-container {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
