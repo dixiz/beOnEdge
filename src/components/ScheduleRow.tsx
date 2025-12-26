@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import './ScheduleRow.css';
 import ScheduleIcons from './ScheduleIcons';
 import Commentator from './Commentator';
 import Optionally from './Optionally';
+import CalendarIcon from './CalendarIcon';
 import { normalizeTime } from '../utils/timeUtils';
 import { generateGoogleCalendarUrl, downloadICalendarFile } from '../utils/calendarUtils';
+import { ScheduleItem } from '../types/schedule';
 
 interface ScheduleRowProps {
   date: string;
@@ -56,38 +58,30 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     return stageText.endsWith('.') ? stageText.slice(0, -1) : stageText;
   }, [stage]);
   
+  // Создаем объект ScheduleItem для календарей (мемоизируем)
+  const scheduleItem = useMemo<ScheduleItem>(() => ({
+    date,
+    time,
+    championship,
+    stage,
+    place,
+    session,
+    day: '', // не используется для календаря
+    Commentator1: commentator1,
+    Commentator2: commentator2,
+    Optionally: optionally
+  }), [date, time, championship, stage, place, session, commentator1, commentator2, optionally]);
+  
   // Обработчик добавления в Google Calendar
-  const handleAddToGoogleCalendar = () => {
-    const calendarUrl = generateGoogleCalendarUrl({
-      date,
-      time,
-      championship,
-      stage,
-      place,
-      session,
-      day: '', // не используется для календаря
-      Commentator1: commentator1,
-      Commentator2: commentator2,
-      Optionally: optionally
-    });
+  const handleAddToGoogleCalendar = useCallback(() => {
+    const calendarUrl = generateGoogleCalendarUrl(scheduleItem);
     window.open(calendarUrl, '_blank');
-  };
+  }, [scheduleItem]);
 
   // Обработчик добавления в Яндекс Календарь
-  const handleAddToYandexCalendar = () => {
-    downloadICalendarFile({
-      date,
-      time,
-      championship,
-      stage,
-      place,
-      session,
-      day: '', // не используется для календаря
-      Commentator1: commentator1,
-      Commentator2: commentator2,
-      Optionally: optionally
-    });
-  };
+  const handleAddToYandexCalendar = useCallback(() => {
+    downloadICalendarFile(scheduleItem);
+  }, [scheduleItem]);
   
   return (
     <div className="schedule-row-wrapper">
@@ -115,59 +109,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
               title="Добавить в Google Calendar"
               aria-label="Добавить в Google Calendar"
             >
-              <svg 
-                width="100%" 
-                height="100%" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg"
-                className="calendar-icon"
-              >
-                <rect 
-                  x="3" 
-                  y="5" 
-                  width="18" 
-                  height="16" 
-                  rx="2" 
-                  className="calendar-icon-outline"
-                  strokeWidth="2"
-                />
-                <line 
-                  x1="3" 
-                  y1="8" 
-                  x2="21" 
-                  y2="8" 
-                  className="calendar-icon-outline"
-                  strokeWidth="2"
-                />
-                <rect 
-                  x="6" 
-                  y="2" 
-                  width="2" 
-                  height="6" 
-                  rx="1" 
-                  className="calendar-icon-accent"
-                />
-                <rect 
-                  x="16" 
-                  y="2" 
-                  width="2" 
-                  height="6" 
-                  rx="1" 
-                  className="calendar-icon-accent"
-                />
-                <text 
-                  x="12" 
-                  y="18" 
-                  textAnchor="middle" 
-                  className="calendar-icon-letter"
-                  fontSize="10"
-                  fontWeight="700"
-                  fontFamily="Arial, sans-serif"
-                >
-                  G
-                </text>
-              </svg>
+              <CalendarIcon letter="G" fontSize="10" isLightTheme={isLightTheme} />
             </button>
             <button 
               onClick={handleAddToYandexCalendar}
@@ -175,59 +117,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
               title="Файл .ics для календаря"
               aria-label="Файл .ics для календаря"
             >
-              <svg 
-                width="100%" 
-                height="100%" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg"
-                className="calendar-icon"
-              >
-                <rect 
-                  x="3" 
-                  y="5" 
-                  width="18" 
-                  height="16" 
-                  rx="2" 
-                  className="calendar-icon-outline"
-                  strokeWidth="2"
-                />
-                <line 
-                  x1="3" 
-                  y1="8" 
-                  x2="21" 
-                  y2="8" 
-                  className="calendar-icon-outline"
-                  strokeWidth="2"
-                />
-                <rect 
-                  x="6" 
-                  y="2" 
-                  width="2" 
-                  height="6" 
-                  rx="1" 
-                  className="calendar-icon-accent"
-                />
-                <rect 
-                  x="16" 
-                  y="2" 
-                  width="2" 
-                  height="6" 
-                  rx="1" 
-                  className="calendar-icon-accent"
-                />
-                <text 
-                  x="12" 
-                  y="18" 
-                  textAnchor="middle" 
-                  className="calendar-icon-letter"
-                  fontSize="8"
-                  fontWeight="700"
-                  fontFamily="Arial, sans-serif"
-                >
-                  .ics
-                </text>
-              </svg>
+              <CalendarIcon letter=".ics" fontSize="8" isLightTheme={isLightTheme} />
             </button>
           </div>
         </div>

@@ -6,11 +6,10 @@ import DayOfWeekDisplay from './components/DayOfWeekDisplay';
 import ScheduleRow from './components/ScheduleRow';
 import Menu from './components/Menu';
 import { ScheduleItem } from './types/schedule';
-import { CSV_URL, DEFAULT_TIMEZONE } from './constants';
+import { CSV_URL } from './constants';
 import { parseCSV } from './utils/csvParser';
 import { groupBy } from './utils/dataUtils';
 import { convertFromGMT3ToLocal } from './utils/dateUtils';
-import { getUserTimeZone } from './utils/timezoneUtils';
 import { parseBooleanFlag } from './utils/flagUtils';
 
 function App() {
@@ -19,12 +18,6 @@ function App() {
   const [error, setError] = useState<string|null>(null);
   const [isLightTheme, setIsLightTheme] = useState(false);
   const [useLocalTime, setUseLocalTime] = useState(false);
-  const [userTimeZone, setUserTimeZone] = useState<string>('');
-
-  // Получаем часовой пояс пользователя при загрузке
-  useEffect(() => {
-    setUserTimeZone(getUserTimeZone());
-  }, []);
 
   useEffect(() => {
     setLoading(true);
