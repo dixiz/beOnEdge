@@ -92,15 +92,15 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
           <div className="content-text">
             <div className="championship">
               {formattedChampionship}
-            </div>
+        </div>
             {formattedStage && (
               <div className="stage">
                 {formattedStage}
-              </div>
+        </div>
             )}
             <div className="place-session">
-              {place}. {session}
-            </div>
+          {place}. {session}
+        </div>
           </div>
           <div className="calendar-buttons">
             <button 
@@ -122,10 +122,10 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
           </div>
         </div>
         <div className="commentators-container">
-          {commentators.map((name, idx) => (
+            {commentators.map((name, idx) => (
             <Commentator key={`${name}-${idx}`} name={name} />
-          ))}
-        </div>
+            ))}
+          </div>
         {optionally && optionally.trim() && (
           <Optionally text={optionally.trim()} isLightTheme={isLightTheme} />
         )}

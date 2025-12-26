@@ -30,7 +30,7 @@ function App() {
       })
       .then(text => {
         try {
-          const parsed = parseCSV(text);
+        const parsed = parseCSV(text);
           if (parsed.length === 0) {
             throw new Error('Данные не найдены');
           }
@@ -101,22 +101,22 @@ function App() {
                   // Создаем уникальный ключ, включая все возможные уникальные поля
                   const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
                   return (
-                    <ScheduleRow
+                  <ScheduleRow
                       key={rowKey}
                       date={row.date}
-                      time={row.time}
-                      championship={row.championship}
-                      stage={row.stage}
-                      place={row.place}
-                      session={row.session}
-                      isLightTheme={isLightTheme}
+                    time={row.time}
+                    championship={row.championship}
+                    stage={row.stage}
+                    place={row.place}
+                    session={row.session}
+                    isLightTheme={isLightTheme}
                       showPC={parseBooleanFlag(row.PC)}
                       tgNumbers={getTgNumbers(row)}
                       bcuNumbers={getBcuNumbers(row)}
-                      commentator1={row.Commentator1}
-                      commentator2={row.Commentator2}
+                    commentator1={row.Commentator1}
+                    commentator2={row.Commentator2}
                       optionally={row.Optionally}
-                    />
+                  />
                   );
                 })}
               </div>
