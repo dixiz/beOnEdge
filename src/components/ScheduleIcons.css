@@ -1,12 +1,20 @@
 .icons-container {
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 4px;
   margin-top: 8px;
   width: fit-content;
   align-self: flex-start;
   overflow: visible;
+}
+
+.icon-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .icon-wrapper {
@@ -15,6 +23,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+}
+
+.icon-wrapper--with-number {
+  padding-right: 8px;
 }
 
 .icon-wrapper--pc {
@@ -27,5 +40,23 @@
 
 .icon-wrapper--bcu {
   background-color: #FF6600;
+}
+
+.icon-number {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #FFD600;
+  background-color: #000000;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 1px solid #000000;
 }
 

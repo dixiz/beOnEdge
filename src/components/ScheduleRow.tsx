@@ -17,8 +17,8 @@ interface ScheduleRowProps {
   session: string;
   isLightTheme?: boolean;
   showPC?: boolean;
-  showTG?: boolean;
-  showBCU?: boolean;
+  tgNumbers?: number[];
+  bcuNumbers?: number[];
   commentator1?: string;
   commentator2?: string;
   optionally?: string;
@@ -33,8 +33,8 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   session,
   isLightTheme = false,
   showPC = false,
-  showTG = false,
-  showBCU = false,
+  tgNumbers = [],
+  bcuNumbers = [],
   commentator1,
   commentator2,
   optionally,
@@ -87,7 +87,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     <div className="schedule-row-wrapper">
       <div className="time-container">
         <div className="time">{normalizedTime}</div>
-        <ScheduleIcons showPC={showPC} showTG={showTG} showBCU={showBCU} />
+        <ScheduleIcons showPC={showPC} tgNumbers={tgNumbers} bcuNumbers={bcuNumbers} isLightTheme={isLightTheme} />
       </div>
       <div className={`content-container ${isLightTheme ? 'schedule-row--light' : 'schedule-row--dark'}`}>
         <div className="content-header">

@@ -104,8 +104,16 @@ function App() {
                       session={row.session}
                       isLightTheme={isLightTheme}
                       showPC={parseBooleanFlag(row.PC)}
-                      showTG={parseBooleanFlag(row.TG)}
-                      showBCU={parseBooleanFlag(row.BCU)}
+                      tgNumbers={[
+                        parseBooleanFlag(row.TG1) && 1,
+                        parseBooleanFlag(row.TG2) && 2,
+                        parseBooleanFlag(row.TG3) && 3
+                      ].filter((num): num is number => typeof num === 'number')}
+                      bcuNumbers={[
+                        parseBooleanFlag(row.BCU1) && 1,
+                        parseBooleanFlag(row.BCU2) && 2,
+                        parseBooleanFlag(row.BCU3) && 3
+                      ].filter((num): num is number => typeof num === 'number')}
                       commentator1={row.Commentator1}
                       commentator2={row.Commentator2}
                       optionally={row.Optionally}
