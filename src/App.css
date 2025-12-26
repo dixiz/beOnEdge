@@ -80,7 +80,7 @@
   display: grid;
   grid-template-columns: clamp(80px, 10vw, 100px) 1fr;
   gap: 0 clamp(12px, 2.4vw, 18px);
-  row-gap: clamp(12px, 2.4vw, 18px);
+  row-gap: clamp(20px, 3.9vw, 30px);
   align-items: start;
   margin-top: clamp(10px, 4vw, 20px);
 }

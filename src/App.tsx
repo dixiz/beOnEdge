@@ -103,6 +103,7 @@ function App() {
                   return (
                     <ScheduleRow
                       key={rowKey}
+                      date={row.date}
                       time={row.time}
                       championship={row.championship}
                       stage={row.stage}
