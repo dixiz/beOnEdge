@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/beOnEdge/static/css/main.e51f39c6.css",
+    "main.js": "/beOnEdge/static/js/main.b81075c0.js",
+    "static/js/453.ad49d1db.chunk.js": "/beOnEdge/static/js/453.ad49d1db.chunk.js",
+    "index.html": "/beOnEdge/index.html",
+    "main.e51f39c6.css.map": "/beOnEdge/static/css/main.e51f39c6.css.map",
+    "main.b81075c0.js.map": "/beOnEdge/static/js/main.b81075c0.js.map",
+    "453.ad49d1db.chunk.js.map": "/beOnEdge/static/js/453.ad49d1db.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e51f39c6.css",
+    "static/js/main.b81075c0.js"
+  ]
+}
