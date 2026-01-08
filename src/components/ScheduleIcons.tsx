@@ -27,6 +27,19 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
     return null;
   }
 
+  const getTgLink = (number: number) => {
+    switch (number) {
+      case 1:
+        return 'https://t.me/BoE_LIVE_1';
+      case 2:
+        return 'https://t.me/BoE_LIVE_2';
+      case 3:
+        return 'https://t.me/BoE_LIVE_3';
+      default:
+        return undefined;
+    }
+  };
+
   return (
     <div className="icons-container">
       {/* Первый ряд: иконка монитора */}
@@ -54,21 +67,29 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
       {hasTG && (
         <div className="icon-row">
           {tgNumbers.map((number) => (
-            <div key={number} className="icon-wrapper icon-wrapper--tg icon-wrapper--with-number">
-          <svg
-            width={iconSize}
-            height={iconSize}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12 0C5.373 0 0 5.373 0 12S5.373 24 12 24 24 18.627 24 12 18.627 0 12 0ZM17.894 8.221L15.924 17.501C15.779 18.159 15.387 18.319 14.84 18.008L12 16.3L10.553 17.694C10.413 17.874 10.196 17.989 9.953 17.989L10.166 14.945L16.726 9.423C17.056 9.21 16.762 9.086 16.333 9.299L7.669 14.111L4.681 13.167C4.041 12.964 4.021 12.527 4.546 12.214L17.457 5.505C18.002 5.178 18.47 5.502 18.297 6.363L17.894 8.221Z"
-              fill={iconColor}
-            />
-          </svg>
-              <span className="icon-number">{number}</span>
-            </div>
+            <a
+              key={number}
+              className="icon-link"
+              href={getTgLink(number)}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <div className="icon-wrapper icon-wrapper--tg icon-wrapper--with-number">
+                <svg
+                  width={iconSize}
+                  height={iconSize}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 0C5.373 0 0 5.373 0 12S5.373 24 12 24 24 18.627 24 12 18.627 0 12 0ZM17.894 8.221L15.924 17.501C15.779 18.159 15.387 18.319 14.84 18.008L12 16.3L10.553 17.694C10.413 17.874 10.196 17.989 9.953 17.989L10.166 14.945L16.726 9.423C17.056 9.21 16.762 9.086 16.333 9.299L7.669 14.111L4.681 13.167C4.041 12.964 4.021 12.527 4.546 12.214L17.457 5.505C18.002 5.178 18.47 5.502 18.297 6.363L17.894 8.221Z"
+                    fill={iconColor}
+                  />
+                </svg>
+                <span className="icon-number">{number}</span>
+              </div>
+            </a>
           ))}
         </div>
       )}

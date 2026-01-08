@@ -43,6 +43,16 @@
   background-color: #0088cc;
 }
 
+.icon-link {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.icon-link:focus-visible .icon-wrapper--tg,
+.icon-link:hover .icon-wrapper--tg {
+  background-color: #33a9e1;
+}
+
 .icon-wrapper--bcu {
   background-color: #FF6600;
 }
