@@ -1,4 +1,9 @@
 export interface ScheduleItem {
+  Shed?: string;     // флаг "запланировано" (опционально)
+  Live?: string;     // флаг "в эфире" (опционально)
+  Ended?: string;    // флаг "завершено" (опционально)
+  Delay?: string;    // флаг "задержка" (опционально)
+  Cancel?: string;   // флаг "отменено" (опционально)
   date: string;
   day: string;
   time: string;
