@@ -29,7 +29,29 @@
 }
 
 .schedule-container--with-menu {
-  padding: clamp(90px, 12vh, 110px) clamp(12px, 3vw, 24px) 0;
+  /* Отступ под фиксированное меню + донат-кнопки */
+  padding: 125px clamp(12px, 3vw, 24px) 0;
+}
+
+@media (min-width: 721px) {
+  .schedule-container--with-menu {
+    /* Когда меню и донаты уже могут становиться в два ряда (до 960) оставляем увеличенный отступ */
+    padding: 125px clamp(12px, 3vw, 24px) 0;
+  }
+}
+
+@media (min-width: 961px) {
+  .schedule-container--with-menu {
+    /* Меню в одну строку (961-1199) — компактный отступ */
+    padding: 105px clamp(12px, 3vw, 24px) 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .schedule-container--with-menu {
+    /* Ещё компактнее на больших экранах */
+    padding: 105px clamp(12px, 3vw, 24px) 0;
+  }
 }
 
 .schedule-container--without-menu {
@@ -75,6 +97,15 @@
   flex-shrink: 0;
   box-sizing: border-box;
 }
+
+/* На узких экранах, когда колонки складываются в столбец — делаем их на ~25% шире, но не шире экрана */
+@media (max-width: 720px) {
+  .schedule-container .day-column {
+    width: clamp(360px, 40vw, 500px);
+    max-width: 95vw;
+  }
+}
+
 
 .day-rows-container {
   display: grid;
