@@ -27,6 +27,9 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
     return null;
   }
 
+  const PC_LINK = 'https://vk.com/be_on_edge';
+  const BCU_LINK = 'https://bcumedia.su/';
+
   const getTgLink = (number: number) => {
     switch (number) {
       case 1:
@@ -45,21 +48,28 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
       {/* Первый ряд: иконка монитора */}
       {hasPC && (
         <div className="icon-row">
-          <div className="icon-wrapper icon-wrapper--pc">
-          <svg
-            width={iconSize}
-            height={iconSize}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-              style={{ display: 'block' }}
+          <a
+            className="icon-link icon-link--pc"
+            href={PC_LINK}
+            target="_blank"
+            rel="noreferrer noopener"
           >
-            <path
-              d="M20 3H4C2.9 3 2 3.9 2 5V15C2 16.1 2.9 17 4 17H10L8 19V20H16V19L14 17H20C21.1 17 22 16.1 22 15V5C22 3.9 21.1 3 20 3ZM20 15H4V5H20V15Z"
-              fill="#000000"
-            />
-          </svg>
-          </div>
+            <div className="icon-wrapper icon-wrapper--pc">
+              <svg
+                width={iconSize}
+                height={iconSize}
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ display: 'block' }}
+              >
+                <path
+                  d="M20 3H4C2.9 3 2 3.9 2 5V15C2 16.1 2.9 17 4 17H10L8 19V20H16V19L14 17H20C21.1 17 22 16.1 22 15V5C22 3.9 21.1 3 20 3ZM20 15H4V5H20V15Z"
+                  fill="#000000"
+                />
+              </svg>
+            </div>
+          </a>
         </div>
       )}
 
@@ -69,7 +79,7 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
           {tgNumbers.map((number) => (
             <a
               key={number}
-              className="icon-link"
+              className="icon-link icon-link--tg"
               href={getTgLink(number)}
               target="_blank"
               rel="noreferrer noopener"
@@ -98,25 +108,33 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
       {hasBCU && (
         <div className="icon-row">
           {bcuNumbers.map((number) => (
-            <div key={number} className="icon-wrapper icon-wrapper--bcu icon-wrapper--with-number">
-          <svg
-            width={iconSize}
-            height={iconSize}
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M21 3H3C1.9 3 1 3.9 1 5V17C1 18.1 1.9 19 3 19H8V21H16V19H21C22.1 19 23 18.1 23 17V5C23 3.9 22.1 3 21 3ZM21 17H3V5H21V17Z"
-              fill={iconColor}
-            />
-            <path
-              d="M7 7H17V14H7V7ZM9 9V12H15V9H9Z"
-              fill={iconColor}
-            />
-          </svg>
-              <span className="icon-number">{number}</span>
-            </div>
+            <a
+              key={number}
+              className="icon-link icon-link--bcu"
+              href={BCU_LINK}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <div className="icon-wrapper icon-wrapper--bcu icon-wrapper--with-number">
+                <svg
+                  width={iconSize}
+                  height={iconSize}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21 3H3C1.9 3 1 3.9 1 5V17C1 18.1 1.9 19 3 19H8V21H16V19H21C22.1 19 23 18.1 23 17V5C23 3.9 22.1 3 21 3ZM21 17H3V5H21V17Z"
+                    fill={iconColor}
+                  />
+                  <path
+                    d="M7 7H17V14H7V7ZM9 9V12H15V9H9Z"
+                    fill={iconColor}
+                  />
+                </svg>
+                <span className="icon-number">{number}</span>
+              </div>
+            </a>
           ))}
         </div>
       )}

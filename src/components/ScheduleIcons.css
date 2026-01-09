@@ -48,13 +48,23 @@
   text-decoration: none;
 }
 
-.icon-link:focus-visible .icon-wrapper--tg,
-.icon-link:hover .icon-wrapper--tg {
+.icon-link--tg:focus-visible .icon-wrapper--tg,
+.icon-link--tg:hover .icon-wrapper--tg {
   background-color: #33a9e1;
+}
+
+.icon-link--pc:focus-visible .icon-wrapper--pc,
+.icon-link--pc:hover .icon-wrapper--pc {
+  background-color: #ffe44d;
 }
 
 .icon-wrapper--bcu {
   background-color: #FF6600;
+}
+
+.icon-link--bcu:focus-visible .icon-wrapper--bcu,
+.icon-link--bcu:hover .icon-wrapper--bcu {
+  background-color: #ff8533;
 }
 
 .icon-number {
