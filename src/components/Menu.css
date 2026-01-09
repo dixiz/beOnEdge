@@ -8,11 +8,20 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 16px;
   padding-top: 10px;
   padding-bottom: 10px;
   z-index: 1000;
   box-sizing: border-box;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.menu-center {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .menu--light {
@@ -21,6 +30,7 @@
 
 .menu--dark {
   background-color: #181818;
+  gap: 0;
 }
 
 .menu-button {
@@ -31,6 +41,78 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.donation-buttons {
+  position: absolute;
+  left: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.donation-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 18px;
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.donation-button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.donation-button--oda {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.donation-button--oda:hover {
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.donation-button--oda:active {
+  transform: translateY(1px);
+}
+
+.donation-button--da {
+  background: #ff6600;
+  color: #ffffff;
+}
+
+.donation-button--da:hover {
+  background: #ffffff;
+  color: #ff6600;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.donation-button--da:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 960px) {
+  .donation-buttons {
+    position: static;
+    order: -1;
+    width: 100%;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .menu-center {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .time-toggle-container {
