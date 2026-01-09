@@ -44,6 +44,26 @@
   justify-content: center;
 }
 
+.filter-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.filter-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.filter-button:active {
+  transform: translateY(1px);
+}
+
 .donation-buttons {
   position: absolute;
   left: 16px;

@@ -19,6 +19,10 @@ function App() {
   const [error, setError] = useState<string|null>(null);
   const [isLightTheme, setIsLightTheme] = useState(false);
   const [useLocalTime, setUseLocalTime] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [appliedSeries, setAppliedSeries] = useState<string[]>([]);
+  const [tempSeries, setTempSeries] = useState<string[]>([]);
+  const [filterError, setFilterError] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -56,10 +60,34 @@ function App() {
     return schedule.filter(item => isDateEqualOrAfterToday(item.date));
   }, [useLocalTime, originalSchedule]);
 
+  // Все серии, присутствующие в текущем расписании
+  const seriesList = useMemo(() => {
+    const set = new Set<string>();
+    convertedSchedule.forEach(item => {
+      if (item.championship) set.add(item.championship);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [convertedSchedule]);
+
+  // Инициализируем выбранные серии, когда данные появились
+  useEffect(() => {
+    if (seriesList.length > 0 && appliedSeries.length === 0) {
+      setAppliedSeries(seriesList);
+      setTempSeries([]); // не отмечаем по умолчанию при старте
+    }
+  }, [seriesList, appliedSeries.length]);
+
+  // Применяем фильтр по сериям
+  const filteredSchedule = useMemo(() => {
+    if (appliedSeries.length === 0) return convertedSchedule;
+    const set = new Set(appliedSeries);
+    return convertedSchedule.filter(item => set.has(item.championship));
+  }, [convertedSchedule, appliedSeries]);
+
   // Мемоизация группировки по дням
   const byDay = useMemo(() => {
-    return groupBy(convertedSchedule, r => `${r.date}_${r.day}`);
-  }, [convertedSchedule]);
+    return groupBy(filteredSchedule, r => `${r.date}_${r.day}`);
+  }, [filteredSchedule]);
 
   // Мемоизация обработчиков
   const handleToggleTheme = useCallback(() => {
@@ -72,6 +100,46 @@ function App() {
 
   const showMenu = !loading && !error && Object.keys(byDay).length > 0;
 
+  const handleOpenFilter = useCallback(() => {
+    setTempSeries([]); // при открытии все чекбоксы пустые
+    setFilterError(null);
+    setIsFilterOpen(true);
+  }, []);
+
+  const handleCloseFilter = useCallback(() => {
+    setTempSeries(appliedSeries); // возврат к применённому при закрытии крестом
+    setFilterError(null);
+    setIsFilterOpen(false);
+  }, [appliedSeries]);
+
+  const handleToggleSeries = useCallback((series: string) => {
+    setTempSeries(prev => {
+      if (prev.includes(series)) {
+        return prev.filter(s => s !== series);
+      }
+      return [...prev, series];
+    });
+  }, []);
+
+  const handleToggleAllSeries = useCallback(() => {
+    const allChecked = tempSeries.length === seriesList.length;
+    if (allChecked) {
+      setTempSeries([]);
+    } else {
+      setTempSeries(seriesList);
+    }
+  }, [tempSeries.length, seriesList]);
+
+  const handleApplyFilter = useCallback(() => {
+    if (tempSeries.length === 0) {
+      setFilterError('Не выбрана ни одна серия');
+      return;
+    }
+    setAppliedSeries(tempSeries);
+    setFilterError(null);
+    setIsFilterOpen(false);
+  }, [tempSeries]);
+
   return (
     <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
       {showMenu && (
@@ -80,6 +148,7 @@ function App() {
           onToggleTheme={handleToggleTheme}
           useLocalTime={useLocalTime}
           onToggleTime={handleToggleTime}
+          onOpenFilter={handleOpenFilter}
         />
       )}
       <div className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}>
@@ -124,6 +193,43 @@ function App() {
           );
         })}
       </div>
+      {isFilterOpen && (
+        <div className="filter-overlay">
+          <div className="filter-modal">
+            <div className="filter-modal__header">
+              <h3>Фильтр по сериям</h3>
+              <button className="filter-close" aria-label="Закрыть" onClick={handleCloseFilter}>✕</button>
+            </div>
+            <div className="filter-modal__list">
+              {seriesList.map(series => {
+                const checked = tempSeries.includes(series);
+                return (
+                  <label key={series} className="filter-item">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => handleToggleSeries(series)}
+                    />
+                    <span>{series}</span>
+                  </label>
+                );
+              })}
+              <label className="filter-item">
+                <input
+                  type="checkbox"
+                  checked={tempSeries.length === seriesList.length && seriesList.length > 0}
+                  onChange={handleToggleAllSeries}
+                />
+                <span>Все серии</span>
+              </label>
+            </div>
+            {filterError && <div className="filter-error">{filterError}</div>}
+            <div className="filter-modal__footer">
+              <button className="filter-ok" onClick={handleApplyFilter}>OK</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
