@@ -187,6 +187,7 @@
 .filter-modal__footer {
   display: flex;
   justify-content: center;
+  gap: 10px;
 }
 
 .filter-ok {
@@ -197,6 +198,18 @@
   padding: 10px 18px;
   font-weight: 800;
   font-size: 16px;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.filter-reset {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 15px;
   cursor: pointer;
   min-width: 120px;
 }

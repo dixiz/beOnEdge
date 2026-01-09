@@ -71,9 +71,10 @@ function App() {
 
   // Инициализируем выбранные серии, когда данные появились
   useEffect(() => {
+    // Если применённых фильтров нет (всё расписание), отображаем всё без проставленных чекбоксов
     if (seriesList.length > 0 && appliedSeries.length === 0) {
-      setAppliedSeries(seriesList);
-      setTempSeries([]); // не отмечаем по умолчанию при старте
+      setAppliedSeries(seriesList); // показываем все серии в расписании
+      setTempSeries([]);            // при открытии поп-апа чекбоксы пустые
     }
   }, [seriesList, appliedSeries.length]);
 
@@ -101,10 +102,13 @@ function App() {
   const showMenu = !loading && !error && Object.keys(byDay).length > 0;
 
   const handleOpenFilter = useCallback(() => {
-    setTempSeries([]); // при открытии все чекбоксы пустые
+    // Если фильтр не активен (в расписании все серии) — открываем с пустыми чекбоксами
+    // Если фильтр активен — отмечаем те серии, которые отображаются
+    const isAllVisible = appliedSeries.length === seriesList.length;
+    setTempSeries(isAllVisible ? [] : appliedSeries);
     setFilterError(null);
     setIsFilterOpen(true);
-  }, []);
+  }, [appliedSeries, seriesList]);
 
   const handleCloseFilter = useCallback(() => {
     setTempSeries(appliedSeries); // возврат к применённому при закрытии крестом
@@ -139,6 +143,13 @@ function App() {
     setFilterError(null);
     setIsFilterOpen(false);
   }, [tempSeries]);
+
+  const handleResetFilter = useCallback(() => {
+    setAppliedSeries(seriesList); // вернуть все серии
+    setTempSeries([]);
+    setFilterError(null);
+    setIsFilterOpen(false);
+  }, [seriesList]);
 
   return (
     <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
@@ -226,6 +237,7 @@ function App() {
             {filterError && <div className="filter-error">{filterError}</div>}
             <div className="filter-modal__footer">
               <button className="filter-ok" onClick={handleApplyFilter}>OK</button>
+              <button className="filter-reset" onClick={handleResetFilter}>Сброс</button>
             </div>
           </div>
         </div>
