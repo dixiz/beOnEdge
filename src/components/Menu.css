@@ -21,7 +21,7 @@
 .menu-center {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 0;
 }
 
 .menu--light {
