@@ -7,9 +7,10 @@ interface MenuProps {
   onToggleTheme?: () => void;
   useLocalTime?: boolean;
   onToggleTime?: (useLocal: boolean) => void;
+  onOpenFilter?: () => void;
 }
 
-const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLocalTime = false, onToggleTime }) => {
+const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLocalTime = false, onToggleTime, onOpenFilter }) => {
   const iconColor = isLightTheme ? '#000000' : '#FFD600'; // черная в светлой теме, желтая в темной
 
   return (
@@ -73,6 +74,23 @@ const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLoc
             </div>
           </div>
         )}
+        <button className="filter-button" aria-label="Фильтр" onClick={onOpenFilter}>
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M4 5H20L14 12V18L10 19V12L4 5Z"
+              stroke={iconColor}
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
