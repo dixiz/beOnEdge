@@ -78,11 +78,11 @@ export function convertFromGMT3ToLocal(item: ScheduleItem): ScheduleItem {
     // Конвертируем в локальный часовой пояс пользователя
     const localDate = new Date(gmt3Date);
     
-    // Форматируем новую дату в формате DD.MM.YYYY вручную
+    // Форматируем новую дату в формате DD.MM.YY вручную
     const localDay = String(localDate.getDate()).padStart(2, '0');
     const localMonth = String(localDate.getMonth() + 1).padStart(2, '0');
-    const localYear = String(localDate.getFullYear()); // Полный год (YYYY)
-    const newDate = `${localDay}.${localMonth}.${localYear}`;
+    const localYearShort = String(localDate.getFullYear()).slice(-2); // Две последние цифры года
+    const newDate = `${localDay}.${localMonth}.${localYearShort}`;
     
     // Форматируем новое время
     const localHours = String(localDate.getHours()).padStart(2, '0');
