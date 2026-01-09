@@ -26,10 +26,12 @@
 
 .menu--light {
   background-color: #FFD600;
+  gap: 0;
 }
 
 .menu--dark {
   background-color: #181818;
+  gap: 0;
 }
 
 .menu-button {
