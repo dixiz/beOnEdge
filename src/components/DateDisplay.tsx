@@ -6,10 +6,18 @@ interface DateDisplayProps {
   isLightTheme?: boolean;
 }
 
+const formatToShortYear = (dateStr: string): string => {
+  const parts = dateStr.split('.');
+  if (parts.length !== 3) return dateStr;
+  const [d, m, y] = parts;
+  const shortYear = y.length === 2 ? y : y.slice(-2);
+  return `${d}.${m}.${shortYear}`;
+};
+
 const DateDisplay: React.FC<DateDisplayProps> = ({ date, isLightTheme = false }) => {
   return (
     <div className={`date-display ${isLightTheme ? 'date-display--light' : 'date-display--dark'}`}>
-      {date}
+      {formatToShortYear(date)}
     </div>
   );
 };
