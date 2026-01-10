@@ -200,8 +200,13 @@ function App() {
       setFilterError('Не выбрана ни одна серия');
       return;
     }
-    if (!hasDays) {
-      setFilterError('Не выбран ни один день');
+
+    // Выбран хотя бы один чемпионат, но дни не выбраны → показываем эти чемпионаты по всем дням
+    if (!hasDays && hasSeries) {
+      setAppliedSeries(tempSeries);
+      setAppliedDays(daysList);
+      setFilterError(null);
+      setIsFilterOpen(false);
       return;
     }
 
@@ -212,7 +217,7 @@ function App() {
     setAppliedDays(tempDays);
     setFilterError(null);
     setIsFilterOpen(false);
-  }, [tempSeries, tempDays]);
+  }, [tempSeries, tempDays, daysList, seriesList]);
 
   const handleResetFilter = useCallback(() => {
     setAppliedSeries(seriesList); // вернуть все серии
