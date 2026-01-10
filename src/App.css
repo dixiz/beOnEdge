@@ -170,12 +170,17 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 16px; /* как размер текста места/сессии */
 }
 
 .filter-item input[type="checkbox"] {
   width: 16px;
   height: 16px;
+}
+
+.filter-item--all .filter-item__all-text {
+  color: #FFD600;
+  font-weight: 700;
 }
 
 .filter-error {
