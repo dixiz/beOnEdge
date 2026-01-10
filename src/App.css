@@ -148,6 +148,29 @@
   margin-bottom: 12px;
 }
 
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.filter-tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.filter-tab--active {
+  background: #FFD600;
+  color: #000;
+  border-color: #FFD600;
+}
+
 .filter-close {
   background: transparent;
   border: none;
