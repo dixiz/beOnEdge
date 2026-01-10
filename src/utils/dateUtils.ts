@@ -5,7 +5,7 @@ import { normalizeTime } from './timeUtils';
 /**
  * Парсит дату из формата DD.MM.YY или DD.MM.YYYY в объект Date
  */
-function parseDate(dateStr: string): Date {
+export function parseDate(dateStr: string): Date {
   const [day, month, year] = dateStr.split('.');
   const fullYear = year.length === 2 ? '20' + year : year;
   return new Date(`${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T12:00:00`);
