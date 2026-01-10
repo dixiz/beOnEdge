@@ -212,6 +212,14 @@ function App() {
               <button className="filter-close" aria-label="Закрыть" onClick={handleCloseFilter}>✕</button>
             </div>
             <div className="filter-modal__list">
+              <label className="filter-item filter-item--all">
+                <input
+                  type="checkbox"
+                  checked={tempSeries.length === seriesList.length && seriesList.length > 0}
+                  onChange={handleToggleAllSeries}
+                />
+                <span className="filter-item__all-text">Все серии</span>
+              </label>
               {seriesList.map(series => {
                 const checked = tempSeries.includes(series);
                 return (
@@ -225,14 +233,6 @@ function App() {
                   </label>
                 );
               })}
-              <label className="filter-item">
-                <input
-                  type="checkbox"
-                  checked={tempSeries.length === seriesList.length && seriesList.length > 0}
-                  onChange={handleToggleAllSeries}
-                />
-                <span>Все серии</span>
-              </label>
             </div>
             {filterError && <div className="filter-error">{filterError}</div>}
             <div className="filter-modal__footer">

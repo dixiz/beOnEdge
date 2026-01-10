@@ -16,12 +16,13 @@
   box-sizing: border-box;
   padding-left: 16px;
   padding-right: 16px;
+  --toggle-height: 44px;
 }
 
 .menu-center {
   display: flex;
   align-items: center;
-  gap: 0;
+  gap: 2px;
 }
 
 .menu--light {
@@ -54,10 +55,35 @@
   justify-content: center;
   border-radius: 8px;
   transition: background-color 0.2s ease, transform 0.1s ease;
+  height: var(--toggle-height);
 }
 
-.filter-button:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+.filter-button--dark {
+  background: #FFD600;
+}
+
+.filter-button--light {
+  background: #000000;
+}
+
+.filter-button--dark:hover {
+  background: #181818;
+}
+
+.filter-button--light:hover {
+  background: #FFD600;
+}
+
+.filter-button--dark .filter-icon path {
+  stroke: #000000;
+}
+
+.filter-button--dark:hover .filter-icon path {
+  stroke: #FFD600;
+}
+
+.filter-button--light:hover .filter-icon path {
+  stroke: #000000;
 }
 
 .filter-button:active {
@@ -152,10 +178,11 @@
   border-radius: 8px;
   padding: 4px;
   gap: 4px;
+  min-height: var(--toggle-height);
 }
 
 .time-toggle-option {
-  padding: 8px 16px;
+  padding: 8px 8px;
   border: none;
   border-radius: 6px;
   cursor: pointer;

@@ -36,7 +36,7 @@
 }
 
 .icon-wrapper--pc {
-  background-color: #FFD600;
+  background-color: #0077FF;
 }
 
 .icon-wrapper--tg {
@@ -55,7 +55,7 @@
 
 .icon-link--pc:focus-visible .icon-wrapper--pc,
 .icon-link--pc:hover .icon-wrapper--pc {
-  background-color: #ffe44d;
+  background-color: #0066e0;
 }
 
 .icon-wrapper--bcu {

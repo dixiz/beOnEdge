@@ -8,20 +8,20 @@ const DonationButtons: React.FC = () => {
   return (
     <div className="donation-buttons" aria-label="Donation links">
       <a
+        className="donation-button donation-button--da"
+        href={DONATE_LINK}
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        DA
+      </a>
+      <a
         className="donation-button donation-button--oda"
         href={ODA_LINK}
         target="_blank"
         rel="noreferrer noopener"
       >
         ODA
-      </a>
-      <a
-        className="donation-button donation-button--da"
-        href={DONATE_LINK}
-        target="_blank"
-        rel="noreferrer noopener"
-      >
-        Donation Alerts
       </a>
     </div>
   );

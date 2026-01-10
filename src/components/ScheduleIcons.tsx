@@ -16,6 +16,7 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
 }) => {
   const iconSize = 22;
   const iconColor = 'white';
+  const pcBg = '#0077FF'; // VK blue
 
   // Определяем, есть ли что показывать
   const hasPC = showPC;
@@ -63,10 +64,19 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
                 xmlns="http://www.w3.org/2000/svg"
                 style={{ display: 'block' }}
               >
-                <path
-                  d="M20 3H4C2.9 3 2 3.9 2 5V15C2 16.1 2.9 17 4 17H10L8 19V20H16V19L14 17H20C21.1 17 22 16.1 22 15V5C22 3.9 21.1 3 20 3ZM20 15H4V5H20V15Z"
-                  fill="#000000"
-                />
+                <rect x="2" y="4" width="20" height="16" rx="3" fill={pcBg} />
+                <text
+                  x="12"
+                  y="14"
+                  textAnchor="middle"
+                  fontFamily="Arial, sans-serif"
+                  fontSize="14"
+                  fontWeight="bold"
+                  fill="#FFFFFF"
+                  dominantBaseline="middle"
+                >
+                  VK
+                </text>
               </svg>
             </div>
           </a>
