@@ -99,8 +99,8 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
         </div>
             )}
             <div className="place-session">
-          {place}. {session}
-        </div>
+              {place ? `${place}. ${session}` : session}
+            </div>
           </div>
           <div className="calendar-buttons">
             <button 

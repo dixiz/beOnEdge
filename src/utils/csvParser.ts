@@ -61,10 +61,9 @@ function parseCSVLine(line: string): string[] {
 // Валидация элемента расписания
 function validateScheduleItem(item: Partial<ScheduleItem>): item is ScheduleItem {
   return !!(
-    item.date && 
-    item.time && 
+    item.date &&
+    item.time &&
     item.championship &&
-    item.place &&
     item.session
   );
 }
