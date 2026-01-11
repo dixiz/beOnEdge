@@ -27,7 +27,9 @@ function App() {
   const [tempDays, setTempDays] = useState<string[]>([]);
   const [appliedTracks, setAppliedTracks] = useState<string[]>([]);
   const [tempTracks, setTempTracks] = useState<string[]>([]);
-  const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks'>('series');
+  const [appliedCommentators, setAppliedCommentators] = useState<string[]>([]);
+  const [tempCommentators, setTempCommentators] = useState<string[]>([]);
+  const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks' | 'commentators'>('series');
 
   useEffect(() => {
     setLoading(true);
@@ -118,6 +120,21 @@ function App() {
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
   }, [normalizedSchedule]);
 
+  const ORIGINAL_COMMENT = 'Оригинальная дорожка';
+
+  // Все комментаторы (Commentator1/2 или отсутствие как "Оригинальная дорожка") для фильтра по комментаторам
+  const commentatorsList = useMemo(() => {
+    const set = new Set<string>();
+    normalizedSchedule.forEach(item => {
+      const hasComm1 = !!item.Commentator1;
+      const hasComm2 = !!item.Commentator2;
+      if (hasComm1 && item.Commentator1) set.add(item.Commentator1);
+      if (hasComm2 && item.Commentator2) set.add(item.Commentator2);
+      if (!hasComm1 && !hasComm2) set.add(ORIGINAL_COMMENT);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [normalizedSchedule]);
+
   // Инициализируем выбранные серии, когда данные появились
   useEffect(() => {
     // Если применённых фильтров нет (всё расписание), отображаем всё без проставленных чекбоксов
@@ -133,17 +150,40 @@ function App() {
       setAppliedTracks(tracksList);
       setTempTracks([]);
     }
-  }, [seriesList, appliedSeries.length, daysList, appliedDays.length, tracksList, appliedTracks.length]);
+    if (commentatorsList.length > 0 && appliedCommentators.length === 0) {
+      setAppliedCommentators(commentatorsList);
+      setTempCommentators([]);
+    }
+  }, [
+    seriesList, appliedSeries.length,
+    daysList, appliedDays.length,
+    tracksList, appliedTracks.length,
+    commentatorsList, appliedCommentators.length
+  ]);
 
   // Применяем фильтр по сериям
   const filteredSchedule = useMemo(() => {
     const seriesSet = new Set(appliedSeries.length === 0 ? seriesList : appliedSeries);
     const daysSet = new Set(appliedDays.length === 0 ? daysList : appliedDays);
     const tracksSet = new Set(appliedTracks.length === 0 ? tracksList : appliedTracks);
+    const commentatorsNoFilter = appliedCommentators.length === 0 || appliedCommentators.length === commentatorsList.length;
+    const commentatorsSet = new Set(appliedCommentators.length === 0 ? commentatorsList : appliedCommentators);
     return normalizedSchedule.filter(
-      item => seriesSet.has(item.championship) && daysSet.has(item.date) && tracksSet.has(item.place)
+      item => {
+        const matchSeries = seriesSet.has(item.championship);
+        const matchDay = daysSet.has(item.date);
+        const matchTrack = tracksSet.has(item.place);
+        const hasComm1 = !!item.Commentator1;
+        const hasComm2 = !!item.Commentator2;
+        const matchCommentator =
+          commentatorsNoFilter ||
+          ((hasComm1 && commentatorsSet.has(item.Commentator1!)) ||
+           (hasComm2 && commentatorsSet.has(item.Commentator2!)) ||
+           (!hasComm1 && !hasComm2 && commentatorsSet.has(ORIGINAL_COMMENT)));
+        return matchSeries && matchDay && matchTrack && matchCommentator;
+      }
     );
-  }, [normalizedSchedule, appliedSeries, appliedDays, appliedTracks, seriesList, daysList, tracksList]);
+  }, [normalizedSchedule, appliedSeries, appliedDays, appliedTracks, appliedCommentators, seriesList, daysList, tracksList, commentatorsList]);
 
   // Мемоизация группировки по дням
   const byDay = useMemo(() => {
@@ -167,21 +207,24 @@ function App() {
     const isAllVisible = appliedSeries.length === seriesList.length;
     const isAllDaysVisible = appliedDays.length === daysList.length;
     const isAllTracksVisible = appliedTracks.length === tracksList.length;
+    const isAllCommentatorsVisible = appliedCommentators.length === commentatorsList.length;
     setTempSeries(isAllVisible ? [] : appliedSeries);
     setTempDays(isAllDaysVisible ? [] : appliedDays);
     setTempTracks(isAllTracksVisible ? [] : appliedTracks);
+    setTempCommentators(isAllCommentatorsVisible ? [] : appliedCommentators);
     setFilterError(null);
     setFilterPage('series');
     setIsFilterOpen(true);
-  }, [appliedSeries, seriesList, appliedDays, daysList, appliedTracks, tracksList]);
+  }, [appliedSeries, seriesList, appliedDays, daysList, appliedTracks, tracksList, appliedCommentators, commentatorsList]);
 
   const handleCloseFilter = useCallback(() => {
     setTempSeries(appliedSeries); // возврат к применённому при закрытии крестом
     setTempDays(appliedDays);
     setTempTracks(appliedTracks);
+    setTempCommentators(appliedCommentators);
     setFilterError(null);
     setIsFilterOpen(false);
-  }, [appliedSeries, appliedDays, appliedTracks]);
+  }, [appliedSeries, appliedDays, appliedTracks, appliedCommentators]);
 
   const handleToggleSeries = useCallback((series: string) => {
     setTempSeries(prev => {
@@ -237,29 +280,47 @@ function App() {
     }
   }, [tempTracks.length, tracksList]);
 
+  const handleToggleCommentator = useCallback((commentator: string) => {
+    setTempCommentators(prev => {
+      if (prev.includes(commentator)) {
+        return prev.filter(c => c !== commentator);
+      }
+      return [...prev, commentator];
+    });
+  }, []);
+
+  const handleToggleAllCommentators = useCallback(() => {
+    const allChecked = tempCommentators.length === commentatorsList.length;
+    if (allChecked) {
+      setTempCommentators([]);
+    } else {
+      setTempCommentators(commentatorsList);
+    }
+  }, [tempCommentators.length, commentatorsList]);
+
   const handleApplyFilter = useCallback(() => {
     const hasDays = tempDays.length > 0;
     const hasSeries = tempSeries.length > 0;
     const hasTracks = tempTracks.length > 0;
+    const hasCommentators = tempCommentators.length > 0;
 
-    if (!hasDays && !hasSeries && !hasTracks) {
+    if (!hasDays && !hasSeries && !hasTracks && !hasCommentators) {
       setFilterError('Не выбрана ни одна серия');
       return;
     }
 
-    const nextSeries =
-      hasSeries ? tempSeries : seriesList;
-    const nextDays =
-      hasDays ? tempDays : daysList;
-    const nextTracks =
-      hasTracks ? tempTracks : tracksList;
+    const nextSeries = hasSeries ? tempSeries : seriesList;
+    const nextDays = hasDays ? tempDays : daysList;
+    const nextTracks = hasTracks ? tempTracks : tracksList;
+    const nextCommentators = hasCommentators ? tempCommentators : commentatorsList;
 
     setAppliedSeries(nextSeries);
     setAppliedDays(nextDays);
     setAppliedTracks(nextTracks);
+    setAppliedCommentators(nextCommentators);
     setFilterError(null);
     setIsFilterOpen(false);
-  }, [tempSeries, tempDays, tempTracks, daysList, seriesList, tracksList]);
+  }, [tempSeries, tempDays, tempTracks, tempCommentators, daysList, seriesList, tracksList, commentatorsList]);
 
   const handleResetFilter = useCallback(() => {
     setAppliedSeries(seriesList); // вернуть все серии
@@ -268,9 +329,11 @@ function App() {
     setTempDays([]);
     setAppliedTracks(tracksList);
     setTempTracks([]);
+    setAppliedCommentators(commentatorsList);
+    setTempCommentators([]);
     setFilterError(null);
     setIsFilterOpen(false);
-  }, [seriesList, daysList, tracksList]);
+  }, [seriesList, daysList, tracksList, commentatorsList]);
 
   return (
     <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
@@ -351,6 +414,12 @@ function App() {
               >
                 Трассы
               </button>
+              <button
+                className={`filter-tab ${filterPage === 'commentators' ? 'filter-tab--active' : ''}`}
+                onClick={() => setFilterPage('commentators')}
+              >
+                Комментаторы
+              </button>
             </div>
             <div className="filter-modal__list">
               {filterPage === 'series' && (
@@ -424,6 +493,31 @@ function App() {
                           onChange={() => handleToggleTrack(track)}
                         />
                         <span>{track}</span>
+                      </label>
+                    );
+                  })}
+                </>
+              )}
+              {filterPage === 'commentators' && (
+                <>
+                  <label className="filter-item filter-item--all">
+                    <input
+                      type="checkbox"
+                      checked={tempCommentators.length === commentatorsList.length && commentatorsList.length > 0}
+                      onChange={handleToggleAllCommentators}
+                    />
+                    <span className="filter-item__all-text">Все комментаторы</span>
+                  </label>
+                  {commentatorsList.map(comm => {
+                    const checked = tempCommentators.includes(comm);
+                    return (
+                      <label key={comm} className="filter-item">
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => handleToggleCommentator(comm)}
+                        />
+                        <span>{comm}</span>
                       </label>
                     );
                   })}
