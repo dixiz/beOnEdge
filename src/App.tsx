@@ -54,6 +54,15 @@ function App() {
   const convertedSchedule = useMemo(() => {
     let schedule = originalSchedule;
     
+    // Оставляем только строки, где Shed = Истина/TRUE/✓/1 (или явно "истина")
+    schedule = schedule.filter(item => {
+      const shed = item.Shed?.trim() || '';
+      const isTrue =
+        parseBooleanFlag(shed) ||
+        shed.toLowerCase() === 'истина';
+      return isTrue;
+    });
+
     // Конвертируем время, если нужно
     if (useLocalTime && schedule.length > 0) {
       schedule = schedule.map(convertFromGMT3ToLocal);
@@ -64,11 +73,9 @@ function App() {
   }, [useLocalTime, originalSchedule]);
 
   const normalizeDateShort = useCallback((dateStr: string) => {
-    const parts = dateStr.trim().split('.');
-    if (parts.length < 3) return dateStr.trim();
-    const [d, m, yRaw] = parts;
-    const y = yRaw.length === 2 ? yRaw : yRaw.slice(-2);
-    return `${d.padStart(2, '0')}.${m.padStart(2, '0')}.${y}`;
+    // Вход теперь всегда dd.mm.yyyy, нормализуем только к короткому виду dd.mm.yy
+    const [d = '', m = '', y = ''] = dateStr.split('.');
+    return `${d.padStart(2, '0')}.${m.padStart(2, '0')}.${y.slice(-2)}`;
   }, []);
 
   const normalizedSchedule = useMemo(() => {
