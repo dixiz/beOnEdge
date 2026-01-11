@@ -66,7 +66,7 @@ function App() {
         shed.toLowerCase() === 'истина';
       return isTrue;
     });
-
+    
     // Конвертируем время, если нужно
     if (useLocalTime && schedule.length > 0) {
       schedule = schedule.map(convertFromGMT3ToLocal);
@@ -111,11 +111,17 @@ function App() {
     });
   }, [normalizedSchedule]);
 
+  const SPECIAL_TRACK = 'Особая трасса';
+
   // Все трассы (place) для фильтра по трассам
   const tracksList = useMemo(() => {
     const set = new Set<string>();
     normalizedSchedule.forEach(item => {
-      if (item.place) set.add(item.place);
+      if (item.place && item.place.trim() !== '') {
+        set.add(item.place);
+      } else {
+        set.add(SPECIAL_TRACK);
+      }
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
   }, [normalizedSchedule]);
@@ -172,7 +178,8 @@ function App() {
       item => {
         const matchSeries = seriesSet.has(item.championship);
         const matchDay = daysSet.has(item.date);
-        const matchTrack = tracksSet.has(item.place);
+        const trackKey = item.place && item.place.trim() !== '' ? item.place : SPECIAL_TRACK;
+        const matchTrack = tracksSet.has(trackKey);
         const hasComm1 = !!item.Commentator1;
         const hasComm2 = !!item.Commentator2;
         const matchCommentator =
@@ -202,16 +209,15 @@ function App() {
   const showMenu = !loading && !error && originalSchedule.length > 0;
 
   const handleOpenFilter = useCallback(() => {
-    // Если фильтр не активен (в расписании все серии) — открываем с пустыми чекбоксами
-    // Если фильтр активен — отмечаем те серии, которые отображаются
-    const isAllVisible = appliedSeries.length === seriesList.length;
-    const isAllDaysVisible = appliedDays.length === daysList.length;
-    const isAllTracksVisible = appliedTracks.length === tracksList.length;
-    const isAllCommentatorsVisible = appliedCommentators.length === commentatorsList.length;
-    setTempSeries(isAllVisible ? [] : appliedSeries);
-    setTempDays(isAllDaysVisible ? [] : appliedDays);
-    setTempTracks(isAllTracksVisible ? [] : appliedTracks);
-    setTempCommentators(isAllCommentatorsVisible ? [] : appliedCommentators);
+    // Если фильтр не активен (в расписании все серии/дни/трассы/комментаторы) — открываем с пустыми чекбоксами
+    const isAllSeries = appliedSeries.length === seriesList.length;
+    const isAllDays = appliedDays.length === daysList.length;
+    const isAllTracks = appliedTracks.length === tracksList.length;
+    const isAllCommentators = appliedCommentators.length === commentatorsList.length;
+    setTempSeries(isAllSeries ? [] : appliedSeries);
+    setTempDays(isAllDays ? [] : appliedDays);
+    setTempTracks(isAllTracks ? [] : appliedTracks);
+    setTempCommentators(isAllCommentators ? [] : appliedCommentators);
     setFilterError(null);
     setFilterPage('series');
     setIsFilterOpen(true);
