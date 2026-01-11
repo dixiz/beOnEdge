@@ -25,7 +25,9 @@ function App() {
   const [filterError, setFilterError] = useState<string | null>(null);
   const [appliedDays, setAppliedDays] = useState<string[]>([]);
   const [tempDays, setTempDays] = useState<string[]>([]);
-  const [filterPage, setFilterPage] = useState<'series' | 'days'>('series');
+  const [appliedTracks, setAppliedTracks] = useState<string[]>([]);
+  const [tempTracks, setTempTracks] = useState<string[]>([]);
+  const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks'>('series');
 
   useEffect(() => {
     setLoading(true);
@@ -107,6 +109,15 @@ function App() {
     });
   }, [normalizedSchedule]);
 
+  // Все трассы (place) для фильтра по трассам
+  const tracksList = useMemo(() => {
+    const set = new Set<string>();
+    normalizedSchedule.forEach(item => {
+      if (item.place) set.add(item.place);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
+  }, [normalizedSchedule]);
+
   // Инициализируем выбранные серии, когда данные появились
   useEffect(() => {
     // Если применённых фильтров нет (всё расписание), отображаем всё без проставленных чекбоксов
@@ -118,15 +129,21 @@ function App() {
       setAppliedDays(daysList); // показываем все дни
       setTempDays([]);          // при открытии поп-апа чекбоксы пустые
     }
-  }, [seriesList, appliedSeries.length, daysList, appliedDays.length]);
+    if (tracksList.length > 0 && appliedTracks.length === 0) {
+      setAppliedTracks(tracksList);
+      setTempTracks([]);
+    }
+  }, [seriesList, appliedSeries.length, daysList, appliedDays.length, tracksList, appliedTracks.length]);
 
   // Применяем фильтр по сериям
   const filteredSchedule = useMemo(() => {
-    if (appliedSeries.length === 0) return normalizedSchedule;
-    const seriesSet = new Set(appliedSeries);
+    const seriesSet = new Set(appliedSeries.length === 0 ? seriesList : appliedSeries);
     const daysSet = new Set(appliedDays.length === 0 ? daysList : appliedDays);
-    return normalizedSchedule.filter(item => seriesSet.has(item.championship) && daysSet.has(item.date));
-  }, [normalizedSchedule, appliedSeries, appliedDays, daysList]);
+    const tracksSet = new Set(appliedTracks.length === 0 ? tracksList : appliedTracks);
+    return normalizedSchedule.filter(
+      item => seriesSet.has(item.championship) && daysSet.has(item.date) && tracksSet.has(item.place)
+    );
+  }, [normalizedSchedule, appliedSeries, appliedDays, appliedTracks, seriesList, daysList, tracksList]);
 
   // Мемоизация группировки по дням
   const byDay = useMemo(() => {
@@ -149,19 +166,22 @@ function App() {
     // Если фильтр активен — отмечаем те серии, которые отображаются
     const isAllVisible = appliedSeries.length === seriesList.length;
     const isAllDaysVisible = appliedDays.length === daysList.length;
+    const isAllTracksVisible = appliedTracks.length === tracksList.length;
     setTempSeries(isAllVisible ? [] : appliedSeries);
     setTempDays(isAllDaysVisible ? [] : appliedDays);
+    setTempTracks(isAllTracksVisible ? [] : appliedTracks);
     setFilterError(null);
     setFilterPage('series');
     setIsFilterOpen(true);
-  }, [appliedSeries, seriesList, appliedDays, daysList]);
+  }, [appliedSeries, seriesList, appliedDays, daysList, appliedTracks, tracksList]);
 
   const handleCloseFilter = useCallback(() => {
     setTempSeries(appliedSeries); // возврат к применённому при закрытии крестом
     setTempDays(appliedDays);
+    setTempTracks(appliedTracks);
     setFilterError(null);
     setIsFilterOpen(false);
-  }, [appliedSeries, appliedDays]);
+  }, [appliedSeries, appliedDays, appliedTracks]);
 
   const handleToggleSeries = useCallback((series: string) => {
     setTempSeries(prev => {
@@ -199,41 +219,58 @@ function App() {
     }
   }, [tempDays.length, daysList]);
 
+  const handleToggleTrack = useCallback((track: string) => {
+    setTempTracks(prev => {
+      if (prev.includes(track)) {
+        return prev.filter(t => t !== track);
+      }
+      return [...prev, track];
+    });
+  }, []);
+
+  const handleToggleAllTracks = useCallback(() => {
+    const allChecked = tempTracks.length === tracksList.length;
+    if (allChecked) {
+      setTempTracks([]);
+    } else {
+      setTempTracks(tracksList);
+    }
+  }, [tempTracks.length, tracksList]);
+
   const handleApplyFilter = useCallback(() => {
     const hasDays = tempDays.length > 0;
     const hasSeries = tempSeries.length > 0;
+    const hasTracks = tempTracks.length > 0;
 
-    if (!hasDays && !hasSeries) {
+    if (!hasDays && !hasSeries && !hasTracks) {
       setFilterError('Не выбрана ни одна серия');
       return;
     }
 
-    // Выбран хотя бы один чемпионат, но дни не выбраны → показываем эти чемпионаты по всем дням
-    if (!hasDays && hasSeries) {
-      setAppliedSeries(tempSeries);
-      setAppliedDays(daysList);
-      setFilterError(null);
-      setIsFilterOpen(false);
-      return;
-    }
-
-    // Если дни выбраны, но серии нет — отображаем все серии для выбранных дней
-    const nextSeries = hasSeries ? tempSeries : seriesList;
+    const nextSeries =
+      hasSeries ? tempSeries : seriesList;
+    const nextDays =
+      hasDays ? tempDays : daysList;
+    const nextTracks =
+      hasTracks ? tempTracks : tracksList;
 
     setAppliedSeries(nextSeries);
-    setAppliedDays(tempDays);
+    setAppliedDays(nextDays);
+    setAppliedTracks(nextTracks);
     setFilterError(null);
     setIsFilterOpen(false);
-  }, [tempSeries, tempDays, daysList, seriesList]);
+  }, [tempSeries, tempDays, tempTracks, daysList, seriesList, tracksList]);
 
   const handleResetFilter = useCallback(() => {
     setAppliedSeries(seriesList); // вернуть все серии
     setTempSeries([]);
     setAppliedDays(daysList);
     setTempDays([]);
+    setAppliedTracks(tracksList);
+    setTempTracks([]);
     setFilterError(null);
     setIsFilterOpen(false);
-  }, [seriesList, daysList]);
+  }, [seriesList, daysList, tracksList]);
 
   return (
     <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
@@ -300,13 +337,19 @@ function App() {
                 className={`filter-tab ${filterPage === 'series' ? 'filter-tab--active' : ''}`}
                 onClick={() => setFilterPage('series')}
               >
-                Фильтр по сериям
+                Серии
               </button>
               <button
                 className={`filter-tab ${filterPage === 'days' ? 'filter-tab--active' : ''}`}
                 onClick={() => setFilterPage('days')}
               >
-                Фильтр по дням
+                Дни
+              </button>
+              <button
+                className={`filter-tab ${filterPage === 'tracks' ? 'filter-tab--active' : ''}`}
+                onClick={() => setFilterPage('tracks')}
+              >
+                Трассы
               </button>
             </div>
             <div className="filter-modal__list">
@@ -356,6 +399,31 @@ function App() {
                           onChange={() => handleToggleDay(day)}
                         />
                         <span>{dayLabel}</span>
+                      </label>
+                    );
+                  })}
+                </>
+              )}
+              {filterPage === 'tracks' && (
+                <>
+                  <label className="filter-item filter-item--all">
+                    <input
+                      type="checkbox"
+                      checked={tempTracks.length === tracksList.length && tracksList.length > 0}
+                      onChange={handleToggleAllTracks}
+                    />
+                    <span className="filter-item__all-text">Все трассы</span>
+                  </label>
+                  {tracksList.map(track => {
+                    const checked = tempTracks.includes(track);
+                    return (
+                      <label key={track} className="filter-item">
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => handleToggleTrack(track)}
+                        />
+                        <span>{track}</span>
                       </label>
                     );
                   })}
