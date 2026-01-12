@@ -111,16 +111,12 @@ function App() {
     });
   }, [normalizedSchedule]);
 
-  const SPECIAL_TRACK = 'Особая трасса';
-
   // Все трассы (place) для фильтра по трассам
   const tracksList = useMemo(() => {
     const set = new Set<string>();
     normalizedSchedule.forEach(item => {
       if (item.place && item.place.trim() !== '') {
         set.add(item.place);
-      } else {
-        set.add(SPECIAL_TRACK);
       }
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
@@ -172,14 +168,16 @@ function App() {
     const seriesSet = new Set(appliedSeries.length === 0 ? seriesList : appliedSeries);
     const daysSet = new Set(appliedDays.length === 0 ? daysList : appliedDays);
     const tracksSet = new Set(appliedTracks.length === 0 ? tracksList : appliedTracks);
+    const trackNoFilter = appliedTracks.length === 0 || appliedTracks.length === tracksList.length;
     const commentatorsNoFilter = appliedCommentators.length === 0 || appliedCommentators.length === commentatorsList.length;
     const commentatorsSet = new Set(appliedCommentators.length === 0 ? commentatorsList : appliedCommentators);
     return normalizedSchedule.filter(
       item => {
         const matchSeries = seriesSet.has(item.championship);
         const matchDay = daysSet.has(item.date);
-        const trackKey = item.place && item.place.trim() !== '' ? item.place : SPECIAL_TRACK;
-        const matchTrack = tracksSet.has(trackKey);
+        const matchTrack = trackNoFilter
+          ? true // все трассы или фильтр не активен
+          : (item.place && tracksSet.has(item.place));
         const hasComm1 = !!item.Commentator1;
         const hasComm2 = !!item.Commentator2;
         const matchCommentator =
