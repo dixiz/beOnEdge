@@ -39,7 +39,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 0px 0px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,23 +166,25 @@
   }
 }
 
-.time-toggle-container {
+.time-toggle-container,
+.view-toggle-container {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.time-toggle {
+.time-toggle,
+.view-toggle {
   display: flex;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 4px;
-  gap: 4px;
+  gap: 0px;
   min-height: var(--toggle-height);
 }
 
 .time-toggle-option {
-  padding: 8px 8px;
+  padding: 0px 8px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
