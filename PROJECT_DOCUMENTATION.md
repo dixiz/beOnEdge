@@ -69,6 +69,7 @@ schedule/
    - `viewMode = byDay`: показывает слайдер дней (учитывает фильтры) и отображает выбранный день
 10. Вычисляет отступ контейнера расписания по высоте меню + (опционально) слайдера дней через CSS-переменную `--menu-offset`
 
+-
 - **Связи:**
 - Использует: `constants/index.ts` (CSV_URL), `utils/csvParser.ts`, `utils/dataUtils.ts`, `utils/dateUtils.ts`, `utils/flagUtils.ts`, `utils/iconUtils.ts`
 - Рендерит: `Menu`, `DaySlider` (в `viewMode = byDay`), `Header`, `DateDisplay`, `DayOfWeekDisplay`, `ScheduleRow`
