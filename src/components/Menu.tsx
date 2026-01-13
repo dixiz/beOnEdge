@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import './Menu.css';
 import DonationButtons from './DonationButtons';
 
@@ -7,17 +7,41 @@ interface MenuProps {
   onToggleTheme?: () => void;
   useLocalTime?: boolean;
   onToggleTime?: (useLocal: boolean) => void;
+  viewMode?: 'all' | 'byDay';
+  onToggleViewMode?: (mode: 'all' | 'byDay') => void;
+  onHeightChange?: (height: number) => void;
   onOpenFilter?: () => void;
 }
 
-const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLocalTime = false, onToggleTime, onOpenFilter }) => {
+const Menu: React.FC<MenuProps> = ({
+  isLightTheme = false,
+  onToggleTheme,
+  useLocalTime = false,
+  onToggleTime,
+  viewMode = 'all',
+  onToggleViewMode,
+  onHeightChange,
+  onOpenFilter
+}) => {
   const iconColor = isLightTheme ? '#000000' : '#FFD600'; // черная в светлой теме, желтая в темной
   // Фильтр: в светлой теме иконка жёлтая на чёрном фоне; в тёмной теме иконка чёрная на жёлтом фоне
   const filterIconColor = isLightTheme ? '#FFD600' : '#000000';
   const filterButtonClass = isLightTheme ? 'filter-button filter-button--light' : 'filter-button filter-button--dark';
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    if (!onHeightChange) return;
+    const el = menuRef.current;
+    if (!el) return;
+    const update = () => onHeightChange(el.getBoundingClientRect().height);
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [onHeightChange]);
 
   return (
-    <div className={`menu ${isLightTheme ? 'menu--light' : 'menu--dark'}`}>
+    <div ref={menuRef} className={`menu ${isLightTheme ? 'menu--light' : 'menu--dark'}`}>
       <DonationButtons />
       <div className="menu-center">
       {onToggleTheme && (
@@ -72,7 +96,31 @@ const Menu: React.FC<MenuProps> = ({ isLightTheme = false, onToggleTheme, useLoc
               onClick={() => onToggleTime && onToggleTime(true)}
               className={`time-toggle-option ${useLocalTime ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
             >
-              Ваш часовой пояс
+              Ваш
+              <br />
+              пояс
+            </button>
+          </div>
+        </div>
+      )}
+      {onToggleViewMode && (
+        <div className="view-toggle-container">
+          <div className="view-toggle">
+            <button
+              onClick={() => onToggleViewMode && onToggleViewMode('all')}
+              className={`time-toggle-option ${viewMode === 'all' ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
+            >
+              Все
+              <br />
+              дни
+            </button>
+            <button
+              onClick={() => onToggleViewMode && onToggleViewMode('byDay')}
+              className={`time-toggle-option ${viewMode === 'byDay' ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
+            >
+              По
+              <br />
+              дням
             </button>
           </div>
         </div>

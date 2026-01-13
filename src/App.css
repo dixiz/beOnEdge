@@ -29,28 +29,25 @@
 }
 
 .schedule-container--with-menu {
-  /* Отступ под фиксированное меню + донат-кнопки */
-  padding: 125px clamp(12px, 3vw, 24px) 0;
+  /* Отступ под фиксированное меню (+ слайдер при необходимости) */
+  padding: var(--menu-offset, 125px) clamp(12px, 3vw, 24px) 0;
 }
 
 @media (min-width: 721px) {
   .schedule-container--with-menu {
-    /* Когда меню и донаты уже могут становиться в два ряда (до 960) оставляем увеличенный отступ */
-    padding: 125px clamp(12px, 3vw, 24px) 0;
+    padding: var(--menu-offset, 125px) clamp(12px, 3vw, 24px) 0;
   }
 }
 
 @media (min-width: 961px) {
   .schedule-container--with-menu {
-    /* Меню в одну строку (961-1199) — компактный отступ */
-    padding: 105px clamp(12px, 3vw, 24px) 0;
+    padding: var(--menu-offset, 105px) clamp(12px, 3vw, 24px) 0;
   }
 }
 
 @media (min-width: 1200px) {
   .schedule-container--with-menu {
-    /* Ещё компактнее на больших экранах */
-    padding: 105px clamp(12px, 3vw, 24px) 0;
+    padding: var(--menu-offset, 105px) clamp(12px, 3vw, 24px) 0;
   }
 }
 
@@ -114,6 +111,36 @@
   row-gap: clamp(20px, 3.9vw, 30px);
   align-items: start;
   margin-top: clamp(10px, 4vw, 20px);
+}
+
+.all-days-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 3vw, 24px);
+  width: min(100%, 980px);
+}
+
+.all-days-row {
+  display: grid;
+  grid-template-columns: clamp(110px, 18vw, 150px) 1fr;
+  gap: clamp(12px, 2.4vw, 18px);
+  align-items: start;
+}
+
+.all-days-date {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.all-days-date--spacer {
+  visibility: hidden;
+}
+
+.all-days-row-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 /* -------------------- Фильтр серий -------------------- */

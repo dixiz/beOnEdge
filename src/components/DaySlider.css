@@ -1,0 +1,123 @@
+.day-slider {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 950;
+  height: var(--day-slider-height, 76px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  backdrop-filter: blur(6px);
+}
+
+.day-slider--light {
+  background: rgba(255, 214, 0, 0.9);
+}
+
+.day-slider--dark {
+  background: rgba(24, 24, 24, 0.9);
+}
+
+.day-slider__track {
+  width: 100%;
+  max-width: clamp(300px, 30vw, 400px);
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 4px;
+  overflow-x: auto;
+  padding: 4px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  scrollbar-width: thin;
+}
+
+@media (max-width: 720px) {
+  .day-slider__track {
+    max-width: clamp(360px, 40vw, 500px);
+  }
+}
+
+.day-slider__track::-webkit-scrollbar {
+  height: 6px;
+}
+
+.day-slider__track::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+}
+
+.day-slider__item {
+  flex: 0 0 calc((100% - 24px) / 7); /* 7 элементов, 6 промежутков по 4px */
+  max-width: calc((100% - 24px) / 7);
+  padding: 0px 8px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: clamp(16px, 1.5vw, 18px);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.day-slider--light .day-slider__item {
+  color: #000000;
+}
+
+.day-slider--dark .day-slider__item {
+  color: #FFD600;
+}
+
+.day-slider--dark .day-slider__day,
+.day-slider--dark .day-slider__date {
+  color: #FFD600;
+}
+
+.day-slider__item--active {
+  background: #FFD600;
+  color: #000000;
+  border: none;
+}
+
+.day-slider--light .day-slider__item--active {
+  background: #000000;
+  color: #FFD600;
+}
+
+.day-slider--dark .day-slider__item--active,
+.day-slider--dark .day-slider__item--active .day-slider__day,
+.day-slider--dark .day-slider__item--active .day-slider__date {
+  color: #000000;
+}
+
+.day-slider__item:not(.day-slider__item--active):hover {
+  transform: translateY(-2px);
+}
+
+.day-slider--light .day-slider__item:not(.day-slider__item--active) {
+  background: transparent;
+}
+
+.day-slider--dark .day-slider__item:not(.day-slider__item--active) {
+  background: transparent;
+}
+
+.day-slider__day {
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.day-slider__date {
+  font-size: 14px;
+  line-height: 1.2;
+}
+

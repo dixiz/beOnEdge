@@ -5,6 +5,7 @@ import DateDisplay from './components/DateDisplay';
 import DayOfWeekDisplay from './components/DayOfWeekDisplay';
 import ScheduleRow from './components/ScheduleRow';
 import Menu from './components/Menu';
+import DaySlider from './components/DaySlider';
 import { ScheduleItem } from './types/schedule';
 import { CSV_URL } from './constants';
 import { parseCSV } from './utils/csvParser';
@@ -12,6 +13,18 @@ import { groupBy } from './utils/dataUtils';
 import { convertFromGMT3ToLocal, isDateEqualOrAfterToday, parseDate, getDayOfWeekFromDate } from './utils/dateUtils';
 import { parseBooleanFlag } from './utils/flagUtils';
 import { getTgNumbers, getBcuNumbers } from './utils/iconUtils';
+import { DayOption } from './components/DaySlider';
+
+const DAY_SLIDER_HEIGHT = 76;
+const DAY_SHORT_LABEL: Record<string, string> = {
+  'понедельник': 'Пн',
+  'вторник': 'Вт',
+  'среда': 'Ср',
+  'четверг': 'Чт',
+  'пятница': 'Пт',
+  'суббота': 'Сб',
+  'воскресенье': 'Вс'
+};
 
 function App() {
   const [originalSchedule, setOriginalSchedule] = useState<ScheduleItem[]>([]);
@@ -19,6 +32,9 @@ function App() {
   const [error, setError] = useState<string|null>(null);
   const [isLightTheme, setIsLightTheme] = useState(false);
   const [useLocalTime, setUseLocalTime] = useState(false);
+  const [viewMode, setViewMode] = useState<'all' | 'byDay'>('all');
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [menuHeight, setMenuHeight] = useState<number>(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [appliedSeries, setAppliedSeries] = useState<string[]>([]);
   const [tempSeries, setTempSeries] = useState<string[]>([]);
@@ -190,9 +206,53 @@ function App() {
     );
   }, [normalizedSchedule, appliedSeries, appliedDays, appliedTracks, appliedCommentators, seriesList, daysList, tracksList, commentatorsList]);
 
+  // Даты после применения фильтров (для слайдера по дням)
+  const filteredDaysList = useMemo(() => {
+    const set = new Set<string>();
+    filteredSchedule.forEach(item => {
+      if (item.date) set.add(item.date);
+    });
+    return Array.from(set).sort((a, b) => {
+      const da = parseDate(a).getTime();
+      const db = parseDate(b).getTime();
+      return da - db;
+    });
+  }, [filteredSchedule]);
+
+  const dayOptions: DayOption[] = useMemo(() => {
+    return filteredDaysList.map(date => {
+      const dayName = getDayOfWeekFromDate(date);
+      const shortLabel = DAY_SHORT_LABEL[dayName] || `${dayName.charAt(0).toUpperCase()}${dayName.slice(1, 2)}`;
+      const [dayNumber = '', month = ''] = date.split('.');
+      const dayMonth = `${dayNumber}.${month}`;
+      return {
+        date,
+        dayName,
+        shortLabel,
+        dayNumber: dayMonth
+      };
+    });
+  }, [filteredDaysList]);
+
+  useEffect(() => {
+    if (viewMode === 'byDay' && dayOptions.length > 0) {
+      setSelectedDay(prev => {
+        if (prev && dayOptions.some(d => d.date === prev)) return prev;
+        return dayOptions[0].date;
+      });
+    }
+    if (viewMode === 'all') {
+      setSelectedDay(null);
+    }
+  }, [viewMode, dayOptions]);
+
   // Мемоизация группировки по дням
   const byDay = useMemo(() => {
     return groupBy(filteredSchedule, r => `${r.date}_${r.day}`);
+  }, [filteredSchedule]);
+
+  const rowsByDate = useMemo(() => {
+    return groupBy(filteredSchedule, r => r.date);
   }, [filteredSchedule]);
 
   // Мемоизация обработчиков
@@ -202,6 +262,14 @@ function App() {
 
   const handleToggleTime = useCallback((useLocal: boolean) => {
     setUseLocalTime(useLocal);
+  }, []);
+
+  const handleToggleViewMode = useCallback((mode: 'all' | 'byDay') => {
+    setViewMode(mode);
+  }, []);
+
+  const handleMenuHeightChange = useCallback((height: number) => {
+    setMenuHeight(height);
   }, []);
 
   const showMenu = !loading && !error && originalSchedule.length > 0;
@@ -339,6 +407,12 @@ function App() {
     setIsFilterOpen(false);
   }, [seriesList, daysList, tracksList, commentatorsList]);
 
+  const sliderVisible = viewMode === 'byDay' && dayOptions.length > 0;
+  const selectedDayRows = selectedDay ? rowsByDate[selectedDay] || [] : [];
+  const selectedDayMeta = selectedDay ? dayOptions.find(d => d.date === selectedDay) : undefined;
+  const menuOffsetValue = (menuHeight || 125) + (sliderVisible ? DAY_SLIDER_HEIGHT : 0);
+  const scheduleContainerStyle = { '--menu-offset': `${menuOffsetValue}px` } as React.CSSProperties;
+
   return (
     <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
       {showMenu && (
@@ -347,50 +421,98 @@ function App() {
           onToggleTheme={handleToggleTheme}
           useLocalTime={useLocalTime}
           onToggleTime={handleToggleTime}
+          viewMode={viewMode}
+          onToggleViewMode={handleToggleViewMode}
+          onHeightChange={handleMenuHeightChange}
           onOpenFilter={handleOpenFilter}
         />
       )}
-      <div className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}>
+      {showMenu && sliderVisible && (
+        <DaySlider
+          days={dayOptions}
+          selectedDate={selectedDay}
+          onSelect={setSelectedDay}
+          isLightTheme={isLightTheme}
+          topOffset={menuHeight}
+        />
+      )}
+      <div
+        className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}
+        style={scheduleContainerStyle}
+      >
         {loading && <div className={`loading-message ${isLightTheme ? 'loading-message--light' : 'loading-message--dark'}`}>BE ON EDGE IS COMING</div>}
         {error && <div className="error-message">{error}</div>}
         {!loading && !error && filteredSchedule.length === 0 && (
           <div className={`empty-message ${isLightTheme ? 'empty-message--light' : 'empty-message--dark'}`}>Упс! Ни одна гоночная серия не подходит для установленных отборов</div>
         )}
-        {Object.entries(byDay).map(([key, rows]) => {
-          const [date, day] = key.split('_');
-          return (
-            <div className="day-column" key={key}>
+        {viewMode === 'all' ? (
+          Object.entries(byDay).map(([key, rows]) => {
+            const [date, day] = key.split('_');
+            return (
+              <div className="day-column" key={key}>
+                <Header isLightTheme={isLightTheme}>
+                  <DateDisplay date={date} isLightTheme={isLightTheme} />
+                  <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
+                </Header>
+                <div className="day-rows-container">
+                  {rows.map((row, index) => {
+                    const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
+                    return (
+                      <ScheduleRow
+                        key={rowKey}
+                        date={row.date}
+                        time={row.time}
+                        championship={row.championship}
+                        stage={row.stage}
+                        place={row.place}
+                        session={row.session}
+                        isLightTheme={isLightTheme}
+                        showPC={parseBooleanFlag(row.PC)}
+                        tgNumbers={getTgNumbers(row)}
+                        bcuNumbers={getBcuNumbers(row)}
+                        commentator1={row.Commentator1}
+                        commentator2={row.Commentator2}
+                        optionally={row.Optionally}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div className="day-column">
+            {selectedDayMeta && (
               <Header isLightTheme={isLightTheme}>
-                <DateDisplay date={date} isLightTheme={isLightTheme} />
-                <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
+                <DateDisplay date={selectedDayMeta.date} isLightTheme={isLightTheme} />
+                <DayOfWeekDisplay day={selectedDayMeta.dayName} isLightTheme={isLightTheme} />
               </Header>
-              <div className="day-rows-container">
-                {rows.map((row, index) => {
-                  // Создаем уникальный ключ, включая все возможные уникальные поля
-                  const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
-                  return (
+            )}
+            <div className="day-rows-container">
+              {selectedDayRows.map((row, index) => {
+                const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
+                return (
                   <ScheduleRow
-                      key={rowKey}
-                      date={row.date}
+                    key={rowKey}
+                    date={row.date}
                     time={row.time}
                     championship={row.championship}
                     stage={row.stage}
                     place={row.place}
                     session={row.session}
                     isLightTheme={isLightTheme}
-                      showPC={parseBooleanFlag(row.PC)}
-                      tgNumbers={getTgNumbers(row)}
-                      bcuNumbers={getBcuNumbers(row)}
+                    showPC={parseBooleanFlag(row.PC)}
+                    tgNumbers={getTgNumbers(row)}
+                    bcuNumbers={getBcuNumbers(row)}
                     commentator1={row.Commentator1}
                     commentator2={row.Commentator2}
-                      optionally={row.Optionally}
+                    optionally={row.Optionally}
                   />
-                  );
-                })}
-              </div>
+                );
+              })}
             </div>
-          );
-        })}
+          </div>
+        )}
       </div>
       {isFilterOpen && (
         <div className="filter-overlay">
