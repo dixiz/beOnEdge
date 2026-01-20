@@ -28,8 +28,29 @@ function parseScheduleDateTime(item: ScheduleItem): { startDate: Date; endDate: 
   // Создаем дату начала (в GMT+3, как указано в данных)
   const startDate = new Date(`${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00+03:00`);
   
-  // Создаем дату окончания (предполагаем длительность 2 часа)
-  const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+  const parseDurationMs = (duration?: string): number => {
+    if (!duration) return 0;
+    const cleaned = duration.trim();
+    if (!cleaned) return 0;
+    const parts = cleaned.split(':').map(part => part.trim());
+    let h = 0;
+    let m = 0;
+    let s = 0;
+    if (parts.length === 3) {
+      [h, m, s] = parts.map(part => Number(part));
+    } else if (parts.length === 2) {
+      [h, m] = parts.map(part => Number(part));
+      s = 0;
+    } else {
+      return 0;
+    }
+    if ([h, m, s].some(value => Number.isNaN(value))) return 0;
+    return Math.max(0, ((h * 60 + m) * 60 + s) * 1000);
+  };
+
+  const durationMs = parseDurationMs(item.Duration);
+  const fallbackMs = 2 * 60 * 60 * 1000;
+  const endDate = new Date(startDate.getTime() + (durationMs || fallbackMs));
   
   return { startDate, endDate };
 }

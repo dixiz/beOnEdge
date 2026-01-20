@@ -1,20 +1,18 @@
 .icons-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 4px;
+  gap: 2px;
   margin-top: 8px;
-  width: fit-content;
+  width: 100%;
+  max-width: 100%;
   align-self: flex-start;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .icon-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
+  display: contents;
 }
 
 .icon-wrapper {
@@ -24,9 +22,9 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  min-width: 26px; /* Минимальная ширина для всех иконок */
-  width: 26px; /* Фиксированная ширина для всех иконок */
-  height: 26px; /* Фиксированная высота для всех иконок */
+  min-width: 22px; /* Минимальная ширина для всех иконок */
+  width: clamp(22px, 3vw, 28px); /* Еще больше, но без переполнения */
+  height: clamp(22px, 3vw, 28px); /* Еще больше, но без переполнения */
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -71,7 +69,7 @@
   position: absolute;
   bottom: -2px;
   right: -2px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: #FFD600;
   background-color: #000000;

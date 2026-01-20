@@ -473,6 +473,7 @@ function App() {
                         commentator1={row.Commentator1}
                         commentator2={row.Commentator2}
                         optionally={row.Optionally}
+                        duration={row.Duration}
                         liveTiming={row.LiveTiming}
                       />
                     );
@@ -508,6 +509,7 @@ function App() {
                     commentator1={row.Commentator1}
                     commentator2={row.Commentator2}
                     optionally={row.Optionally}
+                    duration={row.Duration}
                     liveTiming={row.LiveTiming}
                   />
                 );
