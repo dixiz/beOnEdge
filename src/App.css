@@ -113,20 +113,6 @@
   margin-top: clamp(10px, 4vw, 20px);
 }
 
-.day-rows-virtual {
-  margin-top: clamp(10px, 4vw, 20px);
-  width: 100%;
-}
-
-.day-row-virtual {
-  display: grid;
-  grid-template-columns: clamp(80px, 10vw, 100px) 1fr;
-  column-gap: clamp(12px, 2.4vw, 18px);
-  align-items: start;
-  padding-bottom: clamp(20px, 3.9vw, 30px);
-  box-sizing: border-box;
-}
-
 .all-days-list {
   display: flex;
   flex-direction: column;
