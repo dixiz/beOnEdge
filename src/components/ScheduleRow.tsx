@@ -23,6 +23,7 @@ interface ScheduleRowProps {
   commentator1?: string;
   commentator2?: string;
   optionally?: string;
+  liveTiming?: string;
 }
 
 const ScheduleRow: React.FC<ScheduleRowProps> = ({
@@ -39,6 +40,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   commentator1,
   commentator2,
   optionally,
+  liveTiming,
 }) => {
   const commentators = useMemo(() => {
     const filtered = [commentator1, commentator2].filter(Boolean) as string[];
@@ -80,6 +82,18 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   const handleAddToYandexCalendar = useCallback(() => {
     downloadICalendarFile(scheduleItem);
   }, [scheduleItem]);
+
+  const liveTimingUrl = useMemo(() => {
+    const trimmed = liveTiming?.trim();
+    if (!trimmed) return null;
+    if (trimmed.toLowerCase() === 'нет') return null;
+    return trimmed;
+  }, [liveTiming]);
+
+  const handleOpenLiveTiming = useCallback(() => {
+    if (!liveTimingUrl) return;
+    window.open(liveTimingUrl, '_blank');
+  }, [liveTimingUrl]);
   
   return (
     <div className="schedule-row-wrapper">
@@ -101,6 +115,11 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
             <div className="place-session">
               {place ? `${place}. ${session}` : session}
             </div>
+            <div className="commentators-container">
+                {commentators.map((name, idx) => (
+                <Commentator key={`${name}-${idx}`} name={name} />
+                ))}
+              </div>
           </div>
           <div className="calendar-buttons">
             <button 
@@ -119,13 +138,45 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
             >
               <CalendarIcon letter=".ics" fontSize="8" isLightTheme={isLightTheme} />
             </button>
+            {liveTimingUrl && (
+              <button
+                onClick={handleOpenLiveTiming}
+                className={`calendar-button calendar-button--timer ${isLightTheme ? 'calendar-button--light' : 'calendar-button--dark'}`}
+                title="Live timing"
+                aria-label="Live timing"
+                type="button"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <circle
+                    cx="12"
+                    cy="13"
+                    r="8"
+                    stroke={isLightTheme ? '#000000' : '#FFD600'}
+                    strokeWidth="2"
+                  />
+                  <path
+                    d="M9 2H15"
+                    stroke={isLightTheme ? '#000000' : '#FFD600'}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M12 13V9"
+                    stroke={isLightTheme ? '#000000' : '#FFD600'}
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
-        <div className="commentators-container">
-            {commentators.map((name, idx) => (
-            <Commentator key={`${name}-${idx}`} name={name} />
-            ))}
-          </div>
         {optionally && optionally.trim() && (
           <Optionally text={optionally.trim()} isLightTheme={isLightTheme} />
         )}

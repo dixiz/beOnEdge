@@ -21,5 +21,7 @@ export interface ScheduleItem {
   Commentator1?: string; // первый комментатор
   Commentator2?: string; // второй комментатор
   Optionally?: string; // опциональная информация
+  Duration?: string; // длительность (опционально)
+  LiveTiming?: string; // ссылка на live timing (опционально)
 }
 
