@@ -11,8 +11,7 @@
 - Фильтрация: показ только текущих и будущих событий
 - Переключение темы (светлая/темная)
 - Переключение часового пояса (МСК / локальный)
-- Добавление событий в Google Calendar и Яндекс Календарь (учитывает `Duration`)
-- Кнопка Live Timing (иконка секундомера) при наличии ссылки в колонке `Live Timing`
+- Добавление событий в Google Calendar и Яндекс Календарь
 - Адаптивный дизайн
 
 ### Технологический стек:
@@ -71,10 +70,11 @@ schedule/
    - `viewMode = byDay`: показывает слайдер дней (учитывает фильтры) и отображает выбранный день
 10. Вычисляет отступ контейнера расписания по высоте меню + (опционально) слайдера дней через CSS-переменную `--menu-offset`
 
-**Связи:**
+-
+- **Связи:**
 - Использует: `constants/index.ts` (CSV_URL), `utils/csvParser.ts`, `utils/dataUtils.ts`, `utils/dateUtils.ts`, `utils/flagUtils.ts`, `utils/iconUtils.ts`
 - Рендерит: `Menu`, `DaySlider` (в `viewMode = byDay`), `Header`, `DateDisplay`, `DayOfWeekDisplay`, `ScheduleRow`
-- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`), `LiveTiming`
+- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`)
 
 **Мемоизация:**
 - `convertedSchedule` - конвертированное и отфильтрованное расписание
@@ -128,8 +128,6 @@ schedule/
   BCU1?, BCU2?, BCU3?: string; // Флаги для иконок телевизора (1-3)
   Commentator1?, Commentator2?: string; // Имена комментаторов
   Optionally?: string;    // Дополнительная информация
-  Duration?: string;      // Длительность (HH:MM:SS или HH:MM)
-  LiveTiming?: string;    // Ссылка на live timing или "нет"
 }
 ```
 
@@ -143,9 +141,9 @@ schedule/
 **Назначение:** Парсит CSV-текст в массив `ScheduleItem[]`.
 
 **Ожидаемый порядок колонок (заголовков):**
-`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, Commentator1, Commentator2, Optionally, Duration, Live Timing`
+`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, Commentator1, Commentator2, Optionally`
 
-- Новые колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel`, `Duration`, `Live Timing` опциональны: парсер загружает их в поля `ScheduleItem`, но участвуют частично (Duration влияет на календари, Live Timing — на кнопку секундомера).
+- Новые колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel` опциональны: парсер загружает их в поля `ScheduleItem`, но они пока не участвуют в отображении/логике.
 - Колонка `Start` мапится в поле `time` и нормализуется.
 - Обязательные поля для валидации: `Date`, `Start`, `Championship`, `Place`, `Session`.
 
@@ -325,7 +323,7 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 - `parseScheduleDateTime(item: ScheduleItem): { startDate: Date; endDate: Date }`
   - Парсит дату и время из `ScheduleItem`
   - Создает дату начала в GMT+3
-  - Создает дату окончания (по `Duration`, иначе +2 часа)
+  - Создает дату окончания (+2 часа от начала)
 - `buildEventDescription(item: ScheduleItem): string`
   - Формирует описание события из полей `ScheduleItem`
   - Включает: этап, сессию, место, комментаторов, опциональную информацию
@@ -348,7 +346,7 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 **Логика генерации событий:**
 1. Парсит дату и время из `ScheduleItem`
 2. Создает дату начала в GMT+3
-3. Добавляет длительность из `Duration` (если есть, формат `HH:MM:SS` или `HH:MM`), иначе +2 часа
+3. Добавляет 2 часа для даты окончания
 4. Форматирует в нужный формат (URL или .ics)
 5. Для Google Calendar: открывает URL в новой вкладке
 6. Для Яндекс Календаря: скачивает .ics файл
@@ -447,8 +445,6 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 - `bcuNumbers?: number[]` - номера иконок телевизора
 - `commentator1?, commentator2?: string` - комментаторы
 - `optionally?: string` - дополнительная информация
-- `duration?: string` - длительность (используется для календарей)
-- `liveTiming?: string` - ссылка на live timing, если есть
 
 **Логика:**
 1. Нормализует время через `normalizeTime()`
@@ -460,7 +456,6 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 5. Обработчики:
    - `handleAddToGoogleCalendar()` - открывает URL Google Calendar
    - `handleAddToYandexCalendar()` - скачивает .ics файл
-   - `handleOpenLiveTiming()` - открывает ссылку из `Live Timing`
 
 **Структура рендера:**
 ```
@@ -473,9 +468,9 @@ schedule-row-wrapper
     │   ├── content-text
     │   │   ├── championship (чемпионат)
     │   │   ├── stage (этап, если есть)
-    │   │   ├── place-session (место. сессия)
-    │   │   └── commentators-container (комментаторы)
+    │   │   └── place-session (место. сессия)
     │   └── calendar-buttons (кнопки календарей)
+    ├── commentators-container (комментаторы)
     └── Optionally (важная информация, если есть)
 ```
 
@@ -484,7 +479,7 @@ schedule-row-wrapper
 - `normalizedTime` - нормализованное время
 - `formattedChampionship`, `formattedStage` - отформатированный текст
 - `scheduleItem` - объект для календарей
-- `handleAddToGoogleCalendar`, `handleAddToYandexCalendar`, `handleOpenLiveTiming` - обработчики
+- `handleAddToGoogleCalendar`, `handleAddToYandexCalendar` - обработчики
 
 **Связи:**
 - Использует: `ScheduleIcons`, `Commentator`, `Optionally`, `CalendarIcon`
@@ -505,14 +500,15 @@ schedule-row-wrapper
 - `isLightTheme?: boolean` - тема
 
 **Логика:**
-- Рендерит иконки в одну строку (PC, Telegram, TV), при необходимости уменьшая размер, чтобы не превышать ширину блока времени
-  1. Иконка PC (если `showPC === true`), обернута в ссылку `https://vk.com/be_on_edge` с подсветкой фона при hover/focus на жёлтый (`#ffe44d`)
-  2. Иконки Telegram с номерами (если `tgNumbers.length > 0`), каждая обернута в ссылку:
+- Рендерит иконки в три ряда:
+  1. Ряд 1: иконка PC (если `showPC === true`), обернута в ссылку `https://vk.com/be_on_edge` с подсветкой фона при hover/focus на жёлтый (`#ffe44d`)
+  2. Ряд 2: иконки Telegram с номерами (если `tgNumbers.length > 0`), каждая обернута в ссылку:
      - `1 → https://t.me/BoE_LIVE_1`
      - `2 → https://t.me/BoE_LIVE_2`
      - `3 → https://t.me/BoE_LIVE_3`
      - при hover/focus фон иконки меняется на голубой (`#33a9e1`)
-  3. Иконки телевизора с номерами (если `bcuNumbers.length > 0`), каждая обернута в ссылку `https://bcumedia.su/` с подсветкой фона при hover/focus на оранжевый (`#ff8533`)
+  3. Ряд 3: иконки телевизора с номерами (если `bcuNumbers.length > 0`), каждая обернута в ссылку `https://bcumedia.su/` с подсветкой фона при hover/focus на оранжевый (`#ff8533`)
+- Если в ряду несколько иконок, они отображаются рядом
 - Если нет ни одной иконки, компонент не рендерится
 
 **Связи:**
