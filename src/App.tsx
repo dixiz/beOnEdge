@@ -6,6 +6,7 @@ import DayOfWeekDisplay from './components/DayOfWeekDisplay';
 import ScheduleRow from './components/ScheduleRow';
 import Menu from './components/Menu';
 import DaySlider from './components/DaySlider';
+import VirtualizedScheduleRows from './components/VirtualizedScheduleRows';
 import { ScheduleItem } from './types/schedule';
 import { CSV_URL } from './constants';
 import { parseCSV } from './utils/csvParser';
@@ -16,6 +17,8 @@ import { getTgNumbers, getBcuNumbers } from './utils/iconUtils';
 import { DayOption } from './components/DaySlider';
 
 const DAY_SLIDER_HEIGHT = 76;
+const CSV_CACHE_KEY = 'beonedge:schedule:csv';
+const CSV_CACHE_TTL_MS = 10 * 60 * 1000;
 const DAY_SHORT_LABEL: Record<string, string> = {
   'понедельник': 'Пн',
   'вторник': 'Вт',
@@ -48,26 +51,59 @@ function App() {
   const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks' | 'commentators'>('series');
 
   useEffect(() => {
+    const controller = new AbortController();
+    const loadFromText = (text: string) => {
+      try {
+        const parsed = parseCSV(text);
+        if (parsed.length === 0) {
+          throw new Error('Данные не найдены');
+        }
+        setOriginalSchedule(parsed);
+        return true;
+      } catch (error) {
+        setError(error instanceof Error ? error.message : 'Ошибка обработки данных');
+        return false;
+      }
+    };
+
     setLoading(true);
     setError(null);
-    fetch(CSV_URL)
+
+    const cachedRaw = sessionStorage.getItem(CSV_CACHE_KEY);
+    if (cachedRaw) {
+      try {
+        const cached = JSON.parse(cachedRaw) as { text: string; ts: number };
+        if (Date.now() - cached.ts < CSV_CACHE_TTL_MS && cached.text) {
+          const loaded = loadFromText(cached.text);
+          if (loaded) {
+            setLoading(false);
+            return () => controller.abort();
+          }
+        }
+      } catch {
+        // Игнорируем битый кеш
+      }
+    }
+
+    fetch(CSV_URL, { signal: controller.signal })
       .then(r => {
         if (!r.ok) throw new Error('Ошибка загрузки данных.');
         return r.text();
       })
       .then(text => {
-        try {
-        const parsed = parseCSV(text);
-          if (parsed.length === 0) {
-            throw new Error('Данные не найдены');
-          }
-          setOriginalSchedule(parsed);
-        } catch (error) {
-          setError(error instanceof Error ? error.message : 'Ошибка обработки данных');
+        const loaded = loadFromText(text);
+        if (loaded) {
+          sessionStorage.setItem(CSV_CACHE_KEY, JSON.stringify({ text, ts: Date.now() }));
         }
       })
-      .catch(e => setError(e.message))
+      .catch(e => {
+        if (e.name !== 'AbortError') {
+          setError(e.message);
+        }
+      })
       .finally(() => setLoading(false));
+
+    return () => controller.abort();
   }, []);
 
   // Мемоизация конвертированного расписания с фильтрацией по дате
@@ -105,52 +141,38 @@ function App() {
     }));
   }, [convertedSchedule, normalizeDateShort]);
 
-  // Все серии, присутствующие в текущем расписании
-  const seriesList = useMemo(() => {
-    const set = new Set<string>();
-    normalizedSchedule.forEach(item => {
-      if (item.championship) set.add(item.championship);
-    });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
-  }, [normalizedSchedule]);
+  const ORIGINAL_COMMENT = 'Оригинальная дорожка';
 
-  // Все даты в расписании (для фильтра по дням), сортировка по возрастанию
-  const daysList = useMemo(() => {
-    const set = new Set<string>();
+  const { seriesList, daysList, tracksList, commentatorsList } = useMemo(() => {
+    const seriesSet = new Set<string>();
+    const daysSet = new Set<string>();
+    const tracksSet = new Set<string>();
+    const commentatorsSet = new Set<string>();
+
     normalizedSchedule.forEach(item => {
-      if (item.date) set.add(item.date);
+      if (item.championship) seriesSet.add(item.championship);
+      if (item.date) daysSet.add(item.date);
+      if (item.place && item.place.trim() !== '') {
+        tracksSet.add(item.place);
+      }
+
+      const hasComm1 = !!item.Commentator1;
+      const hasComm2 = !!item.Commentator2;
+      if (hasComm1 && item.Commentator1) commentatorsSet.add(item.Commentator1);
+      if (hasComm2 && item.Commentator2) commentatorsSet.add(item.Commentator2);
+      if (!hasComm1 && !hasComm2) commentatorsSet.add(ORIGINAL_COMMENT);
     });
-    return Array.from(set).sort((a, b) => {
+
+    const seriesList = Array.from(seriesSet).sort((a, b) => a.localeCompare(b, 'ru'));
+    const daysList = Array.from(daysSet).sort((a, b) => {
       const da = parseDate(a).getTime();
       const db = parseDate(b).getTime();
       return da - db;
     });
-  }, [normalizedSchedule]);
+    const tracksList = Array.from(tracksSet).sort((a, b) => a.localeCompare(b, 'ru'));
+    const commentatorsList = Array.from(commentatorsSet).sort((a, b) => a.localeCompare(b, 'ru'));
 
-  // Все трассы (place) для фильтра по трассам
-  const tracksList = useMemo(() => {
-    const set = new Set<string>();
-    normalizedSchedule.forEach(item => {
-      if (item.place && item.place.trim() !== '') {
-        set.add(item.place);
-      }
-    });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
-  }, [normalizedSchedule]);
-
-  const ORIGINAL_COMMENT = 'Оригинальная дорожка';
-
-  // Все комментаторы (Commentator1/2 или отсутствие как "Оригинальная дорожка") для фильтра по комментаторам
-  const commentatorsList = useMemo(() => {
-    const set = new Set<string>();
-    normalizedSchedule.forEach(item => {
-      const hasComm1 = !!item.Commentator1;
-      const hasComm2 = !!item.Commentator2;
-      if (hasComm1 && item.Commentator1) set.add(item.Commentator1);
-      if (hasComm2 && item.Commentator2) set.add(item.Commentator2);
-      if (!hasComm1 && !hasComm2) set.add(ORIGINAL_COMMENT);
-    });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
+    return { seriesList, daysList, tracksList, commentatorsList };
   }, [normalizedSchedule]);
 
   // Инициализируем выбранные серии, когда данные появились
@@ -412,6 +434,10 @@ function App() {
   const selectedDayMeta = selectedDay ? dayOptions.find(d => d.date === selectedDay) : undefined;
   const menuOffsetValue = (menuHeight || 125) + (sliderVisible ? DAY_SLIDER_HEIGHT : 0);
   const scheduleContainerStyle = { '--menu-offset': `${menuOffsetValue}px` } as React.CSSProperties;
+  const maxVirtualHeight = useMemo(() => {
+    const viewportHeight = typeof window === 'undefined' ? 800 : window.innerHeight;
+    return Math.max(320, Math.round(viewportHeight * 0.7));
+  }, []);
 
   return (
     <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
@@ -490,31 +516,11 @@ function App() {
                 <DayOfWeekDisplay day={selectedDayMeta.dayName} isLightTheme={isLightTheme} />
               </Header>
             )}
-            <div className="day-rows-container">
-              {selectedDayRows.map((row, index) => {
-                const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
-                return (
-                  <ScheduleRow
-                    key={rowKey}
-                    date={row.date}
-                    time={row.time}
-                    championship={row.championship}
-                    stage={row.stage}
-                    place={row.place}
-                    session={row.session}
-                    isLightTheme={isLightTheme}
-                    showPC={parseBooleanFlag(row.PC)}
-                    tgNumbers={getTgNumbers(row)}
-                    bcuNumbers={getBcuNumbers(row)}
-                    commentator1={row.Commentator1}
-                    commentator2={row.Commentator2}
-                    optionally={row.Optionally}
-                    duration={row.Duration}
-                    liveTiming={row.LiveTiming}
-                  />
-                );
-              })}
-            </div>
+            <VirtualizedScheduleRows
+              rows={selectedDayRows}
+              isLightTheme={isLightTheme}
+              maxHeight={maxVirtualHeight}
+            />
           </div>
         )}
       </div>
