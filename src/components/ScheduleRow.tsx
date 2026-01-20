@@ -23,6 +23,7 @@ interface ScheduleRowProps {
   commentator1?: string;
   commentator2?: string;
   optionally?: string;
+  duration?: string;
   liveTiming?: string;
 }
 
@@ -40,8 +41,10 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   commentator1,
   commentator2,
   optionally,
+  duration,
   liveTiming,
 }) => {
+  const itemDuration = duration;
   const commentators = useMemo(() => {
     const filtered = [commentator1, commentator2].filter(Boolean) as string[];
     // Если оба комментатора пустые, возвращаем "Оригинальная дорожка"
@@ -66,11 +69,12 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     stage,
     place,
     session,
+    Duration: itemDuration,
     day: '', // не используется для календаря
     Commentator1: commentator1,
     Commentator2: commentator2,
     Optionally: optionally
-  }), [date, time, championship, stage, place, session, commentator1, commentator2, optionally]);
+  }), [date, time, championship, stage, place, session, itemDuration, commentator1, commentator2, optionally]);
   
   // Обработчик добавления в Google Calendar
   const handleAddToGoogleCalendar = useCallback(() => {
@@ -147,11 +151,12 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
                 type="button"
               >
                 <svg
-                  width="20"
-                  height="20"
+                  width="26"
+                  height="26"
                   viewBox="0 0 24 24"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="calendar-button__stopwatch"
                 >
                   <circle
                     cx="12"
@@ -166,12 +171,13 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
                     strokeWidth="2"
                     strokeLinecap="round"
                   />
-                  <path
-                    d="M12 13V9"
-                    stroke={isLightTheme ? '#000000' : '#FFD600'}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
+                <path
+                  d="M12 13V9"
+                  stroke={isLightTheme ? '#000000' : '#FFD600'}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  className="calendar-button__stopwatch-hand"
+                />
                 </svg>
               </button>
             )}
