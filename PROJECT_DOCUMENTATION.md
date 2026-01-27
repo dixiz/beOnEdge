@@ -12,6 +12,7 @@
 - Переключение темы (светлая/темная)
 - Переключение часового пояса (МСК / локальный)
 - Добавление событий в Google Calendar и Яндекс Календарь
+- Отображение перенесённых событий, начавшихся вчера и продолжающихся сегодня (с пометкой `с DD.MM.YY`)
 - Адаптивный дизайн
 
 ### Технологический стек:
@@ -68,13 +69,16 @@ schedule/
 9. Управляет видами:
    - `viewMode = all`: группирует по дням (`byDay`) и выводит все дни
    - `viewMode = byDay`: показывает слайдер дней (учитывает фильтры) и отображает выбранный день
-10. Вычисляет отступ контейнера расписания по высоте меню + (опционально) слайдера дней через CSS-переменную `--menu-offset`
+10. Для событий, начавшихся вчера и продолжающихся сегодня, добавляет строку в список за сегодня:
+   - отображает время окончания
+   - показывает метку `с DD.MM.YY`
+   - такие строки всегда в начале списка дня
+11. Вычисляет отступ контейнера расписания по высоте меню + (опционально) слайдера дней через CSS-переменную `--menu-offset`
 
--
-- **Связи:**
+**Связи:**
 - Использует: `constants/index.ts` (CSV_URL), `utils/csvParser.ts`, `utils/dataUtils.ts`, `utils/dateUtils.ts`, `utils/flagUtils.ts`, `utils/iconUtils.ts`
 - Рендерит: `Menu`, `DaySlider` (в `viewMode = byDay`), `Header`, `DateDisplay`, `DayOfWeekDisplay`, `ScheduleRow`
-- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`)
+- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`), `Duration`, `LiveTiming`
 
 **Мемоизация:**
 - `convertedSchedule` - конвертированное и отфильтрованное расписание
@@ -128,6 +132,8 @@ schedule/
   BCU1?, BCU2?, BCU3?: string; // Флаги для иконок телевизора (1-3)
   Commentator1?, Commentator2?: string; // Имена комментаторов
   Optionally?: string;    // Дополнительная информация
+  Duration?: string;      // Длительность (HH:MM:SS или HH:MM)
+  LiveTiming?: string;    // Ссылка на live timing или "нет"
 }
 ```
 
@@ -141,9 +147,9 @@ schedule/
 **Назначение:** Парсит CSV-текст в массив `ScheduleItem[]`.
 
 **Ожидаемый порядок колонок (заголовков):**
-`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, Commentator1, Commentator2, Optionally`
+`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, Commentator1, Commentator2, Optionally, Duration, Live Timing`
 
-- Новые колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel` опциональны: парсер загружает их в поля `ScheduleItem`, но они пока не участвуют в отображении/логике.
+- Колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel`, `Duration`, `Live Timing` опциональны: парсер загружает их в поля `ScheduleItem`, и они используются частично (Duration влияет на календари и перенос, Live Timing — на кнопку секундомера).
 - Колонка `Start` мапится в поле `time` и нормализуется.
 - Обязательные поля для валидации: `Date`, `Start`, `Championship`, `Place`, `Session`.
 
@@ -323,7 +329,7 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 - `parseScheduleDateTime(item: ScheduleItem): { startDate: Date; endDate: Date }`
   - Парсит дату и время из `ScheduleItem`
   - Создает дату начала в GMT+3
-  - Создает дату окончания (+2 часа от начала)
+  - Создает дату окончания (по `Duration`, иначе +2 часа)
 - `buildEventDescription(item: ScheduleItem): string`
   - Формирует описание события из полей `ScheduleItem`
   - Включает: этап, сессию, место, комментаторов, опциональную информацию
@@ -346,7 +352,7 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 **Логика генерации событий:**
 1. Парсит дату и время из `ScheduleItem`
 2. Создает дату начала в GMT+3
-3. Добавляет 2 часа для даты окончания
+3. Добавляет длительность из `Duration` (если есть, формат `HH:MM:SS` или `HH:MM`), иначе +2 часа
 4. Форматирует в нужный формат (URL или .ics)
 5. Для Google Calendar: открывает URL в новой вкладке
 6. Для Яндекс Календаря: скачивает .ics файл
@@ -445,6 +451,10 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 - `bcuNumbers?: number[]` - номера иконок телевизора
 - `commentator1?, commentator2?: string` - комментаторы
 - `optionally?: string` - дополнительная информация
+- `duration?: string` - длительность (используется для календарей)
+- `liveTiming?: string` - ссылка на live timing, если есть
+- `displayTime?: string` - отображаемое время (для перенесённых событий)
+- `startedLabel?: string` - метка старта (например, `с 26.01.26`)
 
 **Логика:**
 1. Нормализует время через `normalizeTime()`
@@ -456,6 +466,7 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 5. Обработчики:
    - `handleAddToGoogleCalendar()` - открывает URL Google Calendar
    - `handleAddToYandexCalendar()` - скачивает .ics файл
+   - `handleOpenLiveTiming()` - открывает ссылку из `Live Timing`
 
 **Структура рендера:**
 ```
@@ -468,9 +479,9 @@ schedule-row-wrapper
     │   ├── content-text
     │   │   ├── championship (чемпионат)
     │   │   ├── stage (этап, если есть)
-    │   │   └── place-session (место. сессия)
+    │   │   ├── place-session (место. сессия)
+    │   │   └── commentators-container (комментаторы)
     │   └── calendar-buttons (кнопки календарей)
-    ├── commentators-container (комментаторы)
     └── Optionally (важная информация, если есть)
 ```
 
@@ -479,7 +490,7 @@ schedule-row-wrapper
 - `normalizedTime` - нормализованное время
 - `formattedChampionship`, `formattedStage` - отформатированный текст
 - `scheduleItem` - объект для календарей
-- `handleAddToGoogleCalendar`, `handleAddToYandexCalendar` - обработчики
+- `handleAddToGoogleCalendar`, `handleAddToYandexCalendar`, `handleOpenLiveTiming` - обработчики
 
 **Связи:**
 - Использует: `ScheduleIcons`, `Commentator`, `Optionally`, `CalendarIcon`
