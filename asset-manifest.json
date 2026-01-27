@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/beOnEdge/static/css/main.9b653736.css",
-    "main.js": "/beOnEdge/static/js/main.ecc499ed.js",
+    "main.css": "/beOnEdge/static/css/main.8907b353.css",
+    "main.js": "/beOnEdge/static/js/main.2678f46e.js",
     "static/js/453.ad49d1db.chunk.js": "/beOnEdge/static/js/453.ad49d1db.chunk.js",
     "index.html": "/beOnEdge/index.html",
-    "main.9b653736.css.map": "/beOnEdge/static/css/main.9b653736.css.map",
-    "main.ecc499ed.js.map": "/beOnEdge/static/js/main.ecc499ed.js.map",
+    "main.8907b353.css.map": "/beOnEdge/static/css/main.8907b353.css.map",
+    "main.2678f46e.js.map": "/beOnEdge/static/js/main.2678f46e.js.map",
     "453.ad49d1db.chunk.js.map": "/beOnEdge/static/js/453.ad49d1db.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9b653736.css",
-    "static/js/main.ecc499ed.js"
+    "static/css/main.8907b353.css",
+    "static/js/main.2678f46e.js"
   ]
 }
