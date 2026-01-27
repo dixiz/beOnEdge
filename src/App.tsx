@@ -80,7 +80,7 @@ const addCarryoverItems = (items: ScheduleItem[], today: Date): DisplayScheduleI
 
     const endTimeStr = `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
     const endDateStr = formatDateShort(endDate);
-    const startLabel = `с ${formatDateShort(startDate)}`;
+    const startLabel = `с ${formatDateShort(startDate)} до`;
 
     result.unshift({
       ...item,
@@ -303,7 +303,10 @@ function App() {
   const displaySchedule = useMemo<DisplayScheduleItem[]>(() => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return addCarryoverItems(filteredSchedule, today);
+    const withCarryover = addCarryoverItems(filteredSchedule, today);
+    const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+    const yesterdayStr = formatDateShort(yesterday);
+    return withCarryover.filter(item => item.date !== yesterdayStr);
   }, [filteredSchedule]);
 
   // Даты после применения фильтров (для слайдера по дням)
