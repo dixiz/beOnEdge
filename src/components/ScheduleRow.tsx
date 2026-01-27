@@ -25,6 +25,8 @@ interface ScheduleRowProps {
   optionally?: string;
   duration?: string;
   liveTiming?: string;
+  displayTime?: string;
+  startedLabel?: string;
 }
 
 const ScheduleRow: React.FC<ScheduleRowProps> = ({
@@ -43,6 +45,8 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   optionally,
   duration,
   liveTiming,
+  displayTime,
+  startedLabel,
 }) => {
   const itemDuration = duration;
   const commentators = useMemo(() => {
@@ -56,6 +60,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   
   // Нормализуем время к формату ЧЧ:ММ
   const normalizedTime = useMemo(() => normalizeTime(time), [time]);
+  const timeLabel = displayTime ?? normalizedTime;
   
   // Форматируем чемпионат и этап
   const formattedChampionship = useMemo(() => formatChampionship(championship), [championship]);
@@ -101,8 +106,9 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   
   return (
     <div className="schedule-row-wrapper">
-      <div className="time-container">
-        <div className="time">{normalizedTime}</div>
+      <div className={`time-container ${isLightTheme ? 'time-container--light' : 'time-container--dark'}`}>
+        {startedLabel && <div className="time-started">{startedLabel}</div>}
+        <div className="time">{timeLabel}</div>
         <ScheduleIcons showPC={showPC} tgNumbers={tgNumbers} bcuNumbers={bcuNumbers} isLightTheme={isLightTheme} />
       </div>
       <div className={`content-container ${isLightTheme ? 'schedule-row--light' : 'schedule-row--dark'}`}>

@@ -16,6 +16,85 @@ import { getTgNumbers, getBcuNumbers } from './utils/iconUtils';
 import { DayOption } from './components/DaySlider';
 
 const DAY_SLIDER_HEIGHT = 76;
+ 
+
+type DisplayScheduleItem = ScheduleItem & {
+  displayTime?: string;
+  startedLabel?: string;
+  isCarryover?: boolean;
+};
+
+const parseDurationMs = (duration?: string): number => {
+  if (!duration) return 0;
+  const cleaned = duration.trim();
+  if (!cleaned) return 0;
+  const parts = cleaned.split(':').map(part => part.trim());
+  let h = 0;
+  let m = 0;
+  let s = 0;
+  if (parts.length === 3) {
+    [h, m, s] = parts.map(part => Number(part));
+  } else if (parts.length === 2) {
+    [h, m] = parts.map(part => Number(part));
+    s = 0;
+  } else {
+    return 0;
+  }
+  if ([h, m, s].some(value => Number.isNaN(value))) return 0;
+  return Math.max(0, ((h * 60 + m) * 60 + s) * 1000);
+};
+
+const getStartDate = (item: ScheduleItem): Date => {
+  const [day, month, year] = item.date.split('.');
+  const fullYear = year.length === 2 ? `20${year}` : year;
+  const [hours, minutes] = item.time.split(':');
+  return new Date(
+    `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`
+  );
+};
+
+const formatDateShort = (date: Date): string => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear()).slice(-2);
+  return `${day}.${month}.${year}`;
+};
+
+const addCarryoverItems = (items: ScheduleItem[], today: Date): DisplayScheduleItem[] => {
+  const result: DisplayScheduleItem[] = [...items];
+  const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  const yesterdayKey = `${yesterday.getFullYear()}-${yesterday.getMonth()}-${yesterday.getDate()}`;
+
+  items.forEach(item => {
+    const durationMs = parseDurationMs(item.Duration);
+    if (!durationMs) return;
+
+    const startDate = getStartDate(item);
+    const startKey = `${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}`;
+    if (startKey !== yesterdayKey) return;
+
+    const endDate = new Date(startDate.getTime() + durationMs);
+    const endKey = `${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()}`;
+    if (endKey !== todayKey) return;
+
+    const endTimeStr = `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
+    const endDateStr = formatDateShort(endDate);
+    const startLabel = `с ${formatDateShort(startDate)}`;
+
+    result.unshift({
+      ...item,
+      date: endDateStr,
+      day: getDayOfWeekFromDate(endDateStr),
+      time: endTimeStr,
+      displayTime: endTimeStr,
+      startedLabel: startLabel,
+      isCarryover: true
+    });
+  });
+
+  return result;
+};
 const DAY_SHORT_LABEL: Record<string, string> = {
   'понедельник': 'Пн',
   'вторник': 'Вт',
@@ -88,8 +167,23 @@ function App() {
       schedule = schedule.map(convertFromGMT3ToLocal);
     }
     
-    // Фильтруем: оставляем только дни, которые равны или старше текущего дня
-    return schedule.filter(item => isDateEqualOrAfterToday(item.date));
+    // Фильтруем: оставляем только дни, которые равны или старше текущего дня,
+    // а также события, начавшиеся вчера и продолжающиеся сегодня
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+    return schedule.filter(item => {
+      if (isDateEqualOrAfterToday(item.date)) return true;
+      const durationMs = parseDurationMs(item.Duration);
+      if (!durationMs) return false;
+      const startDate = getStartDate(item);
+      const startKey = `${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}`;
+      const yKey = `${yesterday.getFullYear()}-${yesterday.getMonth()}-${yesterday.getDate()}`;
+      if (startKey !== yKey) return false;
+      const endDate = new Date(startDate.getTime() + durationMs);
+      const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+      return endDateOnly >= today;
+    });
   }, [useLocalTime, originalSchedule]);
 
   const normalizeDateShort = useCallback((dateStr: string) => {
@@ -206,10 +300,16 @@ function App() {
     );
   }, [normalizedSchedule, appliedSeries, appliedDays, appliedTracks, appliedCommentators, seriesList, daysList, tracksList, commentatorsList]);
 
+  const displaySchedule = useMemo<DisplayScheduleItem[]>(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return addCarryoverItems(filteredSchedule, today);
+  }, [filteredSchedule]);
+
   // Даты после применения фильтров (для слайдера по дням)
   const filteredDaysList = useMemo(() => {
     const set = new Set<string>();
-    filteredSchedule.forEach(item => {
+    displaySchedule.forEach(item => {
       if (item.date) set.add(item.date);
     });
     return Array.from(set).sort((a, b) => {
@@ -217,7 +317,7 @@ function App() {
       const db = parseDate(b).getTime();
       return da - db;
     });
-  }, [filteredSchedule]);
+  }, [displaySchedule]);
 
   const dayOptions: DayOption[] = useMemo(() => {
     return filteredDaysList.map(date => {
@@ -248,12 +348,26 @@ function App() {
 
   // Мемоизация группировки по дням
   const byDay = useMemo(() => {
-    return groupBy(filteredSchedule, r => `${r.date}_${r.day}`);
-  }, [filteredSchedule]);
+    return groupBy(displaySchedule, r => `${r.date}_${r.day}`);
+  }, [displaySchedule]);
 
   const rowsByDate = useMemo(() => {
-    return groupBy(filteredSchedule, r => r.date);
-  }, [filteredSchedule]);
+    return groupBy(displaySchedule, r => r.date);
+  }, [displaySchedule]);
+
+  const timeToMinutes = useCallback((time: string) => {
+    const [h = '0', m = '0'] = time.split(':');
+    return Number(h) * 60 + Number(m);
+  }, []);
+
+  const sortDayRows = useCallback((rows: DisplayScheduleItem[]) => {
+    return [...rows].sort((a, b) => {
+      const aCarry = a.isCarryover ? 1 : 0;
+      const bCarry = b.isCarryover ? 1 : 0;
+      if (aCarry !== bCarry) return bCarry - aCarry;
+      return timeToMinutes(a.time) - timeToMinutes(b.time);
+    });
+  }, [timeToMinutes]);
 
   // Мемоизация обработчиков
   const handleToggleTheme = useCallback(() => {
@@ -409,6 +523,10 @@ function App() {
 
   const sliderVisible = viewMode === 'byDay' && dayOptions.length > 0;
   const selectedDayRows = selectedDay ? rowsByDate[selectedDay] || [] : [];
+  const sortedSelectedDayRows = useMemo(
+    () => sortDayRows(selectedDayRows as DisplayScheduleItem[]),
+    [selectedDayRows, sortDayRows]
+  );
   const selectedDayMeta = selectedDay ? dayOptions.find(d => d.date === selectedDay) : undefined;
   const menuOffsetValue = (menuHeight || 125) + (sliderVisible ? DAY_SLIDER_HEIGHT : 0);
   const scheduleContainerStyle = { '--menu-offset': `${menuOffsetValue}px` } as React.CSSProperties;
@@ -448,6 +566,7 @@ function App() {
         {viewMode === 'all' ? (
           Object.entries(byDay).map(([key, rows]) => {
             const [date, day] = key.split('_');
+            const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
             return (
               <div className="day-column" key={key}>
                 <Header isLightTheme={isLightTheme}>
@@ -455,7 +574,7 @@ function App() {
                   <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
                 </Header>
                 <div className="day-rows-container">
-                  {rows.map((row, index) => {
+                  {sortedRows.map((row, index) => {
                     const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
                     return (
                       <ScheduleRow
@@ -475,6 +594,8 @@ function App() {
                         optionally={row.Optionally}
                         duration={row.Duration}
                         liveTiming={row.LiveTiming}
+                        displayTime={row.displayTime}
+                        startedLabel={row.startedLabel}
                       />
                     );
                   })}
@@ -491,7 +612,7 @@ function App() {
               </Header>
             )}
             <div className="day-rows-container">
-              {selectedDayRows.map((row, index) => {
+              {sortedSelectedDayRows.map((row, index) => {
                 const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
                 return (
                   <ScheduleRow
@@ -511,6 +632,8 @@ function App() {
                     optionally={row.Optionally}
                     duration={row.Duration}
                     liveTiming={row.LiveTiming}
+                    displayTime={row.displayTime}
+                    startedLabel={row.startedLabel}
                   />
                 );
               })}
