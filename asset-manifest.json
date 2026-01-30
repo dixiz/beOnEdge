@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/beOnEdge/static/css/main.8907b353.css",
-    "main.js": "/beOnEdge/static/js/main.0ebeed0b.js",
-    "static/js/453.ad49d1db.chunk.js": "/beOnEdge/static/js/453.ad49d1db.chunk.js",
-    "index.html": "/beOnEdge/index.html",
-    "main.8907b353.css.map": "/beOnEdge/static/css/main.8907b353.css.map",
-    "main.0ebeed0b.js.map": "/beOnEdge/static/js/main.0ebeed0b.js.map",
-    "453.ad49d1db.chunk.js.map": "/beOnEdge/static/js/453.ad49d1db.chunk.js.map"
+    "main.css": "./static/css/main.8907b353.css",
+    "main.js": "./static/js/main.c9ab42ca.js",
+    "static/js/453.ad49d1db.chunk.js": "./static/js/453.ad49d1db.chunk.js",
+    "index.html": "./index.html",
+    "main.8907b353.css.map": "./static/css/main.8907b353.css.map",
+    "main.c9ab42ca.js.map": "./static/js/main.c9ab42ca.js.map",
+    "453.ad49d1db.chunk.js.map": "./static/js/453.ad49d1db.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8907b353.css",
-    "static/js/main.0ebeed0b.js"
+    "static/js/main.c9ab42ca.js"
   ]
 }
