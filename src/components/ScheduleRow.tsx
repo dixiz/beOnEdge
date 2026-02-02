@@ -25,6 +25,7 @@ interface ScheduleRowProps {
   optionally?: string;
   duration?: string;
   liveTiming?: string;
+  spotter?: string;
   displayTime?: string;
   startedLabel?: string;
 }
@@ -45,6 +46,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   optionally,
   duration,
   liveTiming,
+  spotter,
   displayTime,
   startedLabel,
 }) => {
@@ -103,6 +105,18 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     if (!liveTimingUrl) return;
     window.open(liveTimingUrl, '_blank');
   }, [liveTimingUrl]);
+
+  const spotterUrl = useMemo(() => {
+    const trimmed = spotter?.trim();
+    if (!trimmed) return null;
+    if (trimmed.toLowerCase() === 'нет') return null;
+    return trimmed;
+  }, [spotter]);
+
+  const handleOpenSpotter = useCallback(() => {
+    if (!spotterUrl) return;
+    window.open(spotterUrl, '_blank');
+  }, [spotterUrl]);
   
   return (
     <div className="schedule-row-wrapper">
@@ -110,6 +124,17 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
         {startedLabel && <div className="time-started">{startedLabel}</div>}
         <div className="time">{timeLabel}</div>
         <ScheduleIcons showPC={showPC} tgNumbers={tgNumbers} bcuNumbers={bcuNumbers} isLightTheme={isLightTheme} />
+        {spotterUrl && (
+          <button
+            className={`spotter-button ${isLightTheme ? 'spotter-button--light' : 'spotter-button--dark'}`}
+            onClick={handleOpenSpotter}
+            type="button"
+            title="Spotter"
+            aria-label="Spotter"
+          >
+            SPOTTER GUIDE
+          </button>
+        )}
       </div>
       <div className={`content-container ${isLightTheme ? 'schedule-row--light' : 'schedule-row--dark'}`}>
         <div className="content-header">

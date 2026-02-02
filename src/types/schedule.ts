@@ -23,5 +23,6 @@ export interface ScheduleItem {
   Optionally?: string; // опциональная информация
   Duration?: string; // длительность (опционально)
   LiveTiming?: string; // ссылка на live timing (опционально)
+  Spotter?: string; // ссылка на spotter (опционально)
 }
 
