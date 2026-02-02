@@ -173,6 +173,42 @@
   height: 100%;
 }
 
+.spotter-button {
+  margin-top: 6px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  width: 100%;
+  text-align: center;
+}
+
+.spotter-button--dark {
+  background: #FFD600;
+  color: #000000;
+}
+
+.spotter-button--light {
+  background: #000000;
+  color: #FFD600;
+}
+
+.spotter-button--dark:hover {
+  box-shadow: 0 0 0 2px rgba(255, 214, 0, 0.45);
+}
+
+.spotter-button--light:hover {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.45);
+}
+
+.spotter-button:active {
+  transform: scale(0.98);
+}
+
 /* Светлая тема: черный календарь с желтыми деталями */
 .calendar-button--light .calendar-icon-outline {
   stroke: #000000;

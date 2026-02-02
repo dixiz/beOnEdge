@@ -1,7 +1,7 @@
 .day-of-week-display {
   font-size: clamp(36px, 3.375vw, 42px);
   font-weight: 800;
-  margin-top: 16px;
+  margin-top: 0px;
   text-align: center;
   width: 100%;
   max-width: 100%;

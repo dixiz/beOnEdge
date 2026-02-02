@@ -28,6 +28,7 @@ const HEADER_MAP: Record<string, keyof ScheduleItem> = {
   duration: 'Duration',
   'live timing': 'LiveTiming',
   livetiming: 'LiveTiming',
+  spotter: 'Spotter',
 };
 
 // Улучшенный парсер CSV строки (обрабатывает кавычки)

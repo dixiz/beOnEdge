@@ -597,6 +597,7 @@ function App() {
                         optionally={row.Optionally}
                         duration={row.Duration}
                         liveTiming={row.LiveTiming}
+                        spotter={row.Spotter}
                         displayTime={row.displayTime}
                         startedLabel={row.startedLabel}
                       />
@@ -635,6 +636,7 @@ function App() {
                     optionally={row.Optionally}
                     duration={row.Duration}
                     liveTiming={row.LiveTiming}
+                    spotter={row.Spotter}
                     displayTime={row.displayTime}
                     startedLabel={row.startedLabel}
                   />

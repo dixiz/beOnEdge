@@ -13,6 +13,7 @@
 - Переключение часового пояса (МСК / локальный)
 - Добавление событий в Google Calendar и Яндекс Календарь
 - Отображение перенесённых событий, начавшихся вчера и продолжающихся сегодня (с пометкой `с DD.MM.YY до`), при этом вчерашний день полностью скрывается
+- Кнопка `SPOTTER GUIDE` под иконками, если заполнена колонка `Spotter`
 - Адаптивный дизайн
 
 ### Технологический стек:
@@ -79,7 +80,7 @@ schedule/
 **Связи:**
 - Использует: `constants/index.ts` (CSV_URL), `utils/csvParser.ts`, `utils/dataUtils.ts`, `utils/dateUtils.ts`, `utils/flagUtils.ts`, `utils/iconUtils.ts`
 - Рендерит: `Menu`, `DaySlider` (в `viewMode = byDay`), `Header`, `DateDisplay`, `DayOfWeekDisplay`, `ScheduleRow`
-- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`), `Duration`, `LiveTiming`
+- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`), `Duration`, `LiveTiming`, `Spotter`
 
 **Мемоизация:**
 - `convertedSchedule` - конвертированное и отфильтрованное расписание
@@ -135,6 +136,7 @@ schedule/
   Optionally?: string;    // Дополнительная информация
   Duration?: string;      // Длительность (HH:MM:SS или HH:MM)
   LiveTiming?: string;    // Ссылка на live timing или "нет"
+  Spotter?: string;       // Ссылка на spotter (опционально)
 }
 ```
 
@@ -148,9 +150,9 @@ schedule/
 **Назначение:** Парсит CSV-текст в массив `ScheduleItem[]`.
 
 **Ожидаемый порядок колонок (заголовков):**
-`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, Commentator1, Commentator2, Optionally, Duration, Live Timing`
+`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, Commentator1, Commentator2, Optionally, Duration, Live Timing, Spotter`
 
-- Колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel`, `Duration`, `Live Timing` опциональны: парсер загружает их в поля `ScheduleItem`, и они используются частично (Duration влияет на календари и перенос, Live Timing — на кнопку секундомера).
+- Колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel`, `Duration`, `Live Timing`, `Spotter` опциональны: парсер загружает их в поля `ScheduleItem`, и они используются частично (Duration влияет на календари и перенос, Live Timing — на кнопку секундомера, Spotter — на кнопку `SPOTTER GUIDE`).
 - Колонка `Start` мапится в поле `time` и нормализуется.
 - Обязательные поля для валидации: `Date`, `Start`, `Championship`, `Place`, `Session`.
 
@@ -454,6 +456,7 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 - `optionally?: string` - дополнительная информация
 - `duration?: string` - длительность (используется для календарей)
 - `liveTiming?: string` - ссылка на live timing, если есть
+- `spotter?: string` - ссылка на spotter, если есть
 - `displayTime?: string` - отображаемое время (для перенесённых событий)
 - `startedLabel?: string` - метка старта (например, `с 26.01.26`)
 
@@ -468,6 +471,7 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
    - `handleAddToGoogleCalendar()` - открывает URL Google Calendar
    - `handleAddToYandexCalendar()` - скачивает .ics файл
    - `handleOpenLiveTiming()` - открывает ссылку из `Live Timing`
+   - `handleOpenSpotter()` - открывает ссылку из `Spotter`
 
 **Структура рендера:**
 ```
@@ -475,6 +479,7 @@ schedule-row-wrapper
 ├── time-container
 │   ├── time (время)
 │   └── ScheduleIcons (иконки PC, TG, BCU)
+│   └── spotter-button (кнопка `SPOTTER GUIDE`, если `Spotter` заполнен)
 └── content-container
     ├── content-header
     │   ├── content-text
