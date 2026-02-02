@@ -530,6 +530,13 @@ function App() {
     () => sortDayRows(selectedDayRows as DisplayScheduleItem[]),
     [selectedDayRows, sortDayRows]
   );
+  const sortedDayEntries = useMemo(() => {
+    return Object.entries(byDay).sort(([aKey], [bKey]) => {
+      const [aDate] = aKey.split('_');
+      const [bDate] = bKey.split('_');
+      return parseDate(aDate).getTime() - parseDate(bDate).getTime();
+    });
+  }, [byDay]);
   const selectedDayMeta = selectedDay ? dayOptions.find(d => d.date === selectedDay) : undefined;
   const menuOffsetValue = (menuHeight || 125) + (sliderVisible ? DAY_SLIDER_HEIGHT : 0);
   const scheduleContainerStyle = { '--menu-offset': `${menuOffsetValue}px` } as React.CSSProperties;
@@ -567,7 +574,7 @@ function App() {
           <div className={`empty-message ${isLightTheme ? 'empty-message--light' : 'empty-message--dark'}`}>Упс! Ни одна гоночная серия не подходит для установленных отборов</div>
         )}
         {viewMode === 'all' ? (
-          Object.entries(byDay).map(([key, rows]) => {
+          sortedDayEntries.map(([key, rows]) => {
             const [date, day] = key.split('_');
             const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
             return (
