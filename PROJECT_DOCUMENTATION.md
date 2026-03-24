@@ -13,6 +13,7 @@
 - Переключение часового пояса (МСК / локальный)
 - Добавление событий в Google Calendar и Яндекс Календарь
 - Отображение перенесённых событий, начавшихся вчера и продолжающихся сегодня (с пометкой `с DD.MM.YY до`), при этом вчерашний день полностью скрывается
+- Поддержка иконки `R` для RuTube, если `RT` отмечен булевым флагом и заполнена колонка `RuTube`
 - Кнопка `SPOTTER GUIDE` под иконками, если заполнена колонка `Spotter`
 - Адаптивный дизайн
 
@@ -80,7 +81,7 @@ schedule/
 **Связи:**
 - Использует: `constants/index.ts` (CSV_URL), `utils/csvParser.ts`, `utils/dataUtils.ts`, `utils/dateUtils.ts`, `utils/flagUtils.ts`, `utils/iconUtils.ts`
 - Рендерит: `Menu`, `DaySlider` (в `viewMode = byDay`), `Header`, `DateDisplay`, `DayOfWeekDisplay`, `ScheduleRow`
-- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`), `Duration`, `LiveTiming`, `Spotter`
+- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`), флаг `showRT`, ссылку `RuTube`, а также `Duration`, `LiveTiming`, `Spotter`
 
 **Мемоизация:**
 - `convertedSchedule` - конвертированное и отфильтрованное расписание
@@ -132,10 +133,12 @@ schedule/
   PC?: string;            // Флаг показа иконки компьютера
   TG1?, TG2?, TG3?: string;  // Флаги для иконок Telegram (1-3)
   BCU1?, BCU2?, BCU3?: string; // Флаги для иконок телевизора (1-3)
+  RT?: string;            // Булевый флаг показа иконки RuTube
   Commentator1?, Commentator2?: string; // Имена комментаторов
   Optionally?: string;    // Дополнительная информация
   Duration?: string;      // Длительность (HH:MM:SS или HH:MM)
   LiveTiming?: string;    // Ссылка на live timing или "нет"
+  RuTube?: string;        // Ссылка для иконки RuTube
   Spotter?: string;       // Ссылка на spotter (опционально)
 }
 ```
@@ -150,9 +153,9 @@ schedule/
 **Назначение:** Парсит CSV-текст в массив `ScheduleItem[]`.
 
 **Ожидаемый порядок колонок (заголовков):**
-`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, Commentator1, Commentator2, Optionally, Duration, Live Timing, Spotter`
+`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, RT, Commentator1, Commentator2, Optionally, Duration, Live Timing, RuTube, Spotter`
 
-- Колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel`, `Duration`, `Live Timing`, `Spotter` опциональны: парсер загружает их в поля `ScheduleItem`, и они используются частично (Duration влияет на календари и перенос, Live Timing — на кнопку секундомера, Spotter — на кнопку `SPOTTER GUIDE`).
+- Колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel`, `RT`, `Duration`, `Live Timing`, `RuTube`, `Spotter` опциональны: парсер загружает их в поля `ScheduleItem`, и они используются частично (RT - булевый флаг показа иконки `R`, RuTube - ссылка для этой иконки, Duration влияет на календари и перенос, Live Timing - на кнопку секундомера, Spotter - на кнопку `SPOTTER GUIDE`).
 - Колонка `Start` мапится в поле `time` и нормализуется.
 - Обязательные поля для валидации: `Date`, `Start`, `Championship`, `Place`, `Session`.
 
@@ -452,6 +455,8 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 - `showPC?: boolean` - показывать иконку компьютера
 - `tgNumbers?: number[]` - номера иконок Telegram (например, `[1, 2]`)
 - `bcuNumbers?: number[]` - номера иконок телевизора
+- `showRT?: boolean` - показывать иконку `R`
+- `ruTube?: string` - ссылка для иконки `R`
 - `commentator1?, commentator2?: string` - комментаторы
 - `optionally?: string` - дополнительная информация
 - `duration?: string` - длительность (используется для календарей)
@@ -466,8 +471,9 @@ groupBy(schedule, r => `${r.date}_${r.day}`)
 3. Обрабатывает комментаторов:
    - Если оба пустые → показывает "Оригинальная дорожка"
    - Иначе показывает список комментаторов
-4. Создает объект `ScheduleItem` для календарей
-5. Обработчики:
+4. Передает в `ScheduleIcons` флаги `PC` / `TG` / `BCU`, а также `showRT` и ссылку `ruTube`
+5. Создает объект `ScheduleItem` для календарей
+6. Обработчики:
    - `handleAddToGoogleCalendar()` - открывает URL Google Calendar
    - `handleAddToYandexCalendar()` - скачивает .ics файл
    - `handleOpenLiveTiming()` - открывает ссылку из `Live Timing`
@@ -508,24 +514,27 @@ schedule-row-wrapper
 
 ### 18. `src/components/ScheduleIcons.tsx` - Иконки расписания
 
-**Назначение:** Отображает иконки PC, Telegram, TV с номерами.
+**Назначение:** Отображает иконки PC, Telegram, TV и RuTube.
 
 **Props:**
 - `showPC?: boolean` - показывать иконку компьютера
 - `tgNumbers?: number[]` - массив номеров Telegram (например, `[1, 2]`)
 - `bcuNumbers?: number[]` - массив номеров телевизора
+- `showRT?: boolean` - показывать иконку `R`
+- `rtLink?: string` - ссылка для иконки `R`
 - `isLightTheme?: boolean` - тема
 
 **Логика:**
-- Рендерит иконки в три ряда:
-  1. Ряд 1: иконка PC (если `showPC === true`), обернута в ссылку `https://vk.com/be_on_edge` с подсветкой фона при hover/focus на жёлтый (`#ffe44d`)
-  2. Ряд 2: иконки Telegram с номерами (если `tgNumbers.length > 0`), каждая обернута в ссылку:
-     - `1 → https://t.me/BoE_LIVE_1`
-     - `2 → https://t.me/BoE_LIVE_2`
-     - `3 → https://t.me/BoE_LIVE_3`
-     - при hover/focus фон иконки меняется на голубой (`#33a9e1`)
-  3. Ряд 3: иконки телевизора с номерами (если `bcuNumbers.length > 0`), каждая обернута в ссылку `https://bcumedia.su/` с подсветкой фона при hover/focus на оранжевый (`#ff8533`)
-- Если в ряду несколько иконок, они отображаются рядом
+- Рендерит иконки в сетке до 3 колонок
+- Иконка PC обернута в ссылку `https://vk.com/be_on_edge`
+- Иконки Telegram обернуты в ссылки:
+  - `1 → https://t.me/BoE_LIVE_1`
+  - `2 → https://t.me/BoE_LIVE_2`
+  - `3 → https://t.me/BoE_LIVE_3`
+- Иконки TV обернуты в ссылку `https://bcumedia.su/`
+- Для иконок `VK`, `TG` и `BCU` при hover/focus применяется легкий сдвиг вверх и цветная обводка в основном цвете кнопки
+- Иконка `R` показывается, если `showRT === true`; если перед ней уже есть 3 иконки, она переносится на второй ряд и центрируется
+- Если заполнена `rtLink`, иконка `R` становится ссылкой на RuTube
 - Если нет ни одной иконки, компонент не рендерится
 
 **Связи:**
