@@ -82,7 +82,7 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
                 <rect x="2" y="4" width="20" height="16" rx="3" fill={pcBg} />
                 <text
                   x="12"
-                  y="14"
+                  y="12.8"
                   textAnchor="middle"
                   fontFamily="Arial, sans-serif"
                   fontSize="14"
@@ -188,14 +188,17 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
                 />
                 <text
                   x="12"
-                  y="14.2"
+                  y="12.8"
                   textAnchor="middle"
                   fontFamily="Arial, sans-serif"
-                  fontSize="10.5"
+                  fontSize="13.5"
                   fontWeight="700"
+                  dominantBaseline="middle"
+                  lengthAdjust="spacingAndGlyphs"
+                  textLength="10.5"
                   fill="#FFFFFF"
                 >
-                  RT
+                  R
                 </text>
               </svg>
             </div>
@@ -220,14 +223,17 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
                 />
                 <text
                   x="12"
-                  y="14.2"
+                  y="12.8"
                   textAnchor="middle"
                   fontFamily="Arial, sans-serif"
-                  fontSize="10.5"
+                  fontSize="13.5"
                   fontWeight="700"
+                  dominantBaseline="middle"
+                  lengthAdjust="spacingAndGlyphs"
+                  textLength="10.5"
                   fill="#FFFFFF"
                 >
-                  RT
+                  R
                 </text>
               </svg>
             </div>
