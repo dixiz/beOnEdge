@@ -22,12 +22,14 @@ const HEADER_MAP: Record<string, keyof ScheduleItem> = {
   bcu1: 'BCU1',
   bcu2: 'BCU2',
   bcu3: 'BCU3',
+  rt: 'RT',
   commentator1: 'Commentator1',
   commentator2: 'Commentator2',
   optionally: 'Optionally',
   duration: 'Duration',
   'live timing': 'LiveTiming',
   livetiming: 'LiveTiming',
+  rutube: 'RuTube',
   spotter: 'Spotter',
 };
 
