@@ -20,6 +20,8 @@ interface ScheduleRowProps {
   showPC?: boolean;
   tgNumbers?: number[];
   bcuNumbers?: number[];
+  showRT?: boolean;
+  ruTube?: string;
   commentator1?: string;
   commentator2?: string;
   optionally?: string;
@@ -41,6 +43,8 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   showPC = false,
   tgNumbers = [],
   bcuNumbers = [],
+  showRT = false,
+  ruTube,
   commentator1,
   commentator2,
   optionally,
@@ -123,7 +127,14 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
       <div className={`time-container ${isLightTheme ? 'time-container--light' : 'time-container--dark'}`}>
         {startedLabel && <div className="time-started">{startedLabel}</div>}
         <div className="time">{timeLabel}</div>
-        <ScheduleIcons showPC={showPC} tgNumbers={tgNumbers} bcuNumbers={bcuNumbers} isLightTheme={isLightTheme} />
+        <ScheduleIcons
+          showPC={showPC}
+          tgNumbers={tgNumbers}
+          bcuNumbers={bcuNumbers}
+          showRT={showRT}
+          rtLink={ruTube}
+          isLightTheme={isLightTheme}
+        />
         {spotterUrl && (
           <button
             className={`spotter-button ${isLightTheme ? 'spotter-button--light' : 'spotter-button--dark'}`}

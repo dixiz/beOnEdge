@@ -5,6 +5,8 @@ interface ScheduleIconsProps {
   showPC?: boolean;
   tgNumbers?: number[]; // массив номеров: [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]
   bcuNumbers?: number[]; // массив номеров: [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]
+  showRT?: boolean;
+  rtLink?: string;
   isLightTheme?: boolean;
 }
 
@@ -12,6 +14,8 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
   showPC = false,
   tgNumbers = [],
   bcuNumbers = [],
+  showRT = false,
+  rtLink,
   isLightTheme = false,
 }) => {
   const iconSize = 22;
@@ -22,9 +26,20 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
   const hasPC = showPC;
   const hasTG = tgNumbers.length > 0;
   const hasBCU = bcuNumbers.length > 0;
+  const trimmedRtLink = rtLink?.trim();
+  const hasRT = showRT;
+  const hasRtLink = !!trimmedRtLink && trimmedRtLink.toLowerCase() !== 'нет';
+  const iconCount = (hasPC ? 1 : 0) + tgNumbers.length + bcuNumbers.length + (hasRT ? 1 : 0);
+  const baseIconCount = iconCount - (hasRT ? 1 : 0);
+  const rtOnNextRow = hasRT && baseIconCount >= 3;
+  const containerClassName = [
+    'icons-container',
+    iconCount === 1 ? 'icons-container--single' : '',
+    iconCount === 2 ? 'icons-container--double' : '',
+  ].filter(Boolean).join(' ');
 
   // Если ни одна иконка не должна показываться, не рендерим контейнер
-  if (!hasPC && !hasTG && !hasBCU) {
+  if (!hasPC && !hasTG && !hasBCU && !hasRT) {
     return null;
   }
 
@@ -45,7 +60,7 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
   };
 
   return (
-    <div className="icons-container">
+    <div className={containerClassName}>
       {/* Первый ряд: иконка монитора */}
       {hasPC && (
         <div className="icon-row">
@@ -147,6 +162,77 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
             </a>
           ))}
         </div>
+      )}
+
+      {hasRT && (
+        hasRtLink ? (
+          <a
+            className={`icon-link icon-link--rt ${rtOnNextRow ? 'icon-link--rt-bottom' : ''}`}
+            href={trimmedRtLink}
+            target="_blank"
+            rel="noreferrer noopener"
+            title="RuTube"
+            aria-label="RuTube"
+          >
+            <div className="icon-wrapper icon-wrapper--rt" aria-hidden="true">
+              <svg
+                width={iconSize}
+                height={iconSize}
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0.75" y="0.75" width="22.5" height="22.5" rx="5.5" fill="#1B115A" />
+                <path
+                  d="M15 0.75H17.75C20.7886 0.75 23.25 3.21143 23.25 6.25V9C19.35 9 16.2 5.5 15 0.75Z"
+                  fill="#FF164B"
+                />
+                <text
+                  x="12"
+                  y="14.2"
+                  textAnchor="middle"
+                  fontFamily="Arial, sans-serif"
+                  fontSize="10.5"
+                  fontWeight="700"
+                  fill="#FFFFFF"
+                >
+                  RT
+                </text>
+              </svg>
+            </div>
+          </a>
+        ) : (
+          <div
+            className={`icon-link icon-link--rt icon-link--rt-static ${rtOnNextRow ? 'icon-link--rt-bottom' : ''}`}
+            title="RuTube"
+            aria-label="RuTube"
+          >
+            <div className="icon-wrapper icon-wrapper--rt" aria-hidden="true">
+              <svg
+                width={iconSize}
+                height={iconSize}
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0.75" y="0.75" width="22.5" height="22.5" rx="5.5" fill="#1B115A" />
+                <path
+                  d="M15 0.75H17.75C20.7886 0.75 23.25 3.21143 23.25 6.25V9C19.35 9 16.2 5.5 15 0.75Z"
+                  fill="#FF164B"
+                />
+                <text
+                  x="12"
+                  y="14.2"
+                  textAnchor="middle"
+                  fontFamily="Arial, sans-serif"
+                  fontSize="10.5"
+                  fontWeight="700"
+                  fill="#FFFFFF"
+                >
+                  RT
+                </text>
+              </svg>
+            </div>
+          </div>
+        )
       )}
     </div>
   );

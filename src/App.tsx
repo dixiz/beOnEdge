@@ -105,6 +105,12 @@ const DAY_SHORT_LABEL: Record<string, string> = {
   'воскресенье': 'Вс'
 };
 
+const shouldShowRtIcon = (value?: string): boolean => {
+  const trimmed = value?.trim();
+  if (!trimmed) return false;
+  return parseBooleanFlag(trimmed);
+};
+
 function App() {
   const [originalSchedule, setOriginalSchedule] = useState<ScheduleItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -599,6 +605,8 @@ function App() {
                         showPC={parseBooleanFlag(row.PC)}
                         tgNumbers={getTgNumbers(row)}
                         bcuNumbers={getBcuNumbers(row)}
+                        showRT={shouldShowRtIcon(row.RT)}
+                        ruTube={row.RuTube}
                         commentator1={row.Commentator1}
                         commentator2={row.Commentator2}
                         optionally={row.Optionally}
@@ -638,6 +646,8 @@ function App() {
                     showPC={parseBooleanFlag(row.PC)}
                     tgNumbers={getTgNumbers(row)}
                     bcuNumbers={getBcuNumbers(row)}
+                    showRT={shouldShowRtIcon(row.RT)}
+                    ruTube={row.RuTube}
                     commentator1={row.Commentator1}
                     commentator2={row.Commentator2}
                     optionally={row.Optionally}

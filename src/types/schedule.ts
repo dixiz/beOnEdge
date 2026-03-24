@@ -18,11 +18,13 @@ export interface ScheduleItem {
   BCU1?: string; // флажок для иконки телевизора 1
   BCU2?: string; // флажок для иконки телевизора 2
   BCU3?: string; // флажок для иконки телевизора 3
+  RT?: string; // флаг или значение для RT
   Commentator1?: string; // первый комментатор
   Commentator2?: string; // второй комментатор
   Optionally?: string; // опциональная информация
   Duration?: string; // длительность (опционально)
   LiveTiming?: string; // ссылка на live timing (опционально)
+  RuTube?: string; // ссылка на RuTube (опционально)
   Spotter?: string; // ссылка на spotter (опционально)
 }
 
