@@ -10,8 +10,8 @@
   justify-content: center;
   flex-wrap: nowrap;
   gap: 16px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 6px;
+  padding-bottom: 0;
   z-index: 1000;
   box-sizing: border-box;
   padding-left: 16px;
@@ -21,8 +21,56 @@
 
 .menu-center {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 1px;
+}
+
+.menu-center__row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 2px;
+}
+
+.menu-center__row--primary {
+  flex-wrap: nowrap;
+}
+
+.menu-center__row--secondary {
+  width: 100%;
+}
+
+.session-scroll-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.session-scroll-toggle__label {
+  font-size: clamp(16px, 1.5vw, 18px);
+  font-weight: 700;
+}
+
+.session-scroll-toggle__label--light {
+  color: #000000;
+}
+
+.session-scroll-toggle__label--dark {
+  color: #FFD600;
+}
+
+.session-scroll-toggle__controls {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 1px;
+  min-height: 30px;
+}
+
+.session-scroll-toggle__controls .time-toggle-option {
+  min-height: 28px;
 }
 
 .menu--light {
@@ -163,6 +211,14 @@
   .menu-center {
     width: 100%;
     justify-content: center;
+  }
+
+  .menu-center__row--primary {
+    flex-wrap: wrap;
+  }
+
+  .session-scroll-toggle {
+    flex-wrap: wrap;
   }
 }
 

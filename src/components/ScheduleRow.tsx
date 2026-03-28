@@ -30,6 +30,7 @@ interface ScheduleRowProps {
   spotter?: string;
   displayTime?: string;
   startedLabel?: string;
+  timeContainerRef?: React.Ref<HTMLDivElement>;
 }
 
 const ScheduleRow: React.FC<ScheduleRowProps> = ({
@@ -53,6 +54,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   spotter,
   displayTime,
   startedLabel,
+  timeContainerRef,
 }) => {
   const itemDuration = duration;
   const commentators = useMemo(() => {
@@ -124,7 +126,10 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   
   return (
     <div className="schedule-row-wrapper">
-      <div className={`time-container ${isLightTheme ? 'time-container--light' : 'time-container--dark'}`}>
+      <div
+        ref={timeContainerRef}
+        className={`time-container ${isLightTheme ? 'time-container--light' : 'time-container--dark'}`}
+      >
         {startedLabel && <div className="time-started">{startedLabel}</div>}
         <div className="time">{timeLabel}</div>
         <ScheduleIcons

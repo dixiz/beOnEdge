@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useLayoutEffect, useRef } from 'react';
 import './App.css';
 import Header from './components/Header';
 import DateDisplay from './components/DateDisplay';
@@ -16,12 +16,33 @@ import { getTgNumbers, getBcuNumbers } from './utils/iconUtils';
 import { DayOption } from './components/DaySlider';
 
 const DAY_SLIDER_HEIGHT = 76;
+const DAY_SLIDER_OVERLAP = 4;
+const FLOATING_DAY_HEADER_HEIGHT = 34;
+const FLOATING_DAY_HEADER_GAP = 0;
+const MIN_CONTENT_SCALE = 0.4;
+const MAX_CONTENT_SCALE = 1;
+const CONTENT_SCALE_STEP = 0.05;
  
 
 type DisplayScheduleItem = ScheduleItem & {
   displayTime?: string;
   startedLabel?: string;
   isCarryover?: boolean;
+};
+
+type FloatingDayHeader = {
+  key: string;
+  date: string;
+  day: string;
+  left: number;
+  width: number;
+};
+
+type SessionScrollMode = 'all' | 'future';
+
+type RenderedRowMeta = {
+  key: string;
+  row: DisplayScheduleItem;
 };
 
 const parseDurationMs = (duration?: string): number => {
@@ -111,6 +132,31 @@ const shouldShowRtIcon = (value?: string): boolean => {
   return parseBooleanFlag(trimmed);
 };
 
+const scrollToPageTop = () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const toFullYear = (year: string) => year.length === 2 ? `20${year}` : year;
+
+const getScheduleItemDateTime = (item: ScheduleItem, useLocalTime: boolean): Date => {
+  const [day, month, year] = item.date.split('.');
+  const fullYear = toFullYear(year);
+  const [hours = '00', minutes = '00'] = item.time.split(':');
+
+  if (useLocalTime) {
+    return new Date(
+      `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`
+    );
+  }
+
+  return new Date(
+    `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00+03:00`
+  );
+};
+
+const buildRowKey = (row: DisplayScheduleItem, index: number) =>
+  `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
+
 function App() {
   const [originalSchedule, setOriginalSchedule] = useState<ScheduleItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -131,6 +177,14 @@ function App() {
   const [appliedCommentators, setAppliedCommentators] = useState<string[]>([]);
   const [tempCommentators, setTempCommentators] = useState<string[]>([]);
   const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks' | 'commentators'>('series');
+  const [contentScale, setContentScale] = useState(1);
+  const [sessionScrollMode, setSessionScrollMode] = useState<SessionScrollMode>('all');
+  const [zoomControlsHeight, setZoomControlsHeight] = useState(0);
+  const [floatingDayHeaders, setFloatingDayHeaders] = useState<FloatingDayHeader[]>([]);
+  const zoomControlsRef = useRef<HTMLDivElement | null>(null);
+  const dayColumnRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const dayHeaderRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const rowAnchorRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     setLoading(true);
@@ -397,6 +451,23 @@ function App() {
 
   const showMenu = !loading && !error && originalSchedule.length > 0;
 
+  useLayoutEffect(() => {
+    const el = zoomControlsRef.current;
+
+    if (!showMenu || !el) {
+      setZoomControlsHeight(0);
+      return;
+    }
+
+    const update = () => setZoomControlsHeight(el.getBoundingClientRect().height);
+    update();
+
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+
+    return () => ro.disconnect();
+  }, [showMenu]);
+
   const handleOpenFilter = useCallback(() => {
     // Если фильтр не активен (в расписании все серии/дни/трассы/комментаторы) — открываем с пустыми чекбоксами
     const isAllSeries = appliedSeries.length === seriesList.length;
@@ -515,6 +586,7 @@ function App() {
     setAppliedCommentators(nextCommentators);
     setFilterError(null);
     setIsFilterOpen(false);
+    scrollToPageTop();
   }, [tempSeries, tempDays, tempTracks, tempCommentators, daysList, seriesList, tracksList, commentatorsList]);
 
   const handleResetFilter = useCallback(() => {
@@ -528,7 +600,20 @@ function App() {
     setTempCommentators([]);
     setFilterError(null);
     setIsFilterOpen(false);
+    scrollToPageTop();
   }, [seriesList, daysList, tracksList, commentatorsList]);
+
+  const handleZoomIn = useCallback(() => {
+    setContentScale(prev => Math.min(MAX_CONTENT_SCALE, Number((prev + CONTENT_SCALE_STEP).toFixed(2))));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setContentScale(prev => Math.max(MIN_CONTENT_SCALE, Number((prev - CONTENT_SCALE_STEP).toFixed(2))));
+  }, []);
+
+  const handleZoomReset = useCallback(() => {
+    setContentScale(1);
+  }, []);
 
   const sliderVisible = viewMode === 'byDay' && dayOptions.length > 0;
   const selectedDayRows = selectedDay ? rowsByDate[selectedDay] || [] : [];
@@ -543,12 +628,135 @@ function App() {
       return parseDate(aDate).getTime() - parseDate(bDate).getTime();
     });
   }, [byDay]);
+  const renderedRows = useMemo<RenderedRowMeta[]>(() => {
+    if (viewMode === 'all') {
+      return sortedDayEntries.flatMap(([, rows]) => {
+        const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
+        return sortedRows.map((row, index) => ({
+          key: buildRowKey(row, index),
+          row
+        }));
+      });
+    }
+
+    return sortedSelectedDayRows.map((row, index) => ({
+      key: buildRowKey(row, index),
+      row
+    }));
+  }, [viewMode, sortedDayEntries, sortedSelectedDayRows, sortDayRows]);
   const selectedDayMeta = selectedDay ? dayOptions.find(d => d.date === selectedDay) : undefined;
-  const menuOffsetValue = (menuHeight || 125) + (sliderVisible ? DAY_SLIDER_HEIGHT : 0);
+  const scaledDaySliderHeight = sliderVisible ? DAY_SLIDER_HEIGHT : 0;
+  const sliderTopOffset = Math.max(0, menuHeight - (sliderVisible ? DAY_SLIDER_OVERLAP : 0));
+  const menuOffsetValue = (menuHeight || 125) + scaledDaySliderHeight - (sliderVisible ? DAY_SLIDER_OVERLAP : 0);
+  const floatingDayHeaderTop = menuHeight + FLOATING_DAY_HEADER_GAP;
   const scheduleContainerStyle = { '--menu-offset': `${menuOffsetValue}px` } as React.CSSProperties;
+  const scheduleContentStyle = { zoom: contentScale } as React.CSSProperties;
+  const appContainerStyle = { '--zoom-controls-offset': `${showMenu ? zoomControlsHeight + 24 : 0}px` } as React.CSSProperties;
+
+  const scrollToFutureSession = useCallback(() => {
+    const now = new Date();
+    const nextFutureRow = renderedRows.find(({ row }) => getScheduleItemDateTime(row, useLocalTime).getTime() > now.getTime());
+
+    if (!nextFutureRow) return;
+
+    const anchorEl = rowAnchorRefs.current[nextFutureRow.key];
+    if (!anchorEl) return;
+
+    const extraOffset = viewMode === 'all' ? FLOATING_DAY_HEADER_HEIGHT : 0;
+    const targetTop = anchorEl.getBoundingClientRect().top + window.scrollY - menuOffsetValue - extraOffset - 8;
+    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+  }, [renderedRows, useLocalTime, viewMode, menuOffsetValue]);
+
+  const handleToggleSessionScrollMode = useCallback((mode: SessionScrollMode) => {
+    setSessionScrollMode(mode);
+
+    if (mode === 'all') {
+      scrollToPageTop();
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      scrollToFutureSession();
+    });
+  }, [scrollToFutureSession]);
+
+  const updateFloatingDayHeaders = useCallback(() => {
+    if (!showMenu || viewMode !== 'all') {
+      setFloatingDayHeaders([]);
+      return;
+    }
+
+    const nextHeaders: FloatingDayHeader[] = [];
+
+    sortedDayEntries.forEach(([key]) => {
+      const columnEl = dayColumnRefs.current[key];
+      const headerEl = dayHeaderRefs.current[key];
+
+      if (!columnEl || !headerEl) return;
+
+      const columnRect = columnEl.getBoundingClientRect();
+      const headerRect = headerEl.getBoundingClientRect();
+      const isHorizontallyVisible = columnRect.right > 0 && columnRect.left < window.innerWidth;
+      const hasScrolledUnderMenu = headerRect.bottom <= menuHeight;
+      const hasVisibleRowsLeft = columnRect.bottom > floatingDayHeaderTop + FLOATING_DAY_HEADER_HEIGHT;
+
+      if (!isHorizontallyVisible || !hasScrolledUnderMenu || !hasVisibleRowsLeft) return;
+
+      const left = Math.max(8, columnRect.left);
+      const right = Math.min(window.innerWidth - 8, columnRect.right);
+      const width = Math.max(0, right - left);
+
+      if (width <= 0) return;
+
+      const [date, day] = key.split('_');
+      nextHeaders.push({ key, date, day, left, width });
+    });
+
+    setFloatingDayHeaders(prev => {
+      if (
+        prev.length === nextHeaders.length &&
+        prev.every((item, index) => {
+          const next = nextHeaders[index];
+          return (
+            item.key === next.key &&
+            item.date === next.date &&
+            item.day === next.day &&
+            Math.abs(item.left - next.left) < 0.5 &&
+            Math.abs(item.width - next.width) < 0.5
+          );
+        })
+      ) {
+        return prev;
+      }
+
+      return nextHeaders;
+    });
+  }, [showMenu, viewMode, sortedDayEntries, floatingDayHeaderTop, contentScale]);
+
+  useEffect(() => {
+    updateFloatingDayHeaders();
+
+    let rafId = 0;
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(rafId);
+      rafId = window.requestAnimationFrame(updateFloatingDayHeaders);
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', scheduleUpdate);
+      window.removeEventListener('resize', scheduleUpdate);
+    };
+  }, [updateFloatingDayHeaders]);
 
   return (
-    <div className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}>
+    <div
+      className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}
+      style={appContainerStyle}
+    >
       {showMenu && (
         <Menu
           isLightTheme={isLightTheme}
@@ -557,9 +765,48 @@ function App() {
           onToggleTime={handleToggleTime}
           viewMode={viewMode}
           onToggleViewMode={handleToggleViewMode}
+          sessionScrollMode={sessionScrollMode}
+          onToggleSessionScrollMode={handleToggleSessionScrollMode}
           onHeightChange={handleMenuHeightChange}
           onOpenFilter={handleOpenFilter}
         />
+      )}
+      {showMenu && (
+        <div
+          ref={zoomControlsRef}
+          className={`zoom-controls ${isLightTheme ? 'zoom-controls--light' : 'zoom-controls--dark'}`}
+        >
+          <button
+            type="button"
+            className="zoom-controls__button"
+            onClick={handleZoomOut}
+            disabled={contentScale <= MIN_CONTENT_SCALE}
+            aria-label="Уменьшить масштаб"
+            title="Уменьшить масштаб"
+          >
+            -
+          </button>
+          <button
+            type="button"
+            className="zoom-controls__button zoom-controls__button--reset"
+            onClick={handleZoomReset}
+            disabled={contentScale === 1}
+            aria-label="Сбросить масштаб до 100%"
+            title="100%"
+          >
+            100%
+          </button>
+          <button
+            type="button"
+            className="zoom-controls__button"
+            onClick={handleZoomIn}
+            disabled={contentScale >= MAX_CONTENT_SCALE}
+            aria-label="Увеличить масштаб"
+            title="Увеличить масштаб"
+          >
+            +
+          </button>
+        </div>
       )}
       {showMenu && sliderVisible && (
         <DaySlider
@@ -567,101 +814,130 @@ function App() {
           selectedDate={selectedDay}
           onSelect={setSelectedDay}
           isLightTheme={isLightTheme}
-          topOffset={menuHeight}
+          topOffset={sliderTopOffset}
         />
       )}
+      {floatingDayHeaders.map(({ key, date, day, left, width }) => (
+        <div
+          key={key}
+          className={`floating-day-header ${isLightTheme ? 'floating-day-header--light' : 'floating-day-header--dark'}`}
+          style={{ top: `${floatingDayHeaderTop}px`, left: `${left}px`, width: `${width}px` }}
+        >
+          <span className="floating-day-header__date">{date}</span>
+        </div>
+      ))}
       <div
         className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}
         style={scheduleContainerStyle}
       >
-        {loading && <div className={`loading-message ${isLightTheme ? 'loading-message--light' : 'loading-message--dark'}`}>BE ON EDGE IS COMING</div>}
-        {error && <div className="error-message">{error}</div>}
-        {!loading && !error && filteredSchedule.length === 0 && (
-          <div className={`empty-message ${isLightTheme ? 'empty-message--light' : 'empty-message--dark'}`}>Упс! Ни одна гоночная серия не подходит для установленных отборов</div>
-        )}
-        {viewMode === 'all' ? (
-          sortedDayEntries.map(([key, rows]) => {
-            const [date, day] = key.split('_');
-            const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
-            return (
-              <div className="day-column" key={key}>
-                <Header isLightTheme={isLightTheme}>
-                  <DateDisplay date={date} isLightTheme={isLightTheme} />
-                  <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
-                </Header>
-                <div className="day-rows-container">
-                  {sortedRows.map((row, index) => {
-                    const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
-                    return (
-                      <ScheduleRow
-                        key={rowKey}
-                        date={row.date}
-                        time={row.time}
-                        championship={row.championship}
-                        stage={row.stage}
-                        place={row.place}
-                        session={row.session}
-                        isLightTheme={isLightTheme}
-                        showPC={parseBooleanFlag(row.PC)}
-                        tgNumbers={getTgNumbers(row)}
-                        bcuNumbers={getBcuNumbers(row)}
-                        showRT={shouldShowRtIcon(row.RT)}
-                        ruTube={row.RuTube}
-                        commentator1={row.Commentator1}
-                        commentator2={row.Commentator2}
-                        optionally={row.Optionally}
-                        duration={row.Duration}
-                        liveTiming={row.LiveTiming}
-                        spotter={row.Spotter}
-                        displayTime={row.displayTime}
-                        startedLabel={row.startedLabel}
-                      />
-                    );
-                  })}
+        <div className="schedule-content-zoom" style={scheduleContentStyle}>
+          {loading && <div className={`loading-message ${isLightTheme ? 'loading-message--light' : 'loading-message--dark'}`}>BE ON EDGE IS COMING</div>}
+          {error && <div className="error-message">{error}</div>}
+          {!loading && !error && filteredSchedule.length === 0 && (
+            <div className={`empty-message ${isLightTheme ? 'empty-message--light' : 'empty-message--dark'}`}>Упс! Ни одна гоночная серия не подходит для установленных отборов</div>
+          )}
+          {viewMode === 'all' ? (
+            sortedDayEntries.map(([key, rows]) => {
+              const [date, day] = key.split('_');
+              const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
+              return (
+                <div
+                  className="day-column"
+                  key={key}
+                  ref={el => {
+                    dayColumnRefs.current[key] = el;
+                  }}
+                >
+                  <div
+                    ref={el => {
+                      dayHeaderRefs.current[key] = el;
+                    }}
+                  >
+                    <Header isLightTheme={isLightTheme}>
+                      <DateDisplay date={date} isLightTheme={isLightTheme} />
+                      <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
+                    </Header>
+                  </div>
+                  <div className="day-rows-container">
+                    {sortedRows.map((row, index) => {
+                      const rowKey = buildRowKey(row, index);
+                      return (
+                        <ScheduleRow
+                          key={rowKey}
+                          date={row.date}
+                          time={row.time}
+                          championship={row.championship}
+                          stage={row.stage}
+                          place={row.place}
+                          session={row.session}
+                          isLightTheme={isLightTheme}
+                          showPC={parseBooleanFlag(row.PC)}
+                          tgNumbers={getTgNumbers(row)}
+                          bcuNumbers={getBcuNumbers(row)}
+                          showRT={shouldShowRtIcon(row.RT)}
+                          ruTube={row.RuTube}
+                          commentator1={row.Commentator1}
+                          commentator2={row.Commentator2}
+                          optionally={row.Optionally}
+                          duration={row.Duration}
+                          liveTiming={row.LiveTiming}
+                          spotter={row.Spotter}
+                          displayTime={row.displayTime}
+                          startedLabel={row.startedLabel}
+                          timeContainerRef={el => {
+                            rowAnchorRefs.current[rowKey] = el;
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
+              );
+            })
+          ) : (
+            <div className="day-column">
+              {selectedDayMeta && (
+                <Header isLightTheme={isLightTheme}>
+                  <DateDisplay date={selectedDayMeta.date} isLightTheme={isLightTheme} />
+                  <DayOfWeekDisplay day={selectedDayMeta.dayName} isLightTheme={isLightTheme} />
+                </Header>
+              )}
+              <div className="day-rows-container">
+                {sortedSelectedDayRows.map((row, index) => {
+                  const rowKey = buildRowKey(row, index);
+                  return (
+                    <ScheduleRow
+                      key={rowKey}
+                      date={row.date}
+                      time={row.time}
+                      championship={row.championship}
+                      stage={row.stage}
+                      place={row.place}
+                      session={row.session}
+                      isLightTheme={isLightTheme}
+                      showPC={parseBooleanFlag(row.PC)}
+                      tgNumbers={getTgNumbers(row)}
+                      bcuNumbers={getBcuNumbers(row)}
+                      showRT={shouldShowRtIcon(row.RT)}
+                      ruTube={row.RuTube}
+                      commentator1={row.Commentator1}
+                      commentator2={row.Commentator2}
+                      optionally={row.Optionally}
+                      duration={row.Duration}
+                      liveTiming={row.LiveTiming}
+                      spotter={row.Spotter}
+                      displayTime={row.displayTime}
+                      startedLabel={row.startedLabel}
+                      timeContainerRef={el => {
+                        rowAnchorRefs.current[rowKey] = el;
+                      }}
+                    />
+                  );
+                })}
               </div>
-            );
-          })
-        ) : (
-          <div className="day-column">
-            {selectedDayMeta && (
-              <Header isLightTheme={isLightTheme}>
-                <DateDisplay date={selectedDayMeta.date} isLightTheme={isLightTheme} />
-                <DayOfWeekDisplay day={selectedDayMeta.dayName} isLightTheme={isLightTheme} />
-              </Header>
-            )}
-            <div className="day-rows-container">
-              {sortedSelectedDayRows.map((row, index) => {
-                const rowKey = `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
-                return (
-                  <ScheduleRow
-                    key={rowKey}
-                    date={row.date}
-                    time={row.time}
-                    championship={row.championship}
-                    stage={row.stage}
-                    place={row.place}
-                    session={row.session}
-                    isLightTheme={isLightTheme}
-                    showPC={parseBooleanFlag(row.PC)}
-                    tgNumbers={getTgNumbers(row)}
-                    bcuNumbers={getBcuNumbers(row)}
-                    showRT={shouldShowRtIcon(row.RT)}
-                    ruTube={row.RuTube}
-                    commentator1={row.Commentator1}
-                    commentator2={row.Commentator2}
-                    optionally={row.Optionally}
-                    duration={row.Duration}
-                    liveTiming={row.LiveTiming}
-                    spotter={row.Spotter}
-                    displayTime={row.displayTime}
-                    startedLabel={row.startedLabel}
-                  />
-                );
-              })}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
       {isFilterOpen && (
         <div className="filter-overlay">
