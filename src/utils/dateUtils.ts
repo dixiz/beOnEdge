@@ -6,9 +6,12 @@ import { normalizeTime } from './timeUtils';
  * Парсит дату из формата DD.MM.YY или DD.MM.YYYY в объект Date
  */
 export function parseDate(dateStr: string): Date {
-  const [day, month, year] = dateStr.split('.');
-  const fullYear = year.length === 2 ? '20' + year : year;
-  return new Date(`${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T12:00:00`);
+  const [dayRaw, monthRaw, yearRaw] = (dateStr ?? '').split('.');
+  if (!dayRaw || !monthRaw || !yearRaw) return new Date(NaN);
+  const fullYear = yearRaw.length === 2 ? '20' + yearRaw : yearRaw;
+  const day = dayRaw.padStart(2, '0');
+  const month = monthRaw.padStart(2, '0');
+  return new Date(`${fullYear}-${month}-${day}T12:00:00`);
 }
 
 /**

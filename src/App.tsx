@@ -66,12 +66,18 @@ const parseDurationMs = (duration?: string): number => {
 };
 
 const getStartDate = (item: ScheduleItem): Date => {
-  const [day, month, year] = item.date.split('.');
-  const fullYear = year.length === 2 ? `20${year}` : year;
-  const [hours, minutes] = item.time.split(':');
-  return new Date(
-    `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`
-  );
+  const [dayRaw, monthRaw, yearRaw] = (item.date ?? '').split('.');
+  const [hoursRaw, minutesRaw] = (item.time ?? '').split(':');
+
+  if (!dayRaw || !monthRaw || !yearRaw || !hoursRaw || !minutesRaw) return new Date(NaN);
+
+  const fullYear = yearRaw.length === 2 ? `20${yearRaw}` : yearRaw;
+  const day = dayRaw.padStart(2, '0');
+  const month = monthRaw.padStart(2, '0');
+  const hours = hoursRaw.padStart(2, '0');
+  const minutes = minutesRaw.padStart(2, '0');
+
+  return new Date(`${fullYear}-${month}-${day}T${hours}:${minutes}:00`);
 };
 
 const formatDateShort = (date: Date): string => {
@@ -92,6 +98,7 @@ const addCarryoverItems = (items: ScheduleItem[], today: Date): DisplayScheduleI
     if (!durationMs) return;
 
     const startDate = getStartDate(item);
+    if (Number.isNaN(startDate.getTime())) return;
     const startKey = `${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}`;
     if (startKey !== yesterdayKey) return;
 
@@ -139,18 +146,25 @@ const scrollToPageTop = () => {
 const toFullYear = (year: string) => year.length === 2 ? `20${year}` : year;
 
 const getScheduleItemDateTime = (item: ScheduleItem, useLocalTime: boolean): Date => {
-  const [day, month, year] = item.date.split('.');
-  const fullYear = toFullYear(year);
-  const [hours = '00', minutes = '00'] = item.time.split(':');
+  const [dayRaw, monthRaw, yearRaw] = (item.date ?? '').split('.');
+  const [hoursRaw = '00', minutesRaw = '00'] = (item.time ?? '').split(':');
+
+  if (!dayRaw || !monthRaw || !yearRaw) return new Date(NaN);
+
+  const day = dayRaw.padStart(2, '0');
+  const month = monthRaw.padStart(2, '0');
+  const fullYear = toFullYear(yearRaw);
+  const hours = hoursRaw.padStart(2, '0');
+  const minutes = minutesRaw.padStart(2, '0');
 
   if (useLocalTime) {
     return new Date(
-      `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00`
+      `${fullYear}-${month}-${day}T${hours}:${minutes}:00`
     );
   }
 
   return new Date(
-    `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00+03:00`
+    `${fullYear}-${month}-${day}T${hours}:${minutes}:00+03:00`
   );
 };
 
