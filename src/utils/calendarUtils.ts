@@ -18,15 +18,27 @@ function formatDateForCalendar(date: Date): string {
  */
 function parseScheduleDateTime(item: ScheduleItem): { startDate: Date; endDate: Date } {
   // Парсим дату из формата DD.MM.YY или DD.MM.YYYY
-  const [day, month, year] = item.date.split('.');
+  const [dayRaw, monthRaw, yearRaw] = (item.date ?? '').split('.');
+  if (!dayRaw || !monthRaw || !yearRaw) {
+    const invalid = new Date(NaN);
+    return { startDate: invalid, endDate: invalid };
+  }
   // Определяем формат: если год имеет 2 символа - старый формат (YY), если 4 - новый (YYYY)
-  const fullYear = year.length === 2 ? '20' + year : year;
+  const fullYear = yearRaw.length === 2 ? '20' + yearRaw : yearRaw;
+  const day = dayRaw.padStart(2, '0');
+  const month = monthRaw.padStart(2, '0');
   
   // Парсим время из формата HH:MM
-  const [hours, minutes] = item.time.split(':');
+  const [hoursRaw, minutesRaw] = (item.time ?? '').split(':');
+  if (!hoursRaw || !minutesRaw) {
+    const invalid = new Date(NaN);
+    return { startDate: invalid, endDate: invalid };
+  }
+  const hours = hoursRaw.padStart(2, '0');
+  const minutes = minutesRaw.padStart(2, '0');
   
   // Создаем дату начала (в GMT+3, как указано в данных)
-  const startDate = new Date(`${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:00+03:00`);
+  const startDate = new Date(`${fullYear}-${month}-${day}T${hours}:${minutes}:00+03:00`);
   
   const parseDurationMs = (duration?: string): number => {
     if (!duration) return 0;
