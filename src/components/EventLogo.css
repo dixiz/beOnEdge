@@ -1,0 +1,78 @@
+.event-logo {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 6px;
+  max-width: min(560px, 100%);
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+  padding-bottom: 2px;
+  box-sizing: border-box;
+}
+
+.event-logo__media {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  justify-self: stretch;
+  min-width: 0;
+}
+
+.event-logo__img {
+  width: clamp(100px, 34vw, 280px);
+  max-width: 100%;
+  height: auto;
+  max-height: 72px;
+  object-fit: contain;
+  object-position: right center;
+  display: block;
+  margin-left: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.event-logo__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1.05;
+  opacity: 1;
+  transition: opacity 650ms ease;
+  justify-self: start;
+  text-align: left;
+  min-width: 0;
+}
+
+.event-logo__text--fade {
+  opacity: 0;
+}
+
+.event-logo--light .event-logo__text {
+  color: #000000;
+}
+
+.event-logo--dark .event-logo__text {
+  color: #FFD600;
+}
+
+.event-logo__line1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-logo__line2 {
+  margin-top: 2px;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
