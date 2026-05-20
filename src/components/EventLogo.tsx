@@ -53,12 +53,16 @@ const EventLogo: React.FC<EventLogoProps> = ({ alt = 'Indy 500', isLightTheme = 
 
   if (!isVisible) return null;
 
+  const isCompact = index === 1;
+
   return (
     <div className={`event-logo ${isLightTheme ? 'event-logo--light' : 'event-logo--dark'}`} aria-hidden="true">
       <div className="event-logo__media">
         <img className="event-logo__img" src={indy500Logo} alt={alt} />
       </div>
-      <div className={`event-logo__text ${isFading ? 'event-logo__text--fade' : ''}`}>
+      <div
+        className={`event-logo__text ${isCompact ? 'event-logo__text--compact' : ''} ${isFading ? 'event-logo__text--fade' : ''}`}
+      >
         <div className="event-logo__line1">{messages[index].line1}</div>
         <div className="event-logo__line2">{messages[index].line2}</div>
       </div>
