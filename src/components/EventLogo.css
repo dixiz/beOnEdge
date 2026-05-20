@@ -58,7 +58,7 @@
 }
 
 .event-logo__line1 {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 800;
   letter-spacing: 0.2px;
   white-space: nowrap;
@@ -74,5 +74,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.event-logo__text--compact .event-logo__line1,
+.event-logo__text--compact .event-logo__line2 {
+  font-size: 22px;
 }
 
