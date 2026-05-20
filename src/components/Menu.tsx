@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useRef } from 'react';
 import './Menu.css';
 import DonationButtons from './DonationButtons';
+import EventLogo from './EventLogo';
 
 interface MenuProps {
   isLightTheme?: boolean;
@@ -170,6 +171,7 @@ const Menu: React.FC<MenuProps> = ({
             </div>
           </div>
         )}
+        <EventLogo isLightTheme={isLightTheme} />
       </div>
     </div>
   );
