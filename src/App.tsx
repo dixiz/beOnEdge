@@ -781,7 +781,7 @@ function App() {
   }, [viewMode, selectedDay, dayOptions]);
 
   const handleScheduleTouchStart = useCallback((event: React.TouchEvent<HTMLDivElement>) => {
-    if (viewMode !== 'byDay') return;
+    if (viewMode !== 'byDay' || window.innerWidth > 720) return;
 
     const touch = event.touches[0];
     if (!touch) return;
@@ -793,7 +793,7 @@ function App() {
   }, [viewMode]);
 
   const handleScheduleTouchEnd = useCallback((event: React.TouchEvent<HTMLDivElement>) => {
-    if (viewMode !== 'byDay' || !touchStartRef.current) return;
+    if (viewMode !== 'byDay' || window.innerWidth > 720 || !touchStartRef.current) return;
 
     const touch = event.changedTouches[0];
     if (!touch) return;
@@ -808,6 +808,10 @@ function App() {
 
     selectAdjacentDay(deltaX < 0 ? 1 : -1);
   }, [viewMode, selectAdjacentDay]);
+
+  const handleScheduleTouchCancel = useCallback(() => {
+    touchStartRef.current = null;
+  }, []);
 
   const scrollToFutureSession = useCallback(() => {
     const now = new Date();
@@ -912,6 +916,9 @@ function App() {
     <div
       className={`app-container ${isLightTheme ? 'app-container--light' : 'app-container--dark'}`}
       style={appContainerStyle}
+      onTouchStart={handleScheduleTouchStart}
+      onTouchEnd={handleScheduleTouchEnd}
+      onTouchCancel={handleScheduleTouchCancel}
     >
       {showMenu && (
         <Menu
@@ -987,8 +994,6 @@ function App() {
       <div
         className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}
         style={scheduleContainerStyle}
-        onTouchStart={handleScheduleTouchStart}
-        onTouchEnd={handleScheduleTouchEnd}
       >
         <div className="schedule-content-zoom" style={scheduleContentStyle}>
           {loading && <div className={`loading-message ${isLightTheme ? 'loading-message--light' : 'loading-message--dark'}`}>BE ON EDGE IS COMING</div>}
