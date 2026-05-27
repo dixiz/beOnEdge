@@ -205,6 +205,7 @@ function App() {
   const dayColumnRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const dayHeaderRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const rowAnchorRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -767,6 +768,47 @@ function App() {
   const scheduleContentStyle = { zoom: contentScale } as React.CSSProperties;
   const appContainerStyle = { '--zoom-controls-offset': `${showMenu ? zoomControlsHeight + 24 : 0}px` } as React.CSSProperties;
 
+  const selectAdjacentDay = useCallback((direction: 1 | -1) => {
+    if (viewMode !== 'byDay' || !selectedDay || dayOptions.length <= 1) return;
+
+    const currentIndex = dayOptions.findIndex(day => day.date === selectedDay);
+    if (currentIndex < 0) return;
+
+    const nextIndex = currentIndex + direction;
+    if (nextIndex < 0 || nextIndex >= dayOptions.length) return;
+
+    setSelectedDay(dayOptions[nextIndex].date);
+  }, [viewMode, selectedDay, dayOptions]);
+
+  const handleScheduleTouchStart = useCallback((event: React.TouchEvent<HTMLDivElement>) => {
+    if (viewMode !== 'byDay') return;
+
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    touchStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY
+    };
+  }, [viewMode]);
+
+  const handleScheduleTouchEnd = useCallback((event: React.TouchEvent<HTMLDivElement>) => {
+    if (viewMode !== 'byDay' || !touchStartRef.current) return;
+
+    const touch = event.changedTouches[0];
+    if (!touch) return;
+
+    const deltaX = touch.clientX - touchStartRef.current.x;
+    const deltaY = touch.clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    const minSwipeDistance = 50;
+    const isHorizontalSwipe = Math.abs(deltaX) > minSwipeDistance && Math.abs(deltaX) > Math.abs(deltaY) * 1.4;
+    if (!isHorizontalSwipe) return;
+
+    selectAdjacentDay(deltaX < 0 ? 1 : -1);
+  }, [viewMode, selectAdjacentDay]);
+
   const scrollToFutureSession = useCallback(() => {
     const now = new Date();
     const nextFutureRow = renderedRows.find(({ row }) => getScheduleItemDateTime(row, useLocalTime).getTime() > now.getTime());
@@ -945,6 +987,8 @@ function App() {
       <div
         className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}
         style={scheduleContainerStyle}
+        onTouchStart={handleScheduleTouchStart}
+        onTouchEnd={handleScheduleTouchEnd}
       >
         <div className="schedule-content-zoom" style={scheduleContentStyle}>
           {loading && <div className={`loading-message ${isLightTheme ? 'loading-message--light' : 'loading-message--dark'}`}>BE ON EDGE IS COMING</div>}

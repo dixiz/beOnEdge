@@ -4,7 +4,7 @@
   gap: 8px;
   margin-top: 0;
   padding: 4px 8px 4px 5px;
-  border-radius: 999px;
+  border-radius: var(--event-card-radius, 18px);
   background: rgba(255, 214, 0, 0.12);
   width: fit-content;
   max-width: 100%;
