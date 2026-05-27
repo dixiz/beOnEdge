@@ -18,7 +18,6 @@ import { DayOption } from './components/DaySlider';
 const DAY_SLIDER_HEIGHT = 76;
 const DAY_SLIDER_OVERLAP = 4;
 const FLOATING_DAY_HEADER_HEIGHT = 34;
-const FLOATING_DAY_HEADER_GAP = 0;
 const MIN_CONTENT_SCALE = 0.4;
 const MAX_CONTENT_SCALE = 1;
 const CONTENT_SCALE_STEP = 0.05;
@@ -36,6 +35,13 @@ type FloatingDayHeader = {
   day: string;
   left: number;
   width: number;
+};
+
+type ActiveFilterChip = {
+  key: string;
+  label: string;
+  type: 'series' | 'days' | 'tracks' | 'commentators';
+  value: string;
 };
 
 type SessionScrollMode = 'all' | 'future';
@@ -320,6 +326,69 @@ function App() {
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
   }, [normalizedSchedule]);
+
+  const activeFilterLabels = useMemo<ActiveFilterChip[]>(() => {
+    const labels: ActiveFilterChip[] = [];
+
+    if (seriesList.length > 0 && appliedSeries.length > 0 && appliedSeries.length < seriesList.length) {
+      appliedSeries.forEach(series => {
+        labels.push({
+          key: `series-${series}`,
+          label: series,
+          type: 'series',
+          value: series
+        });
+      });
+    }
+
+    if (daysList.length > 0 && appliedDays.length > 0 && appliedDays.length < daysList.length) {
+      appliedDays.forEach(day => {
+        labels.push({
+          key: `days-${day}`,
+          label: `${day.slice(0, 2)}.${day.slice(3, 5)}.${day.slice(-2)}, ${getDayOfWeekFromDate(day)}`,
+          type: 'days',
+          value: day
+        });
+      });
+    }
+
+    if (tracksList.length > 0 && appliedTracks.length > 0 && appliedTracks.length < tracksList.length) {
+      appliedTracks.forEach(track => {
+        labels.push({
+          key: `tracks-${track}`,
+          label: track,
+          type: 'tracks',
+          value: track
+        });
+      });
+    }
+
+    if (
+      commentatorsList.length > 0 &&
+      appliedCommentators.length > 0 &&
+      appliedCommentators.length < commentatorsList.length
+    ) {
+      appliedCommentators.forEach(commentator => {
+        labels.push({
+          key: `commentators-${commentator}`,
+          label: commentator,
+          type: 'commentators',
+          value: commentator
+        });
+      });
+    }
+
+    return labels;
+  }, [
+    seriesList,
+    appliedSeries,
+    daysList,
+    appliedDays,
+    tracksList,
+    appliedTracks,
+    commentatorsList,
+    appliedCommentators
+  ]);
 
   // Инициализируем выбранные серии, когда данные появились
   useEffect(() => {
@@ -617,6 +686,34 @@ function App() {
     scrollToPageTop();
   }, [seriesList, daysList, tracksList, commentatorsList]);
 
+  const removeFilterValue = useCallback((
+    type: 'series' | 'days' | 'tracks' | 'commentators',
+    value: string
+  ) => {
+    const removeValue = (current: string[], allValues: string[]) => {
+      const source = current.length === 0 ? allValues : current;
+      const next = source.filter(item => item !== value);
+      return next.length > 0 ? next : allValues;
+    };
+
+    if (type === 'series') {
+      setAppliedSeries(current => removeValue(current, seriesList));
+      return;
+    }
+
+    if (type === 'days') {
+      setAppliedDays(current => removeValue(current, daysList));
+      return;
+    }
+
+    if (type === 'tracks') {
+      setAppliedTracks(current => removeValue(current, tracksList));
+      return;
+    }
+
+    setAppliedCommentators(current => removeValue(current, commentatorsList));
+  }, [seriesList, daysList, tracksList, commentatorsList]);
+
   const handleZoomIn = useCallback(() => {
     setContentScale(prev => Math.min(MAX_CONTENT_SCALE, Number((prev + CONTENT_SCALE_STEP).toFixed(2))));
   }, []);
@@ -630,7 +727,10 @@ function App() {
   }, []);
 
   const sliderVisible = viewMode === 'byDay' && dayOptions.length > 0;
-  const selectedDayRows = selectedDay ? rowsByDate[selectedDay] || [] : [];
+  const selectedDayRows = useMemo(
+    () => selectedDay ? rowsByDate[selectedDay] || [] : [],
+    [selectedDay, rowsByDate]
+  );
   const sortedSelectedDayRows = useMemo(
     () => sortDayRows(selectedDayRows as DisplayScheduleItem[]),
     [selectedDayRows, sortDayRows]
@@ -662,7 +762,7 @@ function App() {
   const scaledDaySliderHeight = sliderVisible ? DAY_SLIDER_HEIGHT : 0;
   const sliderTopOffset = Math.max(0, menuHeight - (sliderVisible ? DAY_SLIDER_OVERLAP : 0));
   const menuOffsetValue = (menuHeight || 125) + scaledDaySliderHeight - (sliderVisible ? DAY_SLIDER_OVERLAP : 0);
-  const floatingDayHeaderTop = menuHeight + FLOATING_DAY_HEADER_GAP;
+  const floatingDayHeaderTop = menuHeight;
   const scheduleContainerStyle = { '--menu-offset': `${menuOffsetValue}px` } as React.CSSProperties;
   const scheduleContentStyle = { zoom: contentScale } as React.CSSProperties;
   const appContainerStyle = { '--zoom-controls-offset': `${showMenu ? zoomControlsHeight + 24 : 0}px` } as React.CSSProperties;
@@ -745,7 +845,7 @@ function App() {
 
       return nextHeaders;
     });
-  }, [showMenu, viewMode, sortedDayEntries, floatingDayHeaderTop, contentScale]);
+  }, [showMenu, viewMode, sortedDayEntries, menuHeight, floatingDayHeaderTop]);
 
   useEffect(() => {
     updateFloatingDayHeaders();
@@ -783,6 +883,8 @@ function App() {
           onToggleSessionScrollMode={handleToggleSessionScrollMode}
           onHeightChange={handleMenuHeightChange}
           onOpenFilter={handleOpenFilter}
+          activeFilters={activeFilterLabels}
+          onRemoveActiveFilter={removeFilterValue}
         />
       )}
       {showMenu && (

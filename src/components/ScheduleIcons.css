@@ -124,3 +124,21 @@
   border: 1px solid #000000;
 }
 
+@media (max-width: 720px) {
+  .icons-container {
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    width: fit-content;
+    align-self: center;
+    gap: 4px;
+  }
+
+  .icons-container--single {
+    grid-template-columns: auto;
+  }
+
+  .icons-container--double {
+    grid-template-columns: repeat(2, auto);
+  }
+}
+

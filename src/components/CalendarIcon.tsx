@@ -3,13 +3,11 @@ import React from 'react';
 interface CalendarIconProps {
   letter: string;
   fontSize?: string;
-  isLightTheme: boolean;
 }
 
 const CalendarIcon: React.FC<CalendarIconProps> = ({ 
   letter, 
-  fontSize = '10',
-  isLightTheme 
+  fontSize = '10'
 }) => {
   return (
     <svg 

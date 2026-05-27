@@ -1,46 +1,70 @@
-# Getting Started with Create React App
+# BeOnEdge Schedule
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React-приложение для отображения расписания трансляций Be On Edge. Данные загружаются из опубликованной Google Sheets таблицы в формате CSV, после чего расписание фильтруется, группируется по дням и отображается в виде адаптивных карточек событий.
 
-## Available Scripts
+## Возможности
 
-In the project directory, you can run:
+- Загрузка расписания из Google Sheets CSV.
+- Переключение времени: `МСК` / `Ваш пояс`.
+- Режимы отображения: `Все дни` и `По дням`.
+- Фильтры по сериям, дням, трассам и комментаторам.
+- Интерактивные плашки активных фильтров с удалением конкретного значения.
+- Переключение `Все сессии` / `Будущие` с прокруткой к ближайшей будущей сессии.
+- Светлая и темная тема.
+- Мобильный bottom sheet с настройками расписания.
+- Карточки событий с иконками платформ, комментаторами, live timing, spotter guide и кнопками добавления в календарь.
+- Управление масштабом контента.
+- Плавающие заголовки дней в режиме `Все дни`.
 
-### `npm start`
+## Запуск
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```bash
+npm install
+npm start
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Приложение откроется на `http://localhost:3000`.
 
-### `npm test`
+## Скрипты
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `npm start` - запуск dev-сервера.
+- `npm run build` - production-сборка в папку `build`.
+- `npm test` - запуск тестов CRA.
+- `npm run deploy` - сборка и публикация `build` в ветку `gh-pages`.
 
-### `npm run build`
+## Структура
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```text
+src/
+  components/   React-компоненты интерфейса
+  constants/    URL CSV и общие константы
+  types/        TypeScript-типы расписания
+  utils/        Парсинг CSV, даты, время, иконки, календари
+  App.tsx       Основная логика приложения
+  App.css       Глобальная раскладка и стили расписания
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Источник Данных
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+URL таблицы задается в `src/constants/index.ts` через `CSV_URL`.
 
-### `npm run eject`
+Ожидаемые колонки CSV:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```text
+Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage,
+Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, RT,
+Commentator1, Commentator2, Optionally, Duration, Live Timing,
+RuTube, Spotter
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Обязательные поля для отображения строки: `Date`, `Start`, `Championship`, `Session`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Деплой
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Проект настроен для GitHub Pages:
 
-## Learn More
+```bash
+npm run deploy
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Скрипт сначала выполняет `npm run build`, затем публикует папку `build` в ветку `gh-pages`.
