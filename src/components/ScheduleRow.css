@@ -90,11 +90,13 @@
   }
 
   .time {
+    font-size: clamp(38px, 10vw, 46px);
     text-align: center;
   }
 }
 
 .content-container {
+  --event-card-radius: 18px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -104,7 +106,7 @@
   max-width: 100%;
   min-width: 0;
   border: 1px solid transparent;
-  border-radius: 18px;
+  border-radius: var(--event-card-radius);
   box-sizing: border-box;
   transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -158,8 +160,8 @@
   display: inline-flex;
   align-items: center;
   min-height: 24px;
-  padding: 4px 8px;
-  border-radius: 999px;
+  padding: 2px 6px;
+  border-radius: var(--event-card-radius);
   font-weight: 700;
   font-size: clamp(14px, 1.45vw, 16px);
   line-height: 1.15;
@@ -171,6 +173,7 @@
 
 .event-meta__session {
   background: rgba(255, 255, 255, 0.1);
+  font-size: clamp(16px, 1.7vw, 19px);
   min-width: 0;
 }
 

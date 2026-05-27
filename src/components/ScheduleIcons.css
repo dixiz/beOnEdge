@@ -140,5 +140,16 @@
   .icons-container--double {
     grid-template-columns: repeat(2, auto);
   }
+
+  .icon-wrapper {
+    width: 32px;
+    height: 32px;
+  }
+
+  .icon-number {
+    width: 15px;
+    height: 15px;
+    font-size: 12px;
+  }
 }
 
