@@ -1,785 +1,938 @@
-# BeOnEdge Schedule - Документация проекта
+﻿# BeOnEdge Schedule - подробная документация проекта
 
-## Общее описание проекта
+## 1. Назначение
 
-**BeOnEdge Schedule** — веб-приложение на React для отображения расписания спортивных событий. Приложение загружает данные из Google Sheets в формате CSV, обрабатывает их и отображает в удобном виде с возможностью переключения темы (светлая/темная) и часового пояса (МСК/локальный).
+`BeOnEdge Schedule` - React/TypeScript-приложение для отображения расписания трансляций и гоночных событий Be On Edge.
 
-### Основные возможности:
-- Загрузка расписания из Google Sheets (CSV)
-- Переключение вида расписания: `Все дни` (группировка по дням) / `По дням` (слайдер дней с выбором конкретной даты)
-- Слайдер дней синхронизирован с фильтрами: показывает только даты, оставшиеся после применённых фильтров
-- Фильтрация: показ только текущих и будущих событий
-- Переключение темы (светлая/темная)
-- Переключение часового пояса (МСК / локальный)
-- Добавление событий в Google Calendar и Яндекс Календарь
-- Отображение перенесённых событий, начавшихся вчера и продолжающихся сегодня (с пометкой `с DD.MM.YY до`), при этом вчерашний день полностью скрывается
-- Поддержка иконки `R` для RuTube, если `RT` отмечен булевым флагом и заполнена колонка `RuTube`
-- Кнопка `SPOTTER GUIDE` под иконками, если заполнена колонка `Spotter`
-- Кнопки управления масштабом контента внизу страницы
-- Плавающие компактные заголовки дней под меню, когда основной заголовок колонки уходит вверх
-- Адаптивный дизайн
+Приложение загружает расписание из опубликованной Google Sheets таблицы в формате CSV, преобразует строки в типизированные объекты, фильтрует их и отображает адаптивное расписание с карточками событий, фильтрами, переключением часового пояса, темой, масштабом и интеграциями с календарями.
 
-### Технологический стек:
-- React 19.2.0
-- TypeScript 4.9.5
-- CSS (Grid, Flexbox, CSS Variables)
-- gh-pages для деплоя на GitHub Pages
+Основной пользовательский сценарий:
 
----
+1. Пользователь открывает сайт.
+2. Приложение загружает CSV из `CSV_URL`.
+3. Пользователь выбирает `МСК` или `Ваш пояс`.
+4. Пользователь выбирает режим `Все дни` или `По дням`.
+5. Пользователь применяет фильтры по сериям, дням, трассам и комментаторам.
+6. Пользователь видит карточки событий, платформы трансляции, комментаторов, live timing, spotter guide и кнопки добавления в календарь.
 
-## Структура проекта
+## 2. Технологии
 
+- `React 19.2.0`
+- `TypeScript 4.9.5`
+- `react-scripts 5.0.1`
+- CSS без препроцессора
+- CSS Grid
+- Flexbox
+- CSS variables
+- `gh-pages` для деплоя
+
+## 3. Скрипты
+
+Файл: `package.json`
+
+```bash
+npm start
+npm run build
+npm test
+npm run deploy
 ```
+
+- `npm start` - запускает dev-сервер Create React App.
+- `npm run build` - собирает production-версию в папку `build`.
+- `npm test` - запускает тесты CRA.
+- `npm run deploy` - собирает приложение и публикует папку `build` в ветку `gh-pages`.
+
+## 4. Структура проекта
+
+```text
 schedule/
+├── public/
+│   └── index.html
 ├── src/
-│   ├── components/          # React компоненты
-│   ├── utils/              # Утилиты для обработки данных
-│   ├── types/              # TypeScript типы
-│   ├── constants/          # Константы
-│   ├── App.tsx             # Главный компонент
-│   └── App.css             # Глобальные стили
-├── public/                 # Статические файлы
-└── package.json            # Зависимости и скрипты
+│   ├── assets/
+│   │   └── indy500.png
+│   ├── components/
+│   │   ├── CalendarIcon.tsx
+│   │   ├── Commentator.tsx
+│   │   ├── Commentator.css
+│   │   ├── DateDisplay.tsx
+│   │   ├── DateDisplay.css
+│   │   ├── DayOfWeekDisplay.tsx
+│   │   ├── DayOfWeekDisplay.css
+│   │   ├── DaySlider.tsx
+│   │   ├── DaySlider.css
+│   │   ├── DonationButtons.tsx
+│   │   ├── EventLogo.tsx
+│   │   ├── EventLogo.css
+│   │   ├── Header.tsx
+│   │   ├── Header.css
+│   │   ├── Menu.tsx
+│   │   ├── Menu.css
+│   │   ├── Optionally.tsx
+│   │   ├── Optionally.css
+│   │   ├── ScheduleIcons.tsx
+│   │   ├── ScheduleIcons.css
+│   │   ├── ScheduleRow.tsx
+│   │   └── ScheduleRow.css
+│   ├── constants/
+│   │   └── index.ts
+│   ├── types/
+│   │   └── schedule.ts
+│   ├── utils/
+│   │   ├── calendarUtils.ts
+│   │   ├── csvParser.ts
+│   │   ├── dataUtils.ts
+│   │   ├── dateUtils.ts
+│   │   ├── flagUtils.ts
+│   │   ├── iconUtils.ts
+│   │   ├── textUtils.ts
+│   │   ├── timeUtils.ts
+│   │   └── timezoneUtils.ts
+│   ├── App.tsx
+│   ├── App.css
+│   ├── App.test.tsx
+│   ├── index.tsx
+│   ├── index.css
+│   ├── react-app-env.d.ts
+│   ├── reportWebVitals.ts
+│   └── setupTests.ts
+├── README.md
+├── PROJECT_DOCUMENTATION.md
+└── package.json
 ```
 
----
+## 5. Архитектура и поток данных
 
-## Модули проекта
+```text
+Google Sheets CSV
+  ↓
+constants/CSV_URL
+  ↓
+App.tsx fetch()
+  ↓
+utils/csvParser.ts
+  ↓
+ScheduleItem[]
+  ↓
+App.tsx:
+  - Shed-фильтр
+  - timezone conversion
+  - date normalization
+  - today/future filtering
+  - carryover events
+  - applied filters
+  - grouping by day
+  ↓
+UI:
+  Menu
+  DaySlider
+  Header + DateDisplay + DayOfWeekDisplay
+  ScheduleRow
+    ScheduleIcons
+    Commentator
+    CalendarIcon
+    Optionally
+```
 
-### 1. `src/App.tsx` - Главный компонент приложения
+## 6. Контракт CSV
 
-**Назначение:** Управляет состоянием приложения, загружает данные, обрабатывает их и рендерит интерфейс.
+Источник задается в `src/constants/index.ts`:
 
-**Состояние (основные поля):**
-- `originalSchedule` - исходные данные из CSV
-- `loading` / `error` - загрузка и ошибки
-- `isLightTheme` - тема (false = темная, true = светлая)
-- `useLocalTime` - использование локального времени (false = МСК, true = локальный)
-- `viewMode` - вид расписания (`all` / `byDay`), по умолчанию `all`
-- `selectedDay` - выбранный день в режиме `byDay`
-- `menuHeight` - измеренная высота меню (для вычисления отступа контента)
-- `contentScale` - текущий масштаб контентной части интерфейса
-- `sessionScrollMode` - режим прокрутки сессий (`all` / `future`)
-- `zoomControlsHeight` - измеренная высота блока кнопок масштаба
-- `floatingDayHeaders` - список активных плавающих заголовков дней для колонок в режиме `all`
-- Состояния фильтра: `isFilterOpen`, `applied*` и `temp*` для серий/дней/трасс/комментаторов, `filterPage`, `filterError`
+```ts
+export const CSV_URL = "...";
+```
 
-**Логика:**
-1. При монтировании (`useEffect`) загружает CSV из `CSV_URL`
-2. Парсит CSV через `parseCSV()`
-3. Фильтрует вход: оставляет только строки, где `Shed` = true (TRUE/1/✓/"истина")
-4. Конвертирует время через `convertFromGMT3ToLocal()` при `useLocalTime === true`
-5. Фильтрует события через `isDateEqualOrAfterToday()` (только текущие и будущие)
-6. Нормализует даты (в CSV `DD.MM.YYYY`) к виду `DD.MM.YY` для вывода и дедупликации
-7. Строит `filteredSchedule` по активным фильтрам (серии/дни/трассы/комментаторы)
-8. Формирует `dayOptions` для слайдера дней из отфильтрованных дат; короткие названия дней (Пн, Вт, …), низ — `dd.mm`
+Ожидаемые заголовки CSV:
 
-9. Управляет видами:
-   - `viewMode = all`: группирует по дням (`byDay`) и выводит все дни
-   - `viewMode = byDay`: показывает слайдер дней (учитывает фильтры) и отображает выбранный день
-10. Для событий, начавшихся вчера и продолжающихся сегодня, добавляет строку в список за сегодня:
-   - отображает время окончания
-   - показывает метку `с DD.MM.YY до`
-   - такие строки всегда в начале списка дня
-   - вчерашний день полностью скрывается из расписания
-11. Рендерит фиксированный блок кнопок масштаба внизу страницы
-12. Масштабирует только контентную часть расписания, не затрагивая меню и слайдер дней
-13. В режиме `all` отслеживает положение заголовков колонок дня и показывает компактные плавающие заголовки под меню, пока в колонке еще есть видимые строки
-14. Управляет режимом прокрутки сессий через переключатель `Сессии: Все / Будущие`
-15. В режиме `future` прокручивает текущее представление к первой сессии, время начала которой строго больше текущего времени пользователя
-16. Вычисляет отступ контейнера расписания по высоте меню + (опционально) слайдера дней через CSS-переменную `--menu-offset`
+```text
+Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage,
+Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, RT,
+Commentator1, Commentator2, Optionally, Duration, Live Timing,
+RuTube, Spotter
+```
 
-**Связи:**
-- Использует: `constants/index.ts` (CSV_URL), `utils/csvParser.ts`, `utils/dataUtils.ts`, `utils/dateUtils.ts`, `utils/flagUtils.ts`, `utils/iconUtils.ts`
-- Рендерит: `Menu`, `DaySlider` (в `viewMode = byDay`), `Header`, `DateDisplay`, `DayOfWeekDisplay`, `ScheduleRow`
-- Передает в `ScheduleRow`: данные события, `isLightTheme`, массивы номеров иконок (`getTgNumbers`, `getBcuNumbers`), флаг `showRT`, ссылку `RuTube`, а также `Duration`, `LiveTiming`, `Spotter`
+Маппинг колонок:
 
-**Мемоизация:**
-- `convertedSchedule` - конвертированное и отфильтрованное расписание
-- `byDay` - группировка по дням
-- `handleToggleTheme`, `handleToggleTime` - обработчики
+```text
+Shed          -> Shed
+Live          -> Live
+Ended         -> Ended
+Delay         -> Delay
+Cancel        -> Cancel
+Date          -> date
+Start / Time  -> time
+Championship  -> championship
+Stage         -> stage
+Place         -> place
+Session       -> session
+PC            -> PC
+TG1..TG3      -> TG1..TG3
+BCU1..BCU3    -> BCU1..BCU3
+RT            -> RT
+Commentator1  -> Commentator1
+Commentator2  -> Commentator2
+Optionally    -> Optionally
+Duration      -> Duration
+Live Timing   -> LiveTiming
+RuTube        -> RuTube
+Spotter       -> Spotter
+```
 
----
+Строка считается валидной, если заполнены:
 
-### 2. `src/constants/index.ts` - Константы
+- `date`
+- `time`
+- `championship`
+- `session`
 
-**Назначение:** Хранит глобальные константы приложения.
+`place` используется в интерфейсе и фильтрах, но текущий валидатор не требует его обязательного заполнения.
 
-**Константы:**
-- `CSV_URL` - URL для загрузки CSV из Google Sheets
-  - Формат: `https://docs.google.com/spreadsheets/d/e/{ID}/pub?output=csv`
-  - Используется в `App.tsx` для загрузки данных
-- `DAYS_OF_WEEK` - массив дней недели на русском
-  - `['воскресенье', 'понедельник', ..., 'суббота']`
-  - Используется в `dateUtils.ts` для вычисления дня недели
-- `TRUE_VALUES` - значения, считающиеся `true` для флагов
-  - `['TRUE', 'true', '1', '✓']`
-  - Используется в `flagUtils.ts` для парсинга булевых флагов
-- `DEFAULT_TIMEZONE` - часовой пояс по умолчанию (не используется в текущей версии)
+Истинные значения:
 
-**Связи:**
-- Используется в: `App.tsx`, `dateUtils.ts`, `flagUtils.ts`
+```ts
+export const TRUE_VALUES = ['TRUE', 'true', '1', '✓'];
+```
 
----
+Для `Shed` дополнительно истинным считается значение `истина`.
 
-### 3. `src/types/schedule.ts` - TypeScript типы
+## 7. Типы данных
 
-**Назначение:** Определяет структуру данных расписания.
+Основной тип: `src/types/schedule.ts`.
 
-**Интерфейс `ScheduleItem`:**
-```typescript
-{
-  Shed?: string;          // Статус "запланировано" (опционально)
-  Live?: string;          // Статус "в эфире" (опционально)
-  Ended?: string;         // Статус "завершено" (опционально)
-  Delay?: string;         // Статус "задержка" (опционально)
-  Cancel?: string;        // Статус "отменено" (опционально)
-  date: string;           // Формат: "DD.MM.YY" или "DD.MM.YYYY"
-  day: string;            // День недели (вычисляется из date)
-  time: string;           // Формат: "HH:MM"
-  championship: string;   // Название чемпионата
-  stage?: string;         // Название этапа (опционально)
-  place: string;          // Место проведения
-  session: string;         // Название сессии
-  PC?: string;            // Флаг показа иконки компьютера
-  TG1?, TG2?, TG3?: string;  // Флаги для иконок Telegram (1-3)
-  BCU1?, BCU2?, BCU3?: string; // Флаги для иконок телевизора (1-3)
-  RT?: string;            // Булевый флаг показа иконки RuTube
-  Commentator1?, Commentator2?: string; // Имена комментаторов
-  Optionally?: string;    // Дополнительная информация
-  Duration?: string;      // Длительность (HH:MM:SS или HH:MM)
-  LiveTiming?: string;    // Ссылка на live timing или "нет"
-  RuTube?: string;        // Ссылка для иконки RuTube
-  Spotter?: string;       // Ссылка на spotter (опционально)
+```ts
+export interface ScheduleItem {
+  Shed?: string;
+  Live?: string;
+  Ended?: string;
+  Delay?: string;
+  Cancel?: string;
+  date: string;
+  day: string;
+  time: string;
+  championship: string;
+  stage?: string;
+  place: string;
+  session: string;
+  PC?: string;
+  TG1?: string;
+  TG2?: string;
+  TG3?: string;
+  BCU1?: string;
+  BCU2?: string;
+  BCU3?: string;
+  RT?: string;
+  Commentator1?: string;
+  Commentator2?: string;
+  Optionally?: string;
+  Duration?: string;
+  LiveTiming?: string;
+  RuTube?: string;
+  Spotter?: string;
 }
 ```
 
-**Связи:**
-- Используется во всех модулях для типизации данных расписания
+Внутренние типы `App.tsx`:
 
----
+- `DisplayScheduleItem` - расширяет `ScheduleItem` полями `displayTime`, `startedLabel`, `isCarryover`.
+- `FloatingDayHeader` - данные fixed-заголовка дня.
+- `ActiveFilterChip` - данные плашки активного фильтра.
+- `SessionScrollMode` - `'all' | 'future'`.
+- `RenderedRowMeta` - ключ строки и объект события.
 
-### 4. `src/utils/csvParser.ts` - Парсер CSV
+## 8. Главный поток в `App.tsx`
 
-**Назначение:** Парсит CSV-текст в массив `ScheduleItem[]`.
+### Загрузка
 
-**Ожидаемый порядок колонок (заголовков):**
-`Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage, Place, Session, PC, TG1, TG2, TG3, BCU1, BCU2, BCU3, RT, Commentator1, Commentator2, Optionally, Duration, Live Timing, RuTube, Spotter`
+1. `loading = true`.
+2. `fetch(CSV_URL)`.
+3. Ответ читается как текст.
+4. `parseCSV(text)`.
+5. Результат сохраняется в `originalSchedule`.
+6. Ошибка сохраняется в `error`.
 
-- Колонки `Shed`, `Live`, `Ended`, `Delay`, `Cancel`, `RT`, `Duration`, `Live Timing`, `RuTube`, `Spotter` опциональны: парсер загружает их в поля `ScheduleItem`, и они используются частично (RT - булевый флаг показа иконки `R`, RuTube - ссылка для этой иконки, Duration влияет на календари и перенос, Live Timing - на кнопку секундомера, Spotter - на кнопку `SPOTTER GUIDE`).
-- Колонка `Start` мапится в поле `time` и нормализуется.
-- Обязательные поля для валидации: `Date`, `Start`, `Championship`, `Place`, `Session`.
+### Подготовка расписания
 
-**Функции:**
-- `parseCSVLine(line: string): string[]` - парсит строку CSV с учетом кавычек
-  - Обрабатывает экранированные кавычки (`""`)
-  - Разделяет по запятым вне кавычек
-- `validateScheduleItem(item): boolean` - валидирует обязательные поля
-  - Проверяет: `date`, `time`, `championship`, `place`, `session`
-- `parseCSV(text: string): ScheduleItem[]` - главная функция парсинга
-  - Разбивает текст на строки
-  - Первая строка = заголовки
-  - Остальные строки = данные
-  - Нормализует время через `normalizeTime()`
-  - Вычисляет день недели через `getDayOfWeekFromDate()`
+`convertedSchedule`:
 
-**Логика:**
-1. Разделяет CSV на строки
-2. Парсит заголовки
-3. Для каждой строки данных:
-   - Парсит значения с учетом кавычек
-   - Создает объект по заголовкам
-   - Валидирует обязательные поля
-   - Нормализует время и вычисляет день недели
+1. Берет `originalSchedule`.
+2. Оставляет только строки, где `Shed` истинный.
+3. Если включен `useLocalTime`, применяет `convertFromGMT3ToLocal`.
+4. Оставляет даты сегодня и позже.
+5. Дополнительно оставляет события, начавшиеся вчера и продолжающиеся сегодня.
 
-**Связи:**
-- Использует: `utils/timeUtils.ts` (normalizeTime), `utils/dateUtils.ts` (getDayOfWeekFromDate)
-- Используется в: `App.tsx`
+`normalizedSchedule`:
 
----
+- приводит дату к `DD.MM.YY`;
+- используется для списков фильтров и группировки.
 
-### 5. `src/utils/dateUtils.ts` - Утилиты для работы с датами
+### Списки фильтров
 
-**Назначение:** Обработка дат: парсинг, конвертация часовых поясов, фильтрация.
+Из `normalizedSchedule` вычисляются:
 
-**Функции:**
-- `parseDate(dateStr: string): Date` - парсит дату из `DD.MM.YY` или `DD.MM.YYYY`
-  - Поддерживает 2- и 4-значные годы
-  - Создает объект `Date` с временем 12:00:00
-- `getCurrentDate(): Date` - возвращает текущую дату без времени
-- `isDateEqualOrAfterToday(dateStr: string): boolean` - проверяет, что дата >= сегодня
-  - Используется для фильтрации прошедших событий
-- `getDayOfWeekFromDate(dateStr: string): string` - вычисляет день недели
-  - Использует `DAYS_OF_WEEK` из констант
-  - Возвращает русское название дня
-- `convertFromGMT3ToLocal(item: ScheduleItem): ScheduleItem` - конвертирует время из GMT+3 в локальный часовой пояс
-  - Парсит дату и время из `ScheduleItem`
-  - Создает дату в GMT+3
-  - Конвертирует в локальный часовой пояс браузера
-  - Обновляет `date`, `time`, `day` в объекте
+- `seriesList`
+- `daysList`
+- `tracksList`
+- `commentatorsList`
 
-**Логика конвертации времени:**
-1. Парсит дату и время из `ScheduleItem`
-2. Создает `Date` в формате `YYYY-MM-DDTHH:mm:ss+03:00`
-3. JavaScript автоматически конвертирует в локальный часовой пояс
- 4. Форматирует обратно в `DD.MM.YY` и `HH:MM`
-5. Вычисляет новый день недели
+Для комментаторов:
 
-**Связи:**
-- Использует: `constants/index.ts` (DAYS_OF_WEEK), `utils/timeUtils.ts` (normalizeTime)
-- Используется в: `App.tsx`, `csvParser.ts`, `calendarUtils.ts`
+- если `Commentator1` и `Commentator2` пустые, используется `Оригинальная дорожка`.
 
----
+### Применение фильтров
 
-### 6. `src/utils/timeUtils.ts` - Утилиты для работы со временем
+`filteredSchedule` строится из:
 
-**Назначение:** Нормализация формата времени.
+- `appliedSeries`
+- `appliedDays`
+- `appliedTracks`
+- `appliedCommentators`
 
-**Функции:**
-- `normalizeTime(timeStr: string): string` - нормализует время к формату `HH:MM`
-  - Добавляет ведущие нули для часов и минут
-  - Пример: `"9:5"` → `"09:05"`
+Если выбраны все значения категории, категория не ограничивает расписание.
 
-**Связи:**
-- Используется в: `csvParser.ts`, `dateUtils.ts`
+### Carryover-события
 
----
+Если событие началось вчера и по `Duration` продолжается сегодня:
 
-### 7. `src/utils/timezoneUtils.ts` - Утилиты для часовых поясов
+- оно добавляется в сегодняшний день;
+- в строке показывается время окончания;
+- добавляется метка `с DD.MM.YY до`;
+- вчерашний день скрывается из итогового списка.
 
-**Назначение:** Получение информации о часовом поясе пользователя.
+### Группировка и сортировка
 
-**Функции:**
-- `getUserTimeZone(): string` - возвращает строку типа `"GMT +3"`
-  - Использует `Date.getTimezoneOffset()`
-  - Вычисляет смещение в часах
-  - Форматирует в `GMT ±N`
+`byDay` группирует данные по ключу:
 
-**Примечание:** В текущей версии не используется, но может быть полезно для отображения информации о часовом поясе.
-
----
-
-### 8. `src/utils/dataUtils.ts` - Утилиты для работы с данными
-
-**Назначение:** Общие утилиты для обработки массивов данных.
-
-**Функции:**
-- `groupBy<T>(arr: T[], keyGetter: (item: T) => string): Record<string, T[]>`
-  - Группирует массив по ключу
-  - Возвращает объект `{ [key]: T[] }`
-  - Используется для группировки событий по дням
-
-**Пример использования:**
-```typescript
-groupBy(schedule, r => `${r.date}_${r.day}`)
-// Результат: { "28.12.2025_суббота": [event1, event2], ... }
+```ts
+`${item.date}_${item.day}`
 ```
 
-**Связи:**
-- Используется в: `App.tsx`
+`rowsByDate` группирует данные только по дате и используется в режиме `По дням`.
 
----
+`sortDayRows`:
 
-### 9. `src/utils/flagUtils.ts` - Парсинг булевых флагов
+1. Сначала поднимает carryover-события.
+2. Затем сортирует по времени в минутах.
 
-**Назначение:** Преобразует строковые значения в булевы флаги.
+## 9. Состояние `App.tsx`
 
-**Функции:**
-- `parseBooleanFlag(value?: string): boolean`
-  - Проверяет, входит ли значение в `TRUE_VALUES`
-  - Возвращает `true` если значение = `'TRUE'`, `'true'`, `'1'`, `'✓'`
+| State | Назначение |
+| --- | --- |
+| `originalSchedule` | Исходные данные из CSV |
+| `loading` | Флаг загрузки |
+| `error` | Ошибка загрузки или обработки |
+| `isLightTheme` | Текущая тема |
+| `useLocalTime` | `false` = МСК, `true` = локальный часовой пояс |
+| `viewMode` | `all` или `byDay` |
+| `selectedDay` | Выбранный день в режиме `byDay` |
+| `menuHeight` | Измеренная высота меню |
+| `isFilterOpen` | Открыта ли модалка фильтров |
+| `applied*` | Примененные фильтры |
+| `temp*` | Временные значения фильтров в модалке |
+| `filterPage` | Активная вкладка фильтра |
+| `filterError` | Ошибка в модалке фильтра |
+| `contentScale` | Масштаб контента расписания |
+| `sessionScrollMode` | `all` или `future` |
+| `zoomControlsHeight` | Измеренная высота блока масштаба |
+| `floatingDayHeaders` | Активные плавающие заголовки дней |
 
-**Связи:**
-- Использует: `constants/index.ts` (TRUE_VALUES)
-- Используется в: `iconUtils.ts`
+## 10. Фильтры
 
----
+Фильтры находятся в модальном окне в `App.tsx`.
 
-### 10. `src/utils/iconUtils.ts` - Утилиты для иконок
+Вкладки:
 
-**Назначение:** Формирует массивы номеров для иконок Telegram и телевизора.
+- `Серии`
+- `Дни`
+- `Трассы`
+- `Комментаторы`
 
-**Функции:**
-- `getTgNumbers(item: ScheduleItem): number[]`
-  - Проверяет флаги `TG1`, `TG2`, `TG3`
-  - Возвращает массив номеров активных иконок
-  - Пример: если `TG1=true`, `TG2=true` → `[1, 2]`
-- `getBcuNumbers(item: ScheduleItem): number[]`
-  - Аналогично для `BCU1`, `BCU2`, `BCU3`
+У каждой вкладки есть чекбокс `Все ...`.
 
-**Логика:**
-1. Проверяет каждый флаг через `parseBooleanFlag()`
-2. Если флаг `true`, добавляет номер в массив
-3. Фильтрует `false` значения
+При открытии:
 
-**Связи:**
-- Использует: `utils/flagUtils.ts` (parseBooleanFlag)
-- Используется в: `App.tsx`
+- если категория не активна, чекбоксы могут быть пустыми;
+- если категория активна, отмечены текущие выбранные значения.
 
----
+При применении:
 
-### 11. `src/utils/textUtils.ts` - Форматирование текста
+- если не выбрано ничего во всех категориях, показывается ошибка;
+- если категория пустая, она трактуется как `все значения`;
+- после применения модалка закрывается и страница прокручивается вверх.
 
-**Назначение:** Форматирует названия чемпионатов и этапов.
+Активные фильтры представлены плашками:
 
-**Функции:**
-- `formatChampionship(championship?: string): string`
-  - Добавляет точку в конце, если её нет
-  - Пример: `"Formula 1"` → `"Formula 1."`
-- `formatStage(stage?: string): string`
-  - Убирает точку в конце, если она есть
-  - Пример: `"Этап 1."` → `"Этап 1"`
-
-**Связи:**
-- Используется в: `ScheduleRow.tsx`
-
----
-
-### 12. `src/utils/calendarUtils.ts` - Интеграция с календарями
-
-**Назначение:** Генерация URL для Google Calendar и файлов .ics для Яндекс Календаря.
-
-**Функции:**
-- `formatDateForCalendar(date: Date): string`
-  - Форматирует дату в формат `YYYYMMDDTHHmmssZ` (UTC)
-  - Используется для календарных форматов
-- `parseScheduleDateTime(item: ScheduleItem): { startDate: Date; endDate: Date }`
-  - Парсит дату и время из `ScheduleItem`
-  - Создает дату начала в GMT+3
-  - Создает дату окончания (по `Duration`, иначе +2 часа)
-- `buildEventDescription(item: ScheduleItem): string`
-  - Формирует описание события из полей `ScheduleItem`
-  - Включает: этап, сессию, место, комментаторов, опциональную информацию
-- `generateGoogleCalendarUrl(item: ScheduleItem): string`
-  - Генерирует URL для добавления события в Google Calendar
-  - Формат: `https://calendar.google.com/calendar/render?action=TEMPLATE&...`
-  - Параметры: `text`, `dates`, `details`, `location`
-- `escapeICS(text: string): string`
-  - Экранирует специальные символы для формата iCalendar
-  - Обрабатывает: `\`, `;`, `,`, `\n`, `\r`
-- `generateICalendarFile(item: ScheduleItem): string`
-  - Генерирует содержимое .ics файла
-  - Формат: стандарт iCalendar (RFC 5545)
-  - Включает: UID, DTSTART, DTEND, SUMMARY, DESCRIPTION, LOCATION
-- `downloadICalendarFile(item: ScheduleItem): void`
-  - Создает Blob с .ics содержимым
-  - Генерирует имя файла из чемпионата, этапа, сессии, даты
-  - Инициирует скачивание файла
-
-**Логика генерации событий:**
-1. Парсит дату и время из `ScheduleItem`
-2. Создает дату начала в GMT+3
-3. Добавляет длительность из `Duration` (если есть, формат `HH:MM:SS` или `HH:MM`), иначе +2 часа
-4. Форматирует в нужный формат (URL или .ics)
-5. Для Google Calendar: открывает URL в новой вкладке
-6. Для Яндекс Календаря: скачивает .ics файл
-
-**Связи:**
-- Использует: `types/schedule.ts` (ScheduleItem)
-- Используется в: `ScheduleRow.tsx`
-
----
-
-### 13. `src/components/Menu.tsx` - Компонент меню
-
-**Назначение:** Отображает фиксированное верхнее меню с переключателями темы/часового пояса, режима показа и прокрутки сессий, а также кнопкой фильтра.
-
-**Props:**
-- `isLightTheme?: boolean` - текущая тема
-- `onToggleTheme?: () => void` - обработчик переключения темы
-- `useLocalTime?: boolean` - использование локального времени
-- `onToggleTime?: (useLocal: boolean) => void` - обработчик переключения времени
-
-**Логика:**
-- Отображает кнопку переключения темы (солнце/луна)
-- Отображает переключатель времени: "МСК" / "Ваш часовой пояс"
-- Во втором ряду по центру отображает компактный переключатель `Сессии: Все / Будущие`
-- Активная опция подсвечивается
-- Передает наружу фактическую высоту меню через `onHeightChange`, чтобы `App.tsx` мог корректно располагать блок масштаба и основной контент
-- Кнопка фильтра (иконка) открывает поп-ап:
-  - Вкладки: "Серии" (список серий, алфавит), "Дни" (даты по возрастанию, `DD.MM.YY, <день недели>`), "Трассы" (места, есть пункт "Особая трасса" для пустого `place`), "Комментаторы" (Commentator1/2 + "Оригинальная дорожка" для пустых)
-  - Чекбоксы "Все серии" / "Все дни" / "Все трассы" / "Все комментаторы" — включают/выключают все
-  - При открытии: чекбоксы пустые, если фильтр не активен; если активен — отмечены текущие элементы
-  - Правила OK:
-    - если ничего не выбрано → предупреждение "Не выбрана ни одна серия"
-    - если выбраны дни, но серий нет → показываются все серии выбранных дней
-    - если выбраны серии, но дней нет → показываются выбранные серии по всем дням
-    - если выбраны только трассы → показываются строки выбранных трасс (включая "Особая трасса" для пустого `place`)
-    - если выбраны только комментаторы → показываются строки выбранных комментаторов (учитываются оба поля Commentator1/2 и "Оригинальная дорожка" при их отсутствии)
-  - Кнопка "Сброс": снимает все фильтры, показывает все данные
-  - Крестик: закрывает поп-ап без перерисовки страницы
-  - При отсутствии результатов после фильтрации выводится под меню: "Упс! Ни одна гоночная серия не подходит для установленных отборов"
-
-**Связи:**
-- Используется в: `App.tsx`
-- Стили: `Menu.css`
-
----
-
-### 14. `src/components/Header.tsx` - Компонент заголовка
-
-**Назначение:** Обертка для заголовка колонки дня.
-
-**Props:**
-- `children: ReactNode` - содержимое (обычно `DateDisplay` и `DayOfWeekDisplay`)
-- `isLightTheme?: boolean` - тема
-
-**Связи:**
-- Используется в: `App.tsx`
-- Стили: `Header.css`
-
----
-
-### 15. `src/components/DateDisplay.tsx` - Отображение даты
-
-**Назначение:** Отображает дату в формате `DD.MM.YY` (усекает год до двух цифр).
-
-**Props:**
-- `date: string` - дата, отображается как `DD.MM.YY` (вход может быть с 2 или 4 цифрами года)
-- `isLightTheme?: boolean` - тема
-
-**Связи:**
-- Используется в: `App.tsx` (через `Header`)
-- Стили: `DateDisplay.css`
-
----
-
-### 16. `src/components/DayOfWeekDisplay.tsx` - Отображение дня недели
-
-**Назначение:** Отображает день недели на русском языке.
-
-**Props:**
-- `day: string` - день недели (например, "понедельник")
-- `isLightTheme?: boolean` - тема
-
-**Связи:**
-- Используется в: `App.tsx` (через `Header`)
-- Стили: `DayOfWeekDisplay.css`
-
----
-
-### 17. `src/components/ScheduleRow.tsx` - Строка расписания
-
-**Назначение:** Отображает одно событие расписания со всей информацией.
-
-**Props:**
-- Все поля из `ScheduleItem` (date, time, championship, stage, place, session, ...)
-- `isLightTheme?: boolean` - тема
-- `showPC?: boolean` - показывать иконку компьютера
-- `tgNumbers?: number[]` - номера иконок Telegram (например, `[1, 2]`)
-- `bcuNumbers?: number[]` - номера иконок телевизора
-- `showRT?: boolean` - показывать иконку `R`
-- `ruTube?: string` - ссылка для иконки `R`
-- `commentator1?, commentator2?: string` - комментаторы
-- `optionally?: string` - дополнительная информация
-- `duration?: string` - длительность (используется для календарей)
-- `liveTiming?: string` - ссылка на live timing, если есть
-- `spotter?: string` - ссылка на spotter, если есть
-- `displayTime?: string` - отображаемое время (для перенесённых событий)
-- `startedLabel?: string` - метка старта (например, `с 26.01.26`)
-
-**Логика:**
-1. Нормализует время через `normalizeTime()`
-2. Форматирует чемпионат и этап через `formatChampionship()`, `formatStage()`
-3. Обрабатывает комментаторов:
-   - Если оба пустые → показывает "Оригинальная дорожка"
-   - Иначе показывает список комментаторов
-4. Передает в `ScheduleIcons` флаги `PC` / `TG` / `BCU`, а также `showRT` и ссылку `ruTube`
-5. Создает объект `ScheduleItem` для календарей
-6. Обработчики:
-   - `handleAddToGoogleCalendar()` - открывает URL Google Calendar
-   - `handleAddToYandexCalendar()` - скачивает .ics файл
-   - `handleOpenLiveTiming()` - открывает ссылку из `Live Timing`
-   - `handleOpenSpotter()` - открывает ссылку из `Spotter`
-
-**Структура рендера:**
+```ts
+{
+  key: string;
+  label: string;
+  type: 'series' | 'days' | 'tracks' | 'commentators';
+  value: string;
+}
 ```
+
+Плашки показывают только значение:
+
+```text
+Moto GP   Муджелло   29.05.26, пятница   Дима Искрыч
+```
+
+Плашки отображаются:
+
+- на десктопе - под вторым рядом меню;
+- на мобильной версии - под верхним рядом `DA` / `ODA`.
+
+Удаление плашки:
+
+- вызывает `removeFilterValue`;
+- удаляет значение из соответствующего `applied*`;
+- если в категории больше ничего не осталось, категория возвращается к состоянию `все`.
+
+## 11. Режимы отображения
+
+### `viewMode = 'all'`
+
+Показывает все отфильтрованные дни колонками.
+
+Каждая колонка:
+
+- `Header`
+- `DateDisplay`
+- `DayOfWeekDisplay`
+- список `ScheduleRow`
+
+### `viewMode = 'byDay'`
+
+Показывает:
+
+- `DaySlider`;
+- один выбранный день;
+- строки выбранного дня.
+
+`DaySlider` учитывает активные фильтры и показывает только даты, оставшиеся после фильтрации.
+
+## 12. Режим будущих сессий
+
+`sessionScrollMode = 'future'` не фильтрует строки.
+
+Поведение:
+
+1. Пользователь нажимает `Будущие`.
+2. `App` ищет первую строку, время которой больше текущего времени.
+3. Страница прокручивается к этой строке.
+
+Это режим прокрутки, а не режим скрытия прошедших событий.
+
+## 13. Масштабирование
+
+Кнопки масштаба:
+
+- `-`
+- `100%`
+- `+`
+
+Константы:
+
+```ts
+const MIN_CONTENT_SCALE = 0.4;
+const MAX_CONTENT_SCALE = 1;
+const CONTENT_SCALE_STEP = 0.05;
+```
+
+Масштаб применяется к `.schedule-content-zoom` через CSS `zoom`. Меню и слайдер дней не масштабируются.
+
+## 14. Плавающие заголовки дней
+
+Работают в режиме `Все дни`.
+
+Логика:
+
+1. `App` хранит refs колонок дней и их заголовков.
+2. При scroll/resize вычисляет, какие заголовки ушли под меню.
+3. Для таких колонок показывает fixed-заголовок с датой.
+
+Плавающий заголовок скрывается, если:
+
+- колонка не видна по горизонтали;
+- основной заголовок еще не ушел под меню;
+- в колонке больше нет видимых строк.
+
+## 15. Компоненты
+
+### `Menu.tsx`
+
+Фиксированное меню управления.
+
+Desktop layout:
+
+```text
+Row 1:
+[МСК / Ваш пояс] [Все дни / По дням] [Все сессии / Будущие]
+
+Row 2:
+[theme | filter]
+
+Row 3:
+active filter chips, если есть
+```
+
+Mobile layout:
+
+```text
+Top:
+[DA] [ODA]
+[active filter chips, если есть]
+
+Bottom:
+[Настройки]
+
+Bottom sheet:
+[МСК / Ваш пояс] [Все дни / По дням] [Все сессии / Будущие]
+[theme | filter]
+```
+
+Особенности:
+
+- `ResizeObserver` измеряет высоту меню и передает ее в `App`.
+- Кнопка `Настройки` пульсирует.
+- `prefers-reduced-motion: reduce` отключает пульсацию.
+
+### `DonationButtons.tsx`
+
+Показывает ссылки:
+
+- `DA` -> DonationAlerts
+- `ODA` -> `http://be-on-edge.oda.digital/`
+
+На мобильной версии это единственный верхний ряд.
+
+### `DaySlider.tsx`
+
+Используется только в `viewMode = 'byDay'`.
+
+Props:
+
+```ts
+days: DayOption[];
+selectedDate: string | null;
+onSelect?: (date: string) => void;
+isLightTheme?: boolean;
+topOffset?: number;
+```
+
+### `Header.tsx`, `DateDisplay.tsx`, `DayOfWeekDisplay.tsx`
+
+`Header` - обертка для заголовка дня.
+
+Обычно содержит:
+
+- `DateDisplay`
+- `DayOfWeekDisplay`
+
+`DateDisplay` показывает дату в `DD.MM.YY`.
+
+`DayOfWeekDisplay` показывает день недели.
+
+### `ScheduleRow.tsx`
+
+Карточка одного события.
+
+Структура:
+
+```text
 schedule-row-wrapper
-├── time-container
-│   ├── time (время)
-│   └── ScheduleIcons (иконки PC, TG, BCU)
-│   └── spotter-button (кнопка `SPOTTER GUIDE`, если `Spotter` заполнен)
-└── content-container
-    ├── content-header
-    │   ├── content-text
-    │   │   ├── championship (чемпионат)
-    │   │   ├── stage (этап, если есть)
-    │   │   ├── place-session (место. сессия)
-    │   │   └── commentators-container (комментаторы)
-    │   └── calendar-buttons (кнопки календарей)
-    └── Optionally (важная информация, если есть)
+  time-container
+    time-started
+    time
+    ScheduleIcons
+    spotter-button
+
+  content-container
+    content-header
+      content-text
+        championship
+        event-stage-row
+          stage
+          place chip
+        event-meta
+          session chip
+        commentators-container
+          Commentator[]
+      calendar-buttons
+        Google Calendar
+        .ics
+        live timing
+    Optionally
 ```
 
-**Мемоизация:**
-- `commentators` - список комментаторов
-- `normalizedTime` - нормализованное время
-- `formattedChampionship`, `formattedStage` - отформатированный текст
-- `scheduleItem` - объект для календарей
-- `handleAddToGoogleCalendar`, `handleAddToYandexCalendar`, `handleOpenLiveTiming` - обработчики
+Комментаторы:
 
-**Связи:**
-- Использует: `ScheduleIcons`, `Commentator`, `Optionally`, `CalendarIcon`
-- Использует: `utils/timeUtils.ts`, `utils/calendarUtils.ts`, `utils/textUtils.ts`
-- Используется в: `App.tsx`
-- Стили: `ScheduleRow.css`
+- если оба поля пустые, выводится `Оригинальная дорожка`;
+- если один или два комментатора заполнены, выводятся отдельные плашки;
+- на маленьком экране текст может переноситься на две строки.
 
----
+Календарь:
 
-### 18. `src/components/ScheduleIcons.tsx` - Иконки расписания
+- `G` открывает Google Calendar;
+- `.ics` скачивает файл iCalendar;
+- секундомер открывает `LiveTiming`, если ссылка заполнена и не равна `нет`.
 
-**Назначение:** Отображает иконки PC, Telegram, TV и RuTube.
+### `ScheduleIcons.tsx`
 
-**Props:**
-- `showPC?: boolean` - показывать иконку компьютера
-- `tgNumbers?: number[]` - массив номеров Telegram (например, `[1, 2]`)
-- `bcuNumbers?: number[]` - массив номеров телевизора
-- `showRT?: boolean` - показывать иконку `R`
-- `rtLink?: string` - ссылка для иконки `R`
-- `isLightTheme?: boolean` - тема
+Показывает платформенные иконки.
 
-**Логика:**
-- Рендерит иконки в сетке до 3 колонок
-- Иконка PC обернута в ссылку `https://vk.com/be_on_edge`
-- Иконки Telegram обернуты в ссылки:
-  - `1 → https://t.me/BoE_LIVE_1`
-  - `2 → https://t.me/BoE_LIVE_2`
-  - `3 → https://t.me/BoE_LIVE_3`
-- Иконки TV обернуты в ссылку `https://bcumedia.su/`
-- Для иконок `VK`, `TG` и `BCU` при hover/focus применяется легкий сдвиг вверх и цветная обводка в основном цвете кнопки
-- Иконка `R` показывается, если `showRT === true`; если перед ней уже есть 3 иконки, она переносится на второй ряд и центрируется
-- Если заполнена `rtLink`, иконка `R` становится ссылкой на RuTube
-- Если нет ни одной иконки, компонент не рендерится
+Ссылки:
 
-**Связи:**
-- Используется в: `ScheduleRow.tsx`
-- Стили: `ScheduleIcons.css`
+- PC/VK: `https://vk.com/be_on_edge`
+- TG1: `https://t.me/BoE_LIVE_1`
+- TG2: `https://t.me/BoE_LIVE_2`
+- TG3: `https://t.me/BoE_LIVE_3`
+- BCU: `https://bcumedia.su/`
 
----
+Если `RT` включен:
 
-### 19. `src/components/CalendarIcon.tsx` - Иконка календаря
+- показывается иконка RuTube;
+- если `RuTube` содержит ссылку, иконка кликабельна;
+- если ссылка пустая или `нет`, иконка статическая.
 
-**Назначение:** Переиспользуемый компонент иконки календаря с буквой/текстом внутри.
+### `Commentator.tsx`
 
-**Props:**
-- `letter: string` - текст для отображения внутри (например, "G" или ".ics")
-- `fontSize?: string` - размер шрифта (по умолчанию "10")
-- `isLightTheme: boolean` - тема
+Показывает плашку комментатора:
 
-**Логика:**
-- Рисует SVG календаря с рамкой
-- Внутри отображает текст (`letter`)
-- Цвета зависят от темы:
-  - Светлая тема: обводка черная, акцент желтый, буква черная
-  - Темная тема: обводка желтая, акцент черный, буква желтая
+- иконка микрофона;
+- имя комментатора;
+- адаптивный перенос имени на две строки.
 
-**Связи:**
-- Используется в: `ScheduleRow.tsx`
-- Стили: через CSS классы (определяются в `ScheduleRow.css`)
+### `Optionally.tsx`
 
----
+Показывает блок:
 
-### 20. `src/components/Commentator.tsx` - Компонент комментатора
-
-**Назначение:** Отображает имя комментатора с иконкой микрофона.
-
-**Props:**
-- `name: string` - имя комментатора
-
-**Связи:**
-- Используется в: `ScheduleRow.tsx`
-- Стили: `Commentator.css`
-
----
-
-### 21. `src/components/Optionally.tsx` - Компонент важной информации
-
-**Назначение:** Отображает дополнительную важную информацию.
-
-**Props:**
-- `text: string` - текст информации
-- `isLightTheme?: boolean` - тема
-
-**Формат:** "Важно: {text}"
-
-**Связи:**
-- Используется в: `ScheduleRow.tsx`
-- Стили: `Optionally.css`
-
----
-
-### 22. `src/App.css` - Глобальные стили
-
-**Назначение:** Определяет общую структуру и стили приложения.
-
-**Основные классы:**
-- `.app-container` - контейнер приложения
-  - `.app-container--light` - светлая тема (фон `#FFD600`, текст черный)
-  - `.app-container--dark` - темная тема (фон `#181818`, текст белый)
-  - CSS переменная `--text-color` для цвета текста
-- `.schedule-container` - контейнер расписания
-  - Flexbox с центрированием
-  - Адаптивные отступы
-- `.day-column` - колонка одного дня
-  - Фиксированная ширина с адаптивностью
-- `.day-rows-container` - контейнер строк расписания
-  - CSS Grid: `grid-template-columns: clamp(80px, 10vw, 100px) 1fr`
-  - Левая колонка: время и иконки
-  - Правая колонка: контент события
-
-**Адаптивность:**
-- Использует `clamp()` для адаптивных размеров
-- Поддерживает различные размеры экранов
-
----
-
-## Поток данных
-
-### Загрузка и обработка данных:
-
-1. **Загрузка CSV:**
-   ```
-   App.tsx (useEffect) 
-   → fetch(CSV_URL) 
-   → parseCSV(text) 
-   → ScheduleItem[]
-   ```
-
-2. **Конвертация времени:**
-   ```
-   originalSchedule 
-   → convertFromGMT3ToLocal() (если useLocalTime === true)
-   → convertedSchedule
-   ```
-
-3. **Фильтрация:**
-   ```
-   convertedSchedule 
-   → filter(isDateEqualOrAfterToday)
-   → только текущие и будущие события
-   ```
-
-4. **Группировка:**
-   ```
-   filteredSchedule 
-   → groupBy(item => `${item.date}_${item.day}`)
-   → { "28.12.2025_суббота": [event1, event2], ... }
-   ```
-
-5. **Рендеринг:**
-   ```
-   byDay 
-   → Object.entries() 
-   → day-column (для каждого дня)
-   → Header + ScheduleRow[] (для каждого события)
-   ```
-
-### Обработка иконок:
-
-```
-ScheduleItem (TG1, TG2, TG3, BCU1, BCU2, BCU3)
-→ getTgNumbers(), getBcuNumbers()
-→ parseBooleanFlag() для каждого флага
-→ number[] (например, [1, 2])
-→ ScheduleIcons (рендерит иконки с номерами)
+```text
+Важно: {text}
 ```
 
-### Интеграция с календарями:
+### `CalendarIcon.tsx`
 
+SVG-иконка календаря с текстом внутри:
+
+- `G`
+- `.ics`
+
+Цвет задается CSS-классами родителя в `ScheduleRow.css`.
+
+### `EventLogo.tsx`
+
+Временный промо-компонент Indy 500:
+
+- использует `src/assets/indy500.png`;
+- имеет `HIDE_AFTER`;
+- после даты скрытия возвращает `null`;
+- переключает текстовые сообщения по таймеру.
+
+## 16. Утилиты
+
+### `csvParser.ts`
+
+- парсит CSV-строки с учетом кавычек;
+- мапит заголовки в поля `ScheduleItem`;
+- валидирует обязательные поля;
+- нормализует время через `normalizeTime`;
+- вычисляет день недели через `getDayOfWeekFromDate`.
+
+### `dateUtils.ts`
+
+Функции:
+
+- `parseDate`
+- `getCurrentDate`
+- `isDateEqualOrAfterToday`
+- `getDayOfWeekFromDate`
+- `convertFromGMT3ToLocal`
+
+Важное поведение:
+
+- `parseDate` создает дату с временем `12:00:00`.
+- `convertFromGMT3ToLocal` создает дату как `...+03:00` и форматирует ее в локальные дату/время браузера.
+
+### `timeUtils.ts`
+
+`normalizeTime(timeStr)` приводит время к `HH:MM`.
+
+### `flagUtils.ts`
+
+`parseBooleanFlag(value)` сравнивает значение с `TRUE_VALUES`.
+
+### `iconUtils.ts`
+
+- `getTgNumbers(item)`
+- `getBcuNumbers(item)`
+
+Возвращают массивы активных номеров.
+
+### `textUtils.ts`
+
+- `formatChampionship` добавляет точку в конце, если ее нет.
+- `formatStage` убирает точку в конце.
+
+### `calendarUtils.ts`
+
+Функции:
+
+- `generateGoogleCalendarUrl`
+- `generateICalendarFile`
+- `downloadICalendarFile`
+
+Дата начала события создается в GMT+3. Если `Duration` заполнен, окончание рассчитывается по нему. Если нет - используется fallback `2 часа`.
+
+### `dataUtils.ts`
+
+`groupBy` используется для группировки расписания по дням и датам.
+
+### `timezoneUtils.ts`
+
+`getUserTimeZone` возвращает строку вида `GMT +3`.
+
+В текущем интерфейсе не используется.
+
+## 17. Константы
+
+Файл: `src/constants/index.ts`
+
+- `CSV_URL` - используется в `App.tsx`.
+- `DAYS_OF_WEEK` - используется в `dateUtils.ts`.
+- `TRUE_VALUES` - используется в `flagUtils.ts`.
+- `DEFAULT_TIMEZONE` - сейчас не используется.
+
+## 18. Стили
+
+### `App.css`
+
+Отвечает за:
+
+- фон приложения;
+- контейнер расписания;
+- zoom controls;
+- плавающие заголовки дней;
+- ширину колонок дней;
+- grid строк расписания;
+- модальное окно фильтров.
+
+### `Menu.css`
+
+Отвечает за:
+
+- фиксированное меню;
+- donation buttons;
+- desktop-переключатели;
+- quick actions;
+- active filter chips;
+- mobile bottom sheet;
+- mobile settings trigger.
+
+### `ScheduleRow.css`
+
+Отвечает за:
+
+- карточку события;
+- левую колонку времени;
+- метаданные события;
+- кнопки календарей;
+- spotter button.
+
+### Остальные стили
+
+- `Header.css` - форма заголовка дня.
+- `DateDisplay.css` - крупная дата.
+- `DayOfWeekDisplay.css` - день недели.
+- `DaySlider.css` - fixed-слайдер дней.
+- `ScheduleIcons.css` - сетка иконок.
+- `Commentator.css` - плашка комментатора.
+- `Optionally.css` - блок важной информации.
+- `EventLogo.css` - промо-блок.
+
+## 19. Адаптивность
+
+Основной breakpoint:
+
+```css
+@media (max-width: 720px)
 ```
-ScheduleRow (кнопка календаря)
-→ handleAddToGoogleCalendar() / handleAddToYandexCalendar()
-→ generateGoogleCalendarUrl() / downloadICalendarFile()
-→ parseScheduleDateTime() (парсит дату/время)
-→ formatDateForCalendar() (форматирует для календаря)
-→ URL открывается / .ics файл скачивается
-```
 
----
+На мобильной версии:
 
-## Зависимости между модулями
+- центральное меню скрыто;
+- сверху остается только `DA` / `ODA`;
+- активные фильтры показываются под верхним рядом;
+- кнопка `Настройки` фиксируется снизу и пульсирует;
+- bottom sheet открывается снизу;
+- сетка настроек в bottom sheet состоит из трех равных колонок;
+- колонка времени в расписании становится шире;
+- время и иконки центрируются;
+- карточка события занимает оставшуюся ширину;
+- комментаторы могут переноситься в две строки.
 
-```
+## 20. Связи между модулями
+
+```text
 App.tsx
-├── constants/index.ts (CSV_URL)
+├── constants/index.ts
+│   └── CSV_URL
 ├── utils/csvParser.ts
 │   ├── utils/timeUtils.ts
 │   └── utils/dateUtils.ts
-│       └── constants/index.ts (DAYS_OF_WEEK)
-├── utils/dataUtils.ts
 ├── utils/dateUtils.ts
-│   ├── constants/index.ts (DAYS_OF_WEEK)
+│   ├── constants/index.ts
 │   └── utils/timeUtils.ts
+├── utils/dataUtils.ts
 ├── utils/flagUtils.ts
-│   └── constants/index.ts (TRUE_VALUES)
+│   └── constants/index.ts
 ├── utils/iconUtils.ts
 │   └── utils/flagUtils.ts
-└── components/
-    ├── Menu.tsx
-    ├── Header.tsx
-    │   ├── DateDisplay.tsx
-    │   └── DayOfWeekDisplay.tsx
-    └── ScheduleRow.tsx
-        ├── ScheduleIcons.tsx
-        ├── Commentator.tsx
-        ├── Optionally.tsx
-        ├── CalendarIcon.tsx
-        ├── utils/timeUtils.ts
-        ├── utils/textUtils.ts
-        └── utils/calendarUtils.ts
-            └── utils/dateUtils.ts (parseDate)
+├── components/Menu.tsx
+│   ├── DonationButtons.tsx
+│   └── EventLogo.tsx
+├── components/DaySlider.tsx
+├── components/Header.tsx
+│   ├── DateDisplay.tsx
+│   └── DayOfWeekDisplay.tsx
+└── components/ScheduleRow.tsx
+    ├── ScheduleIcons.tsx
+    ├── Commentator.tsx
+    ├── Optionally.tsx
+    ├── CalendarIcon.tsx
+    ├── utils/timeUtils.ts
+    ├── utils/calendarUtils.ts
+    └── utils/textUtils.ts
 ```
 
----
+## 21. Render tree
 
-## Важные особенности реализации
+```text
+App
+├── Menu
+│   ├── DonationButtons
+│   ├── active filter chips mobile
+│   ├── desktop controls
+│   ├── active filter chips desktop
+│   ├── EventLogo
+│   └── mobile settings bottom sheet
+├── zoom-controls
+├── DaySlider?
+├── floating-day-header[]
+├── schedule-container
+│   └── schedule-content-zoom
+│       └── day-column[]
+│           ├── Header
+│           │   ├── DateDisplay
+│           │   └── DayOfWeekDisplay
+│           └── day-rows-container
+│               └── ScheduleRow[]
+│                   ├── ScheduleIcons
+│                   ├── Commentator[]
+│                   ├── CalendarIcon[]
+│                   └── Optionally?
+└── filter modal?
+```
 
-### 1. Мемоизация
-- Используется `useMemo` для дорогих вычислений (конвертация расписания, группировка)
-- Используется `useCallback` для обработчиков событий
-- Компоненты обернуты в `React.memo` где необходимо
+## 22. Темы
 
-### 2. Уникальные ключи
-- В `App.tsx` используется сложный ключ для `ScheduleRow`:
-  ```typescript
-  `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`
-  ```
-- Это гарантирует уникальность даже при дублирующихся событиях
+Тема задается через `isLightTheme`.
 
-### 3. Обработка ошибок
-- Валидация данных на этапе парсинга CSV
-- Проверка валидности дат
-- Fallback значения при ошибках
+Основные классы:
 
-### 4. Адаптивность
-- Использование `clamp()` для адаптивных размеров
-- CSS Grid и Flexbox для гибкой верстки
-- Поддержка различных размеров экранов
+- `app-container--light`
+- `app-container--dark`
+- `menu--light`
+- `menu--dark`
+- `schedule-row--light`
+- `schedule-row--dark`
 
-### 5. Темы
-- CSS переменные (`--text-color`) для динамического изменения цветов
-- Классы модификаторы (`--light`, `--dark`) для переключения тем
+Цветовая схема:
 
----
+- светлая тема: желтый фон, черные акценты;
+- темная тема: темный фон, желтые акценты.
 
-## Развертывание
+## 23. Интеграции
 
-### Скрипты в `package.json`:
-- `npm start` - запуск dev-сервера
-- `npm run build` - сборка production версии
-- `npm run deploy` - деплой на GitHub Pages (через `gh-pages`)
+### Google Calendar
 
-### Конфигурация деплоя:
-- `homepage` в `package.json` указывает базовый URL для GitHub Pages
-- `gh-pages` публикует папку `build` в ветку `gh-pages`
+Кнопка `G` вызывает:
 
----
+```ts
+generateGoogleCalendarUrl(scheduleItem)
+window.open(url, '_blank')
+```
 
-## Будущие улучшения
+### iCalendar / Яндекс Календарь
 
-1. Кэширование данных CSV
-2. Обработка ошибок сети (retry, offline mode)
-3. Тестирование (unit, integration)
-4. Оптимизация производительности (lazy loading, виртуализация)
-5. Поддержка нескольких источников данных
-6. Экспорт расписания в другие форматы
+Кнопка `.ics` вызывает:
 
+```ts
+downloadICalendarFile(scheduleItem)
+```
+
+### Live Timing
+
+Если `LiveTiming` заполнен и не равен `нет`, показывается кнопка секундомера.
+
+### Spotter Guide
+
+Если `Spotter` заполнен и не равен `нет`, под иконками слева показывается кнопка `SPOTTER GUIDE`.
+
+## 24. Важные особенности поведения
+
+- `sessionScrollMode = future` не фильтрует строки, а только прокручивает к ближайшей будущей сессии.
+- `Shed` должен быть истинным, иначе строка не попадет в расписание.
+- При пустых комментаторах событие считается `Оригинальная дорожка`.
+- Активные фильтры показываются только если выбрана не вся категория.
+- Удаление последней плашки категории возвращает категорию в состояние `все`.
+- Мобильный `Menu` остается источником высоты верхнего offset, потому ряд `DA` / `ODA` влияет на отступ расписания.
+- Масштаб применяется через CSS `zoom`, а не `transform`.
+
+## 25. Технический долг
+
+### Безопасный
+
+- Удалить или задействовать `timezoneUtils.ts`.
+- Удалить или задействовать `DEFAULT_TIMEZONE`.
+- Удалить устаревший `logo.svg`, если он не используется.
+- Переписать или удалить CRA-тест `App.test.tsx`.
+- Удалить `EventLogo`, если промо-блок больше не нужен.
+
+### Средний
+
+- Вынести `FilterModal` из `App.tsx`.
+- Вынести повторяющиеся переключатели из `Menu.tsx`:
+  - `TimeToggle`
+  - `ViewModeToggle`
+  - `SessionScrollToggle`
+  - `QuickActions`
+  - `ActiveFilterChips`
+- Вынести общий форматтер дня для фильтров.
+- Вынести общий рендер `ScheduleRow`, потому props дублируются в двух ветках `viewMode`.
+
+### Осторожный
+
+- Объединить date/time parsing между `App.tsx` и `calendarUtils.ts`.
+- Пересмотреть carryover-логику с учетом локального часового пояса.
+- Заменить CSS `zoom` на `transform: scale`, если потребуется более стандартное поведение. Это может затронуть плавающие заголовки и scroll-позиционирование.
+
+## 26. Проверка после изменений
+
+Рекомендуемый минимум:
+
+```bash
+npm run build
+```
+
+Что проверить вручную:
+
+- загрузка расписания;
+- переключение `МСК` / `Ваш пояс`;
+- режимы `Все дни` / `По дням`;
+- открытие и применение фильтров;
+- удаление плашек активных фильтров;
+- mobile bottom sheet;
+- кнопки масштаба;
+- календарные кнопки;
+- live timing / spotter guide;
+- отображение carryover-событий.

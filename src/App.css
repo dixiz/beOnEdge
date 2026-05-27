@@ -38,19 +38,13 @@
   padding: var(--menu-offset, 125px) clamp(12px, 3vw, 24px) 0;
 }
 
-@media (min-width: 721px) {
+@media (max-width: 720px) {
   .schedule-container--with-menu {
-    padding: var(--menu-offset, 125px) clamp(12px, 3vw, 24px) 0;
+    padding: var(--menu-offset, 46px) clamp(8px, 2vw, 12px) 0;
   }
 }
 
 @media (min-width: 961px) {
-  .schedule-container--with-menu {
-    padding: var(--menu-offset, 105px) clamp(12px, 3vw, 24px) 0;
-  }
-}
-
-@media (min-width: 1200px) {
   .schedule-container--with-menu {
     padding: var(--menu-offset, 105px) clamp(12px, 3vw, 24px) 0;
   }
@@ -157,8 +151,7 @@
   color: #000000;
 }
 
-.floating-day-header__date,
-.floating-day-header__day {
+.floating-day-header__date {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -219,42 +212,17 @@
 
 .day-rows-container {
   display: grid;
-  grid-template-columns: clamp(80px, 10vw, 100px) 1fr;
-  gap: 0 clamp(12px, 2.4vw, 18px);
-  row-gap: clamp(20px, 3.9vw, 30px);
+  grid-template-columns: clamp(80px, 10vw, 100px) minmax(0, 1fr);
+  gap: 0 clamp(4px, 1vw, 8px);
+  row-gap: clamp(8px, 1.5vw, 12px);
   align-items: start;
   margin-top: clamp(10px, 4vw, 20px);
 }
 
-
-.all-days-list {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(16px, 3vw, 24px);
-  width: min(100%, 980px);
-}
-
-.all-days-row {
-  display: grid;
-  grid-template-columns: clamp(110px, 18vw, 150px) 1fr;
-  gap: clamp(12px, 2.4vw, 18px);
-  align-items: start;
-}
-
-.all-days-date {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.all-days-date--spacer {
-  visibility: hidden;
-}
-
-.all-days-row-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+@media (max-width: 720px) {
+  .day-rows-container {
+    grid-template-columns: clamp(112px, 30vw, 124px) minmax(0, 1fr);
+  }
 }
 
 /* -------------------- Фильтр серий -------------------- */

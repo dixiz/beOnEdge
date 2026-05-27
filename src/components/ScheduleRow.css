@@ -8,10 +8,16 @@
 
 .schedule-row--light {
   color: #000000;
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
 .schedule-row--dark {
   color: white;
+  background: rgba(255, 255, 255, 0.055);
+  border-color: rgba(255, 214, 0, 0.28);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
 }
 
 .time-container {
@@ -19,9 +25,11 @@
   flex-direction: column;
   align-items: flex-start;
   margin-right: 0;
-  padding-right: 8px;
-  width: clamp(80px, 10vw, 100px);
-  min-width: clamp(80px, 10vw, 100px);
+  padding-top: clamp(8px, 1.2vw, 10px);
+  padding-right: 0;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .time-started {
@@ -76,12 +84,29 @@
   width: 100%;
 }
 
+@media (max-width: 720px) {
+  .time-container {
+    align-items: center;
+  }
+
+  .time {
+    text-align: center;
+  }
+}
+
 .content-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin-left: 8px;
+  margin-left: 0;
+  padding: clamp(8px, 1.2vw, 10px) clamp(6px, 1vw, 8px);
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .content-header {
@@ -99,24 +124,81 @@
 
 .championship {
   font-weight: 700;
-  font-size: clamp(20px, 2.55vw, 24px);
-  line-height: 1;
+  font-size: clamp(21px, 2.65vw, 25px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
 }
 
 .stage {
-  font-weight: 700;
-  font-size: clamp(20px, 2.55vw, 24px);
-  line-height: 1;
+  font-weight: 650;
+  font-size: clamp(17px, 2.1vw, 20px);
+  line-height: 1.15;
+  opacity: 0.88;
 }
 
-.place-session {
-  font-weight: 600;
-  font-size: clamp(16px, 1.575vw, 18px);
-  margin-top: 8px;
+.event-stage-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.event-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.event-meta__place,
+.event-meta__session {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: clamp(14px, 1.45vw, 16px);
+  line-height: 1.15;
+}
+
+.event-meta__place {
+  background: rgba(255, 214, 0, 0.18);
+}
+
+.event-meta__session {
+  background: rgba(255, 255, 255, 0.1);
+  min-width: 0;
+}
+
+.schedule-row--light .event-meta__place {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.schedule-row--light .event-meta__session {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+.schedule-row--dark .event-meta__place {
+  color: #FFD600;
+}
+
+.schedule-row--dark .event-meta__session {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .commentators-container {
-  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 6px;
+  width: calc(100% + clamp(43px, 5vw, 47px));
+  max-width: calc(100% + clamp(43px, 5vw, 47px));
 }
 
 .calendar-buttons {

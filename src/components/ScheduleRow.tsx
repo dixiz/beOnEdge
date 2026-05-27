@@ -56,7 +56,6 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   startedLabel,
   timeContainerRef,
 }) => {
-  const itemDuration = duration;
   const commentators = useMemo(() => {
     const filtered = [commentator1, commentator2].filter(Boolean) as string[];
     // Если оба комментатора пустые, возвращаем "Оригинальная дорожка"
@@ -82,12 +81,12 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     stage,
     place,
     session,
-    Duration: itemDuration,
+    Duration: duration,
     day: '', // не используется для календаря
     Commentator1: commentator1,
     Commentator2: commentator2,
     Optionally: optionally
-  }), [date, time, championship, stage, place, session, itemDuration, commentator1, commentator2, optionally]);
+  }), [date, time, championship, stage, place, session, duration, commentator1, commentator2, optionally]);
   
   // Обработчик добавления в Google Calendar
   const handleAddToGoogleCalendar = useCallback(() => {
@@ -158,14 +157,17 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
             <div className="championship">
               {formattedChampionship}
         </div>
-            {formattedStage && (
-              <div className="stage">
-                {formattedStage}
-        </div>
+            {(formattedStage || place) && (
+              <div className="event-stage-row">
+                {formattedStage && <div className="stage">{formattedStage}</div>}
+                {place && <span className="event-meta__place">{place}</span>}
+              </div>
             )}
-            <div className="place-session">
-              {place ? `${place}. ${session}` : session}
-            </div>
+            {session && (
+              <div className="event-meta">
+                <span className="event-meta__session">{session}</span>
+              </div>
+            )}
             <div className="commentators-container">
                 {commentators.map((name, idx) => (
                 <Commentator key={`${name}-${idx}`} name={name} />
@@ -179,7 +181,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
               title="Добавить в Google Calendar"
               aria-label="Добавить в Google Calendar"
             >
-              <CalendarIcon letter="G" fontSize="10" isLightTheme={isLightTheme} />
+              <CalendarIcon letter="G" fontSize="10" />
             </button>
             <button 
               onClick={handleAddToYandexCalendar}
@@ -187,7 +189,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
               title="Файл .ics для календаря"
               aria-label="Файл .ics для календаря"
             >
-              <CalendarIcon letter=".ics" fontSize="8" isLightTheme={isLightTheme} />
+              <CalendarIcon letter=".ics" fontSize="8" />
             </button>
             {liveTimingUrl && (
               <button
