@@ -6,9 +6,9 @@ import DayOfWeekDisplay from './components/DayOfWeekDisplay';
 import ScheduleRow from './components/ScheduleRow';
 import Menu from './components/Menu';
 import DaySlider from './components/DaySlider';
-import { ScheduleItem } from './types/schedule';
-import { CSV_URL } from './constants';
-import { parseCSV } from './utils/csvParser';
+import { CommentatorScheduleData, ScheduleItem } from './types/schedule';
+import { COMMENTATOR_SCHEDULE_CSV_URL, CSV_URL } from './constants';
+import { parseCSV, parseCommentatorScheduleCSV } from './utils/csvParser';
 import { groupBy } from './utils/dataUtils';
 import { convertFromGMT3ToLocal, isDateEqualOrAfterToday, parseDate, getDayOfWeekFromDate } from './utils/dateUtils';
 import { parseBooleanFlag } from './utils/flagUtils';
@@ -177,10 +177,17 @@ const getScheduleItemDateTime = (item: ScheduleItem, useLocalTime: boolean): Dat
 const buildRowKey = (row: DisplayScheduleItem, index: number) =>
   `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
 
+const isLeMans24HoursEvent = (item: Pick<ScheduleItem, 'championship' | 'session'>) =>
+  item.championship.trim().toLowerCase() === 'wec' &&
+  item.session.trim() === '94-я гонка "24 часа Ле-Мана"';
+
 function App() {
   const [originalSchedule, setOriginalSchedule] = useState<ScheduleItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string|null>(null);
+  const [commentatorSchedule, setCommentatorSchedule] = useState<CommentatorScheduleData | null>(null);
+  const [commentatorScheduleLoading, setCommentatorScheduleLoading] = useState(false);
+  const [commentatorScheduleError, setCommentatorScheduleError] = useState<string | null>(null);
   const [isLightTheme, setIsLightTheme] = useState(false);
   const [useLocalTime, setUseLocalTime] = useState(false);
   const [viewMode, setViewMode] = useState<'all' | 'byDay'>('all');
@@ -228,6 +235,30 @@ function App() {
       })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    setCommentatorScheduleLoading(true);
+    setCommentatorScheduleError(null);
+
+    fetch(COMMENTATOR_SCHEDULE_CSV_URL)
+      .then(r => {
+        if (!r.ok) throw new Error('Ошибка загрузки расписания комментаторов.');
+        return r.text();
+      })
+      .then(text => {
+        try {
+          const parsed = parseCommentatorScheduleCSV(text);
+          if (parsed.times.length === 0 || parsed.rows.length === 0) {
+            throw new Error('Расписание комментаторов не найдено');
+          }
+          setCommentatorSchedule(parsed);
+        } catch (error) {
+          setCommentatorScheduleError(error instanceof Error ? error.message : 'Ошибка обработки расписания комментаторов');
+        }
+      })
+      .catch(e => setCommentatorScheduleError(e.message))
+      .finally(() => setCommentatorScheduleLoading(false));
   }, []);
 
   // Мемоизация конвертированного расписания с фильтрацией по дате
@@ -1049,6 +1080,9 @@ function App() {
                           spotter={row.Spotter}
                           displayTime={row.displayTime}
                           startedLabel={row.startedLabel}
+                          commentatorSchedule={isLeMans24HoursEvent(row) ? commentatorSchedule : undefined}
+                          commentatorScheduleLoading={isLeMans24HoursEvent(row) ? commentatorScheduleLoading : false}
+                          commentatorScheduleError={isLeMans24HoursEvent(row) ? commentatorScheduleError : null}
                           timeContainerRef={el => {
                             rowAnchorRefs.current[rowKey] = el;
                           }}
@@ -1093,6 +1127,9 @@ function App() {
                       spotter={row.Spotter}
                       displayTime={row.displayTime}
                       startedLabel={row.startedLabel}
+                      commentatorSchedule={isLeMans24HoursEvent(row) ? commentatorSchedule : undefined}
+                      commentatorScheduleLoading={isLeMans24HoursEvent(row) ? commentatorScheduleLoading : false}
+                      commentatorScheduleError={isLeMans24HoursEvent(row) ? commentatorScheduleError : null}
                       timeContainerRef={el => {
                         rowAnchorRefs.current[rowKey] = el;
                       }}

@@ -28,3 +28,13 @@ export interface ScheduleItem {
   Spotter?: string; // ссылка на spotter (опционально)
 }
 
+export interface CommentatorScheduleRow {
+  commentator: string;
+  slots: boolean[];
+}
+
+export interface CommentatorScheduleData {
+  times: string[];
+  rows: CommentatorScheduleRow[];
+}
+
