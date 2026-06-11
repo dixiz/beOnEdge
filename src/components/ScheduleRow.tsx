@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import './ScheduleRow.css';
 import ScheduleIcons from './ScheduleIcons';
 import Commentator from './Commentator';
@@ -7,7 +7,7 @@ import CalendarIcon from './CalendarIcon';
 import { normalizeTime } from '../utils/timeUtils';
 import { generateGoogleCalendarUrl, downloadICalendarFile } from '../utils/calendarUtils';
 import { formatChampionship, formatStage } from '../utils/textUtils';
-import { ScheduleItem } from '../types/schedule';
+import { CommentatorScheduleData, ScheduleItem } from '../types/schedule';
 
 interface ScheduleRowProps {
   date: string;
@@ -30,8 +30,26 @@ interface ScheduleRowProps {
   spotter?: string;
   displayTime?: string;
   startedLabel?: string;
+  commentatorSchedule?: CommentatorScheduleData | null;
+  commentatorScheduleLoading?: boolean;
+  commentatorScheduleError?: string | null;
   timeContainerRef?: React.Ref<HTMLDivElement>;
 }
+
+const COMMENTATOR_SCHEDULE_COLORS = [
+  '#F6C90E',
+  '#4CC9F0',
+  '#F72585',
+  '#80ED99',
+  '#B5179E',
+  '#FF9F1C',
+  '#2EC4B6',
+  '#A3CEF1',
+  '#E76F51',
+  '#CDB4DB',
+  '#90BE6D',
+  '#F28482'
+];
 
 const ScheduleRow: React.FC<ScheduleRowProps> = ({
   date,
@@ -54,8 +72,13 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   spotter,
   displayTime,
   startedLabel,
+  commentatorSchedule,
+  commentatorScheduleLoading = false,
+  commentatorScheduleError,
   timeContainerRef,
 }) => {
+  const [isCommentatorScheduleOpen, setIsCommentatorScheduleOpen] = useState(false);
+
   const commentators = useMemo(() => {
     const filtered = [commentator1, commentator2].filter(Boolean) as string[];
     // Если оба комментатора пустые, возвращаем "Оригинальная дорожка"
@@ -122,6 +145,37 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
     if (!spotterUrl) return;
     window.open(spotterUrl, '_blank');
   }, [spotterUrl]);
+
+  const shouldShowCommentatorSchedule = commentatorScheduleLoading || !!commentatorSchedule || !!commentatorScheduleError;
+
+  const handleOpenCommentatorSchedule = useCallback(() => {
+    setIsCommentatorScheduleOpen(true);
+  }, []);
+
+  const handleCloseCommentatorSchedule = useCallback(() => {
+    setIsCommentatorScheduleOpen(false);
+  }, []);
+
+  const handleCommentatorScheduleBackdropClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      handleCloseCommentatorSchedule();
+    }
+  }, [handleCloseCommentatorSchedule]);
+
+  useEffect(() => {
+    if (!isCommentatorScheduleOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        handleCloseCommentatorSchedule();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isCommentatorScheduleOpen, handleCloseCommentatorSchedule]);
   
   return (
     <div className="schedule-row-wrapper">
@@ -173,6 +227,15 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
                 <Commentator key={`${name}-${idx}`} name={name} />
                 ))}
               </div>
+            {shouldShowCommentatorSchedule && (
+              <button
+                type="button"
+                className={`commentator-schedule-trigger ${isLightTheme ? 'commentator-schedule-trigger--light' : 'commentator-schedule-trigger--dark'}`}
+                onClick={handleOpenCommentatorSchedule}
+              >
+                Расписание комментаторов
+              </button>
+            )}
           </div>
           <div className="calendar-buttons">
             <button 
@@ -236,6 +299,121 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
           <Optionally text={optionally.trim()} isLightTheme={isLightTheme} />
         )}
       </div>
+      {isCommentatorScheduleOpen && (
+        <div
+          className="commentator-schedule-modal"
+          role="presentation"
+          onMouseDown={handleCommentatorScheduleBackdropClick}
+        >
+          <div
+            className={`commentator-schedule-modal__content ${isLightTheme ? 'commentator-schedule-modal__content--light' : 'commentator-schedule-modal__content--dark'}`}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="commentator-schedule-title"
+          >
+            <div className="commentator-schedule-modal__header">
+              <h3 id="commentator-schedule-title">Расписание комментаторов</h3>
+              <button
+                type="button"
+                className="commentator-schedule-modal__close"
+                aria-label="Закрыть"
+                onClick={handleCloseCommentatorSchedule}
+              >
+                x
+              </button>
+            </div>
+            {commentatorScheduleLoading && (
+              <div className="commentator-schedule-message">Загрузка расписания...</div>
+            )}
+            {!commentatorScheduleLoading && commentatorScheduleError && (
+              <div className="commentator-schedule-message commentator-schedule-message--error">
+                {commentatorScheduleError}
+              </div>
+            )}
+            {!commentatorScheduleLoading && !commentatorScheduleError && commentatorSchedule && (
+              <div className="commentator-schedule-table-wrap">
+                <table className="commentator-schedule-table commentator-schedule-table--desktop">
+                  <thead>
+                    <tr>
+                      <th className="commentator-schedule-table__name-header">Комментатор</th>
+                      {commentatorSchedule.times.map((time, index) => (
+                        <th key={`${time}-${index}`} className="commentator-schedule-table__time">
+                          <span className="commentator-schedule-table__time-label">{time}</span>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {commentatorSchedule.rows.map((row, rowIndex) => (
+                      <tr
+                        key={row.commentator}
+                        style={{
+                          '--commentator-schedule-color': COMMENTATOR_SCHEDULE_COLORS[rowIndex % COMMENTATOR_SCHEDULE_COLORS.length]
+                        } as React.CSSProperties}
+                      >
+                        <th className="commentator-schedule-table__name" scope="row">
+                          {row.commentator}
+                        </th>
+                        {row.slots.map((isActive, index) => (
+                          <td
+                            key={`${row.commentator}-${index}`}
+                            className={`commentator-schedule-table__slot ${isActive ? 'commentator-schedule-table__slot--active' : ''}`}
+                            aria-label={`${row.commentator}, ${commentatorSchedule.times[index]}: ${isActive ? 'присутствует' : 'нет'}`}
+                          >
+                            {isActive ? <span className="commentator-schedule-table__mark" /> : null}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <table className="commentator-schedule-table commentator-schedule-table--mobile">
+                  <thead>
+                    <tr>
+                      <th className="commentator-schedule-mobile__time-header">Время</th>
+                      {commentatorSchedule.rows.map((row, rowIndex) => (
+                        <th
+                          key={row.commentator}
+                          className="commentator-schedule-mobile__commentator"
+                          style={{
+                            '--commentator-schedule-color': COMMENTATOR_SCHEDULE_COLORS[rowIndex % COMMENTATOR_SCHEDULE_COLORS.length]
+                          } as React.CSSProperties}
+                        >
+                          {row.commentator}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {commentatorSchedule.times.map((time, timeIndex) => (
+                      <tr key={`${time}-${timeIndex}`}>
+                        <th className="commentator-schedule-mobile__time" scope="row">
+                          {time}
+                        </th>
+                        {commentatorSchedule.rows.map((row, rowIndex) => {
+                          const isActive = row.slots[timeIndex];
+                          return (
+                            <td
+                              key={`${time}-${row.commentator}`}
+                              className={`commentator-schedule-mobile__slot ${isActive ? 'commentator-schedule-mobile__slot--active' : ''}`}
+                              style={{
+                                '--commentator-schedule-color': COMMENTATOR_SCHEDULE_COLORS[rowIndex % COMMENTATOR_SCHEDULE_COLORS.length]
+                              } as React.CSSProperties}
+                              aria-label={`${time}, ${row.commentator}: ${isActive ? 'присутствует' : 'нет'}`}
+                            >
+                              {isActive ? <span className="commentator-schedule-table__mark" /> : null}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

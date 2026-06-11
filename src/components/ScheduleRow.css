@@ -204,6 +204,417 @@
   max-width: calc(100% + clamp(43px, 5vw, 47px));
 }
 
+.commentator-schedule-trigger {
+  margin-top: 10px;
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: clamp(13px, 1.4vw, 15px);
+  line-height: 1.1;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.commentator-schedule-trigger--dark {
+  background: rgba(255, 214, 0, 0.16);
+  border-color: rgba(255, 214, 0, 0.5);
+  color: #FFD600;
+}
+
+.commentator-schedule-trigger--light {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.3);
+  color: #000000;
+}
+
+.commentator-schedule-trigger:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.commentator-schedule-trigger--dark:hover {
+  box-shadow: 0 0 0 2px rgba(255, 214, 0, 0.24);
+}
+
+.commentator-schedule-trigger--light:hover {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.16);
+}
+
+.commentator-schedule-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.68);
+  box-sizing: border-box;
+}
+
+.commentator-schedule-modal__content {
+  width: min(1180px, 100%);
+  max-height: min(760px, 92vh);
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  overflow: hidden;
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.45);
+}
+
+.commentator-schedule-modal__content--dark {
+  background: #151515;
+  border-color: rgba(255, 214, 0, 0.4);
+  color: #FFFFFF;
+}
+
+.commentator-schedule-modal__content--light {
+  background: #FFFFFF;
+  border-color: rgba(0, 0, 0, 0.18);
+  color: #000000;
+}
+
+.commentator-schedule-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid currentColor;
+}
+
+.commentator-schedule-modal__header h3 {
+  margin: 0;
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.1;
+}
+
+.commentator-schedule-modal__close {
+  width: 34px;
+  height: 34px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.commentator-schedule-message {
+  padding: 22px 16px;
+  font-weight: 700;
+}
+
+.commentator-schedule-message--error {
+  color: #ff6b6b;
+}
+
+.commentator-schedule-table-wrap {
+  isolation: isolate;
+  overflow: auto;
+  padding: 12px 0 16px;
+  scrollbar-color: #FFD600 rgba(255, 255, 255, 0.08);
+  scrollbar-width: thin;
+}
+
+.commentator-schedule-table-wrap::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.commentator-schedule-table-wrap::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+}
+
+.commentator-schedule-table-wrap::-webkit-scrollbar-thumb {
+  background: #FFD600;
+  border: 2px solid #151515;
+  border-radius: 999px;
+}
+
+.commentator-schedule-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #ffe45c;
+}
+
+.commentator-schedule-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: max-content;
+  font-size: 13px;
+}
+
+.commentator-schedule-table--mobile {
+  display: none;
+}
+
+.commentator-schedule-table th,
+.commentator-schedule-table td {
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-table th,
+.commentator-schedule-modal__content--light .commentator-schedule-table td {
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+.commentator-schedule-table__name-header,
+.commentator-schedule-table__name {
+  position: sticky;
+  left: 0;
+  z-index: 7;
+  min-width: 204px;
+  max-width: 240px;
+  padding: 8px 12px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.commentator-schedule-table__name-header {
+  z-index: 8;
+  top: 0;
+}
+
+.commentator-schedule-modal__content--dark .commentator-schedule-table__name-header,
+.commentator-schedule-modal__content--dark .commentator-schedule-table__name {
+  background: #202020;
+  box-shadow: 2px 0 0 #202020;
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-table__name-header,
+.commentator-schedule-modal__content--light .commentator-schedule-table__name {
+  background: #f3f3f3;
+  box-shadow: 2px 0 0 #f3f3f3;
+}
+
+.commentator-schedule-table__name {
+  padding-left: 12px;
+  padding-right: 28px;
+  font-size: 15px;
+  font-weight: 850;
+}
+
+.commentator-schedule-table__name::before {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 6px;
+  bottom: 6px;
+  width: 7px;
+  border-radius: 999px;
+  background: var(--commentator-schedule-color, #FFD600);
+}
+
+.commentator-schedule-table__time {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  min-width: 42px;
+  height: 84px;
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.commentator-schedule-table__time-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+.commentator-schedule-modal__content--dark .commentator-schedule-table__time {
+  background: #202020;
+  color: #FFD600;
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-table__time {
+  background: #f3f3f3;
+  color: #000000;
+}
+
+.commentator-schedule-table__slot {
+  position: relative;
+  z-index: 0;
+  min-width: 42px;
+  height: 30px;
+  padding: 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-table__slot {
+  background: rgba(0, 0, 0, 0.025);
+}
+
+.commentator-schedule-table__slot--active {
+  background: var(--commentator-schedule-color, rgba(255, 214, 0, 0.84));
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-table__slot--active {
+  background: var(--commentator-schedule-color, rgba(0, 0, 0, 0.82));
+}
+
+.commentator-schedule-table__mark {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.72);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22);
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-table__mark {
+  background: rgba(0, 0, 0, 0.72);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.commentator-schedule-mobile__time-header,
+.commentator-schedule-mobile__time,
+.commentator-schedule-mobile__commentator,
+.commentator-schedule-mobile__slot {
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__time-header,
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__time,
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__commentator,
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__slot {
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+.commentator-schedule-mobile__time-header,
+.commentator-schedule-mobile__time {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  min-width: 52px;
+  padding: 6px 5px;
+  font-weight: 850;
+  font-size: 15px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.commentator-schedule-mobile__time-header {
+  top: 0;
+  z-index: 9;
+}
+
+.commentator-schedule-mobile__commentator {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  min-width: 76px;
+  max-width: 82px;
+  height: 48px;
+  padding: 2px 2px 8px;
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 0.98;
+  text-align: center;
+  vertical-align: middle;
+  white-space: normal;
+  word-break: normal;
+}
+
+.commentator-schedule-mobile__commentator::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 28px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--commentator-schedule-color, #FFD600);
+  transform: translateX(-50%);
+}
+
+.commentator-schedule-mobile__slot {
+  min-width: 76px;
+  height: 28px;
+  padding: 0;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.commentator-schedule-mobile__slot--active {
+  background: var(--commentator-schedule-color, rgba(255, 214, 0, 0.84));
+}
+
+.commentator-schedule-modal__content--dark .commentator-schedule-mobile__time-header,
+.commentator-schedule-modal__content--dark .commentator-schedule-mobile__time,
+.commentator-schedule-modal__content--dark .commentator-schedule-mobile__commentator {
+  background: #202020;
+}
+
+.commentator-schedule-modal__content--dark .commentator-schedule-mobile__time-header,
+.commentator-schedule-modal__content--dark .commentator-schedule-mobile__time {
+  color: #FFD600;
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__time-header,
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__time,
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__commentator {
+  background: #f3f3f3;
+}
+
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__time-header,
+.commentator-schedule-modal__content--light .commentator-schedule-mobile__time {
+  color: #000000;
+}
+
+@media (max-width: 720px) {
+  .commentator-schedule-modal {
+    padding: 4px;
+  }
+
+  .commentator-schedule-modal__content {
+    max-height: 94vh;
+    border-radius: 12px;
+  }
+
+  .commentator-schedule-modal__header {
+    padding: 10px 12px;
+  }
+
+  .commentator-schedule-modal__header h3 {
+    font-size: 18px;
+  }
+
+  .commentator-schedule-modal__close {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .commentator-schedule-table-wrap {
+    padding-top: 0;
+  }
+
+  .commentator-schedule-table--desktop {
+    display: none;
+  }
+
+  .commentator-schedule-table--mobile {
+    display: table;
+  }
+}
+
 .calendar-buttons {
   display: flex;
   flex-direction: column;

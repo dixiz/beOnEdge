@@ -1,4 +1,4 @@
-import { ScheduleItem } from '../types/schedule';
+import { CommentatorScheduleData, ScheduleItem } from '../types/schedule';
 import { normalizeTime } from './timeUtils';
 import { getDayOfWeekFromDate } from './dateUtils';
 
@@ -34,7 +34,7 @@ const HEADER_MAP: Record<string, keyof ScheduleItem> = {
 };
 
 // Улучшенный парсер CSV строки (обрабатывает кавычки)
-function parseCSVLine(line: string): string[] {
+export function parseCSVLine(line: string): string[] {
   const result: string[] = [];
   let current = '';
   let inQuotes = false;
@@ -97,5 +97,44 @@ export function parseCSV(text: string): ScheduleItem[] {
       time: normalizeTime(item.time),
       day: getDayOfWeekFromDate(item.date) // Вычисляем день недели из даты
     })) as ScheduleItem[];
+}
+
+const COMMENTATOR_NAME_COLUMN = 0;
+const FIRST_TIME_COLUMN = 3;
+const TIME_HEADER_PATTERN = /^\d{1,2}:\d{2}$/;
+
+function isFilledScheduleCell(value: string | undefined): boolean {
+  const normalized = (value ?? '').trim().toLowerCase();
+  return normalized !== '' && normalized !== '0' && normalized !== 'false' && normalized !== 'нет';
+}
+
+export function parseCommentatorScheduleCSV(text: string): CommentatorScheduleData {
+  const lines = text.split('\n').filter(line => line.trim() !== '');
+  if (lines.length < 2) {
+    return { times: [], rows: [] };
+  }
+
+  const headers = parseCSVLine(lines[0]).map(header => header.trim());
+  const timeColumns = headers
+    .map((header, index) => ({ header, index }))
+    .filter(({ header, index }) => index >= FIRST_TIME_COLUMN && TIME_HEADER_PATTERN.test(header));
+
+  const rows = lines.slice(1)
+    .map(line => {
+      const values = parseCSVLine(line);
+      const commentator = (values[COMMENTATOR_NAME_COLUMN] ?? '').trim();
+      if (!commentator) return null;
+
+      return {
+        commentator,
+        slots: timeColumns.map(({ index }) => isFilledScheduleCell(values[index]))
+      };
+    })
+    .filter((row): row is NonNullable<typeof row> => row !== null);
+
+  return {
+    times: timeColumns.map(({ header }) => header),
+    rows
+  };
 }
 
