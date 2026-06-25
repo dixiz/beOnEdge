@@ -177,9 +177,20 @@ const getScheduleItemDateTime = (item: ScheduleItem, useLocalTime: boolean): Dat
 const buildRowKey = (row: DisplayScheduleItem, index: number) =>
   `${row.date}_${row.time}_${row.championship}_${row.stage || ''}_${row.session}_${row.place}_${row.Commentator1 || ''}_${row.Commentator2 || ''}_${row.Optionally || ''}_${index}`;
 
-const isLeMans24HoursEvent = (item: Pick<ScheduleItem, 'championship' | 'session'>) =>
-  item.championship.trim().toLowerCase() === 'wec' &&
-  item.session.trim() === '94-я гонка "24 часа Ле-Мана"';
+const isCommentatorScheduleEvent = (item: Pick<ScheduleItem, 'championship' | 'session'>) => {
+  const championship = item.championship.trim();
+  const session = item.session.trim();
+
+  const isLeMans24h =
+    championship.toLowerCase() === 'wec' &&
+    session === '94-я гонка "24 часа Ле-Мана"';
+
+  const isGtwcEuropeEndurance24h =
+    championship === 'ГТВЧ Европа (Эндуранс)' &&
+    session === 'Гонка (24 часа)';
+
+  return isLeMans24h || isGtwcEuropeEndurance24h;
+};
 
 function App() {
   const [originalSchedule, setOriginalSchedule] = useState<ScheduleItem[]>([]);
@@ -1080,9 +1091,9 @@ function App() {
                           spotter={row.Spotter}
                           displayTime={row.displayTime}
                           startedLabel={row.startedLabel}
-                          commentatorSchedule={isLeMans24HoursEvent(row) ? commentatorSchedule : undefined}
-                          commentatorScheduleLoading={isLeMans24HoursEvent(row) ? commentatorScheduleLoading : false}
-                          commentatorScheduleError={isLeMans24HoursEvent(row) ? commentatorScheduleError : null}
+                          commentatorSchedule={isCommentatorScheduleEvent(row) ? commentatorSchedule : undefined}
+                          commentatorScheduleLoading={isCommentatorScheduleEvent(row) ? commentatorScheduleLoading : false}
+                          commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                           timeContainerRef={el => {
                             rowAnchorRefs.current[rowKey] = el;
                           }}
@@ -1127,9 +1138,9 @@ function App() {
                       spotter={row.Spotter}
                       displayTime={row.displayTime}
                       startedLabel={row.startedLabel}
-                      commentatorSchedule={isLeMans24HoursEvent(row) ? commentatorSchedule : undefined}
-                      commentatorScheduleLoading={isLeMans24HoursEvent(row) ? commentatorScheduleLoading : false}
-                      commentatorScheduleError={isLeMans24HoursEvent(row) ? commentatorScheduleError : null}
+                      commentatorSchedule={isCommentatorScheduleEvent(row) ? commentatorSchedule : undefined}
+                      commentatorScheduleLoading={isCommentatorScheduleEvent(row) ? commentatorScheduleLoading : false}
+                      commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                       timeContainerRef={el => {
                         rowAnchorRefs.current[rowKey] = el;
                       }}
