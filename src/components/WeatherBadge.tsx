@@ -215,8 +215,17 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
         aria-label={`Прогноз погоды. На старт: ${getWeatherDescription(startForecast.weather_code)}, ${temperature} градусов. Открыть полный прогноз`}
         onClick={handleOpen}
       >
-        <WeatherIcon code={startForecast.weather_code} isLightTheme={isLightTheme} />
-        <span className="weather-badge__temp">{temperature}°</span>
+        <span className="weather-badge__start">
+          <WeatherIcon code={startForecast.weather_code} isLightTheme={isLightTheme} />
+          <span className="weather-badge__temp">{temperature}°</span>
+          <span className="weather-badge__start-label">на старте</span>
+        </span>
+        <span className="weather-badge__action">
+          <span>прогноз</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="weather-badge__arrow">
+            <path d="M9 5 16 12 9 19" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
       </button>
       {isOpen && (
         <div
