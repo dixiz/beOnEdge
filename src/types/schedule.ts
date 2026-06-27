@@ -1,3 +1,5 @@
+import { WeatherForecastPoint } from './weather';
+
 export interface ScheduleItem {
   Shed?: string;     // флаг "запланировано" (опционально)
   Live?: string;     // флаг "в эфире" (опционально)
@@ -26,6 +28,7 @@ export interface ScheduleItem {
   LiveTiming?: string; // ссылка на live timing (опционально)
   RuTube?: string; // ссылка на RuTube (опционально)
   Spotter?: string; // ссылка на spotter (опционально)
+  weatherForecast?: WeatherForecastPoint[];
 }
 
 export interface CommentatorScheduleRow {
