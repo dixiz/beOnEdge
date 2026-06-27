@@ -8,6 +8,8 @@ import { normalizeTime } from '../utils/timeUtils';
 import { generateGoogleCalendarUrl, downloadICalendarFile } from '../utils/calendarUtils';
 import { formatChampionship, formatStage } from '../utils/textUtils';
 import { CommentatorScheduleData, ScheduleItem } from '../types/schedule';
+import { WeatherForecastPoint } from '../types/weather';
+import WeatherBadge from './WeatherBadge';
 
 interface ScheduleRowProps {
   date: string;
@@ -33,6 +35,7 @@ interface ScheduleRowProps {
   commentatorSchedule?: CommentatorScheduleData | null;
   commentatorScheduleLoading?: boolean;
   commentatorScheduleError?: string | null;
+  weatherForecast?: WeatherForecastPoint[];
   timeContainerRef?: React.Ref<HTMLDivElement>;
 }
 
@@ -75,6 +78,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   commentatorSchedule,
   commentatorScheduleLoading = false,
   commentatorScheduleError,
+  weatherForecast,
   timeContainerRef,
 }) => {
   const [isCommentatorScheduleOpen, setIsCommentatorScheduleOpen] = useState(false);
@@ -297,6 +301,11 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
         </div>
         {optionally && optionally.trim() && (
           <Optionally text={optionally.trim()} isLightTheme={isLightTheme} />
+        )}
+        {weatherForecast && weatherForecast.length > 0 && (
+          <div className="weather-badge-container">
+            <WeatherBadge forecast={weatherForecast} isLightTheme={isLightTheme} />
+          </div>
         )}
       </div>
       {isCommentatorScheduleOpen && (

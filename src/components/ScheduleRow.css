@@ -149,8 +149,8 @@
 .event-meta {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  flex-wrap: nowrap;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
   margin-top: 6px;
 }
@@ -191,6 +191,12 @@
 
 .schedule-row--dark .event-meta__session {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.weather-badge-container {
+  display: flex;
+  width: 100%;
+  margin-top: 6px;
 }
 
 .commentators-container {

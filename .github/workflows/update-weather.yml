@@ -1,0 +1,37 @@
+name: Update Weather Data
+
+on:
+  schedule:
+    - cron: '15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: update-weather-data
+  cancel-in-progress: false
+
+jobs:
+  update-weather:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout GitHub Pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Download weather data
+        run: |
+          mkdir -p data
+          curl -fL --retry 3 --retry-delay 10 \
+            http://139.28.221.181/weather/weather_cache.json \
+            -o data/weather_cache.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/weather_cache.json
+          git diff --staged --quiet || git commit -m "Update weather data"
+          git push

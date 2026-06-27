@@ -7,8 +7,10 @@ import ScheduleRow from './components/ScheduleRow';
 import Menu from './components/Menu';
 import DaySlider from './components/DaySlider';
 import { CommentatorScheduleData, ScheduleItem } from './types/schedule';
-import { COMMENTATOR_SCHEDULE_CSV_URL, CSV_URL } from './constants';
+import { WeatherForecastPoint } from './types/weather';
+import { COMMENTATOR_SCHEDULE_CSV_URL, CSV_URL, WEATHER_CACHE_URL } from './constants';
 import { parseCSV, parseCommentatorScheduleCSV } from './utils/csvParser';
+import { buildWeatherEventKey, buildWeatherLookupMap, parseWeatherCache } from './utils/weatherUtils';
 import { groupBy } from './utils/dataUtils';
 import { convertFromGMT3ToLocal, isDateEqualOrAfterToday, parseDate, getDayOfWeekFromDate } from './utils/dateUtils';
 import { parseBooleanFlag } from './utils/flagUtils';
@@ -199,6 +201,7 @@ function App() {
   const [commentatorSchedule, setCommentatorSchedule] = useState<CommentatorScheduleData | null>(null);
   const [commentatorScheduleLoading, setCommentatorScheduleLoading] = useState(false);
   const [commentatorScheduleError, setCommentatorScheduleError] = useState<string | null>(null);
+  const [weatherLookupMap, setWeatherLookupMap] = useState<Map<string, WeatherForecastPoint[]>>(new Map());
   const [isLightTheme, setIsLightTheme] = useState(false);
   const [useLocalTime, setUseLocalTime] = useState(false);
   const [viewMode, setViewMode] = useState<'all' | 'byDay'>('all');
@@ -272,6 +275,21 @@ function App() {
       .finally(() => setCommentatorScheduleLoading(false));
   }, []);
 
+  useEffect(() => {
+    fetch(WEATHER_CACHE_URL)
+      .then(r => {
+        if (!r.ok) throw new Error('Ошибка загрузки прогноза погоды.');
+        return r.text();
+      })
+      .then(text => {
+        const parsed = parseWeatherCache(text);
+        setWeatherLookupMap(buildWeatherLookupMap(parsed.events));
+      })
+      .catch(() => {
+        setWeatherLookupMap(new Map());
+      });
+  }, []);
+
   // Мемоизация конвертированного расписания с фильтрацией по дате
   const convertedSchedule = useMemo(() => {
     let schedule = originalSchedule;
@@ -284,6 +302,16 @@ function App() {
         shed.toLowerCase() === 'истина';
       return isTrue;
     });
+
+    schedule = schedule.map(item => ({
+      ...item,
+      weatherForecast: weatherLookupMap.get(buildWeatherEventKey({
+        date: item.date,
+        time: item.time,
+        championship: item.championship,
+        stage: item.stage
+      }))
+    }));
     
     // Конвертируем время, если нужно
     if (useLocalTime && schedule.length > 0) {
@@ -307,7 +335,7 @@ function App() {
       const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
       return endDateOnly >= today;
     });
-  }, [useLocalTime, originalSchedule]);
+  }, [useLocalTime, originalSchedule, weatherLookupMap]);
 
   const normalizeDateShort = useCallback((dateStr: string) => {
     // Вход теперь всегда dd.mm.yyyy, нормализуем только к короткому виду dd.mm.yy
@@ -1094,6 +1122,7 @@ function App() {
                           commentatorSchedule={isCommentatorScheduleEvent(row) ? commentatorSchedule : undefined}
                           commentatorScheduleLoading={isCommentatorScheduleEvent(row) ? commentatorScheduleLoading : false}
                           commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
+                          weatherForecast={row.weatherForecast}
                           timeContainerRef={el => {
                             rowAnchorRefs.current[rowKey] = el;
                           }}
@@ -1141,6 +1170,7 @@ function App() {
                       commentatorSchedule={isCommentatorScheduleEvent(row) ? commentatorSchedule : undefined}
                       commentatorScheduleLoading={isCommentatorScheduleEvent(row) ? commentatorScheduleLoading : false}
                       commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
+                      weatherForecast={row.weatherForecast}
                       timeContainerRef={el => {
                         rowAnchorRefs.current[rowKey] = el;
                       }}

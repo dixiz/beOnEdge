@@ -6,6 +6,9 @@ export const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDWQ_L7
 
 export const COMMENTATOR_SCHEDULE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQDWQ_L7Uqmpdzp4g2N4ndbY0oRqtatyC-ZBvoVeKKnhaj0DHPCCNQ0jK8EsC434dSt4FGLq4KmdIcI/pub?gid=1952221950&single=true&output=csv";
 
+export const WEATHER_CACHE_URL =
+  process.env.REACT_APP_WEATHER_CACHE_URL?.trim() || './data/weather_cache.json';
+
 export const DAYS_OF_WEEK = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'];
 
 export const TRUE_VALUES = ['TRUE', 'true', '1', '✓'];
