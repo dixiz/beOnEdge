@@ -1,6 +1,6 @@
 export interface WeatherForecastPoint {
   forecast_time_msk: string;
-  forecast_time_local?: string;
+  forecast_time_local: string;
   temperature_2m: number;
   relative_humidity_2m: number;
   precipitation: number;

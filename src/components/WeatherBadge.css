@@ -32,9 +32,10 @@
 }
 
 .weather-badge__icon {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
+  overflow: visible;
 }
 
 .weather-badge__start,
@@ -137,10 +138,42 @@
   border-bottom-color: rgba(0, 0, 0, 0.12);
 }
 
+.weather-modal__title-group {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-width: 0;
+}
+
 .weather-modal__header h3 {
   margin: 0;
   font-size: clamp(22px, 2.4vw, 30px);
   line-height: 1.1;
+  white-space: nowrap;
+}
+
+.weather-modal__legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: clamp(12px, 1.25vw, 14px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.weather-modal__legend strong {
+  color: #7DD3FC;
+  font-weight: 900;
+}
+
+.weather-modal__content--light .weather-modal__legend {
+  color: rgba(0, 0, 0, 0.64);
+}
+
+.weather-modal__content--light .weather-modal__legend strong {
+  color: #1D4ED8;
 }
 
 .weather-modal__close {
@@ -205,7 +238,7 @@
 
 .weather-modal__row {
   display: grid;
-  grid-template-columns: minmax(92px, 112px) 1fr;
+  grid-template-columns: minmax(138px, 168px) 1fr;
   gap: 10px;
   align-items: center;
   padding: 10px;
@@ -220,15 +253,40 @@
   background: rgba(0, 0, 0, 0.045);
 }
 
+.weather-modal__time-group {
+  display: grid;
+  gap: 4px;
+}
+
 .weather-modal__time {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   font-weight: 800;
   font-size: clamp(16px, 1.7vw, 19px);
   color: #7DD3FC;
   white-space: nowrap;
 }
 
+.weather-modal__time--track {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: clamp(14px, 1.5vw, 17px);
+}
+
+.weather-modal__time-label {
+  min-width: 22px;
+  color: inherit;
+  font-size: 0.82em;
+  font-weight: 900;
+  opacity: 0.9;
+}
+
 .weather-modal__content--light .weather-modal__time {
   color: #1D4ED8;
+}
+
+.weather-modal__content--light .weather-modal__time--track {
+  color: rgba(0, 0, 0, 0.62);
 }
 
 .weather-modal__summary {
@@ -260,6 +318,16 @@
     padding: 10px;
   }
 
+  .weather-modal__header {
+    align-items: flex-start;
+  }
+
+  .weather-modal__title-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
   .weather-modal__row {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -267,6 +335,10 @@
 
   .weather-modal__time {
     font-size: 17px;
+  }
+
+  .weather-modal__time--track {
+    font-size: 15px;
   }
 
   .weather-modal__description {
