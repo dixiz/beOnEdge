@@ -82,6 +82,26 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({ code, isLightTheme = false })
     );
   }
 
+  if (code >= 51 && code <= 57) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="weather-badge__icon">
+        <path
+          d="M6.6 14.2h10.2a4.4 4.4 0 0 0 .4-8.8A5.8 5.8 0 0 0 6.4 7.6 3.6 3.6 0 0 0 6.6 14.2Z"
+          fill={secondary}
+          stroke={accent}
+          strokeWidth="1.15"
+        />
+        <g fill={rain} opacity="0.9">
+          <circle cx="8" cy="17.2" r="0.75" />
+          <circle cx="12" cy="18.6" r="0.75" />
+          <circle cx="16" cy="17.2" r="0.75" />
+          <circle cx="10" cy="20.2" r="0.6" />
+          <circle cx="14" cy="20.2" r="0.6" />
+        </g>
+      </svg>
+    );
+  }
+
   if ((code >= 71 && code <= 77) || (code >= 85 && code <= 86)) {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="weather-badge__icon">
@@ -97,6 +117,26 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({ code, isLightTheme = false })
           <circle cx="16" cy="19" r="1" />
           <circle cx="10" cy="17.5" r="0.8" />
           <circle cx="14" cy="17.5" r="0.8" />
+        </g>
+      </svg>
+    );
+  }
+
+  if (code >= 80 && code <= 82) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="weather-badge__icon">
+        <path
+          d="M5.2 13.4h12.6a5.3 5.3 0 0 0 .4-10.6A6.9 6.9 0 0 0 5.3 5.5 4.4 4.4 0 0 0 5.2 13.4Z"
+          fill={gloomyCloud}
+          stroke={accent}
+          strokeWidth="1.25"
+        />
+        <g stroke={rain} strokeWidth="2.2" strokeLinecap="round">
+          <line x1="6.8" y1="15.2" x2="5.4" y2="20.8" />
+          <line x1="10" y1="14.8" x2="8.5" y2="21.3" />
+          <line x1="13.3" y1="14.8" x2="11.8" y2="21.3" />
+          <line x1="16.6" y1="15.2" x2="15.2" y2="20.8" />
+          <line x1="19" y1="15" x2="17.9" y2="19.5" />
         </g>
       </svg>
     );
@@ -125,13 +165,16 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({ code, isLightTheme = false })
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" className="weather-badge__icon">
         <path
-          d="M6.5 13.5h10.8a4.8 4.8 0 0 0 .5-9.6 6.2 6.2 0 0 0-11.6 2.3A3.8 3.8 0 0 0 6.5 13.5Z"
-          fill={secondary}
+          d="M5.6 13.2h12.1a5.1 5.1 0 0 0 .4-10.2A6.7 6.7 0 0 0 5.6 5.6 4.2 4.2 0 0 0 5.6 13.2Z"
+          fill={gloomyCloud}
           stroke={accent}
-          strokeWidth="1.2"
+          strokeWidth="1.25"
         />
-        <path d="M11 16.5 9.5 20h3L11 16.5Z" fill={accent} />
-        <path d="M16 16.5 14.5 20h3L16 16.5Z" fill={accent} />
+        <path d="M12.6 12.2 9.6 17h2.8l-1.2 4.7 4.3-6.1h-2.8l1.1-3.4h-1.2Z" fill={sun} />
+        <g stroke={rain} strokeWidth="1.7" strokeLinecap="round">
+          <line x1="7.4" y1="15.8" x2="6.4" y2="19.4" />
+          <line x1="17.2" y1="15.8" x2="16.2" y2="19.4" />
+        </g>
       </svg>
     );
   }
@@ -154,16 +197,21 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({ code, isLightTheme = false })
 };
 
 const formatForecastTime = (value: string): string => {
+  const isoMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);
+  if (isoMatch) {
+    const [, , month, day, hours, minutes] = isoMatch;
+    return `${day}.${month} ${hours}:${minutes}`;
+  }
+
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
     return value;
   }
 
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
   return `${day}.${month} ${hours}:${minutes}`;
 };
 
@@ -240,7 +288,13 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
             aria-labelledby="weather-modal-title"
           >
             <div className="weather-modal__header">
-              <h3 id="weather-modal-title">Прогноз погоды</h3>
+              <div className="weather-modal__title-group">
+                <h3 id="weather-modal-title">Прогноз погоды</h3>
+                <div className="weather-modal__legend" aria-label="Легенда времени прогноза">
+                  <span><strong>LT</strong> - локальное время</span>
+                  <span><strong>TT</strong> - время трассы</span>
+                </div>
+              </div>
               <button
                 type="button"
                 className="weather-modal__close"
@@ -256,7 +310,16 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
                   key={`${point.forecast_time_msk}-${index}`}
                   className="weather-modal__row"
                 >
-                  <div className="weather-modal__time">{formatForecastTime(point.forecast_time_msk)}</div>
+                  <div className="weather-modal__time-group">
+                    <div className="weather-modal__time">
+                      <span className="weather-modal__time-label">LT</span>
+                      <span>{formatForecastTime(point.forecast_time_msk)}</span>
+                    </div>
+                    <div className="weather-modal__time weather-modal__time--track">
+                      <span className="weather-modal__time-label">TT</span>
+                      <span>{formatForecastTime(point.forecast_time_local)}</span>
+                    </div>
+                  </div>
                   <div className="weather-modal__summary">
                     <WeatherIcon code={point.weather_code} isLightTheme={isLightTheme} />
                     <div>
