@@ -37,6 +37,7 @@ interface ScheduleRowProps {
   commentatorScheduleError?: string | null;
   weatherForecast?: WeatherForecastPoint[];
   isEnded?: boolean;
+  isLive?: boolean;
   timeContainerRef?: React.Ref<HTMLDivElement>;
 }
 
@@ -81,6 +82,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   commentatorScheduleError,
   weatherForecast,
   isEnded = false,
+  isLive = false,
   timeContainerRef,
 }) => {
   const [isCommentatorScheduleOpen, setIsCommentatorScheduleOpen] = useState(false);
@@ -309,7 +311,22 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
             <WeatherBadge forecast={weatherForecast} isLightTheme={isLightTheme} />
           </div>
         )}
-        {isEnded && <div className="event-ended-strip">Завершено</div>}
+        {(isEnded || isLive) && (
+          <div className={`event-status-strip ${isEnded ? 'event-status-strip--ended' : 'event-status-strip--live'}`}>
+            {!isEnded && (
+              <svg
+                className="event-status-strip__live-icon"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+                <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M5.5 5.5a9.2 9.2 0 0 0 0 13M18.5 5.5a9.2 9.2 0 0 1 0 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              </svg>
+            )}
+            <span>{isEnded ? 'Завершено' : 'В эфире'}</span>
+          </div>
+        )}
       </div>
       {isCommentatorScheduleOpen && (
         <div
