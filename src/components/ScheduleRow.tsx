@@ -304,7 +304,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
         {optionally && optionally.trim() && (
           <Optionally text={optionally.trim()} isLightTheme={isLightTheme} />
         )}
-        {weatherForecast && weatherForecast.length > 0 && (
+        {!isEnded && weatherForecast && weatherForecast.length > 0 && (
           <div className="weather-badge-container">
             <WeatherBadge forecast={weatherForecast} isLightTheme={isLightTheme} />
           </div>
