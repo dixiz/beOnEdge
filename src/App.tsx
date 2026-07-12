@@ -48,10 +48,17 @@ type ActiveFilterChip = {
 
 type SessionScrollMode = 'all' | 'future';
 
-const isScheduleItemEnded = (item: Pick<ScheduleItem, 'Ended'>): boolean => {
-  const ended = item.Ended?.trim() || '';
-  return parseBooleanFlag(ended) || ended.toLowerCase() === 'истина';
+const isScheduleFlagTrue = (value?: string): boolean => {
+  const normalized = value?.trim() || '';
+  return parseBooleanFlag(normalized) || normalized.toLowerCase() === 'истина';
 };
+
+const isScheduleItemEnded = (item: Pick<ScheduleItem, 'Ended'>): boolean => {
+  return isScheduleFlagTrue(item.Ended);
+};
+
+const isScheduleItemLive = (item: Pick<ScheduleItem, 'Live'>): boolean =>
+  isScheduleFlagTrue(item.Live);
 
 type RenderedRowMeta = {
   key: string;
@@ -1175,6 +1182,7 @@ function App() {
                           commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                           weatherForecast={row.weatherForecast}
                           isEnded={isScheduleItemEnded(row)}
+                          isLive={isScheduleItemLive(row)}
                           timeContainerRef={el => {
                             rowAnchorRefs.current[rowKey] = el;
                           }}
@@ -1229,6 +1237,7 @@ function App() {
                       commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                       weatherForecast={row.weatherForecast}
                       isEnded={isScheduleItemEnded(row)}
+                      isLive={isScheduleItemLive(row)}
                       timeContainerRef={el => {
                         rowAnchorRefs.current[rowKey] = el;
                       }}
