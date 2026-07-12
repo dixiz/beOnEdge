@@ -48,6 +48,11 @@ type ActiveFilterChip = {
 
 type SessionScrollMode = 'all' | 'future';
 
+const isScheduleItemEnded = (item: Pick<ScheduleItem, 'Ended'>): boolean => {
+  const ended = item.Ended?.trim() || '';
+  return parseBooleanFlag(ended) || ended.toLowerCase() === 'истина';
+};
+
 type RenderedRowMeta = {
   key: string;
   row: DisplayScheduleItem;
@@ -220,6 +225,7 @@ function App() {
   const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks' | 'commentators'>('series');
   const [contentScale, setContentScale] = useState(1);
   const [sessionScrollMode, setSessionScrollMode] = useState<SessionScrollMode>('all');
+  const [shownEndedDays, setShownEndedDays] = useState<Set<string>>(() => new Set());
   const [zoomControlsHeight, setZoomControlsHeight] = useState(0);
   const [floatingDayHeaders, setFloatingDayHeaders] = useState<FloatingDayHeader[]>([]);
   const zoomControlsRef = useRef<HTMLDivElement | null>(null);
@@ -514,7 +520,7 @@ function App() {
     );
   }, [normalizedSchedule, appliedSeries, appliedDays, appliedTracks, appliedCommentators, seriesList, daysList, tracksList, commentatorsList]);
 
-  const displaySchedule = useMemo<DisplayScheduleItem[]>(() => {
+  const scheduleWithCarryover = useMemo<DisplayScheduleItem[]>(() => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const withCarryover = addCarryoverItems(filteredSchedule, today);
@@ -523,10 +529,25 @@ function App() {
     return withCarryover.filter(item => item.date !== yesterdayStr);
   }, [filteredSchedule]);
 
+  const endedDays = useMemo(() => {
+    const dates = new Set<string>();
+    scheduleWithCarryover.forEach(item => {
+      if (isScheduleItemEnded(item)) dates.add(item.date);
+    });
+    return dates;
+  }, [scheduleWithCarryover]);
+
+  const displaySchedule = useMemo(
+    () => scheduleWithCarryover.filter(
+      item => !isScheduleItemEnded(item) || shownEndedDays.has(item.date)
+    ),
+    [scheduleWithCarryover, shownEndedDays]
+  );
+
   // Даты после применения фильтров (для слайдера по дням)
   const filteredDaysList = useMemo(() => {
     const set = new Set<string>();
-    displaySchedule.forEach(item => {
+    scheduleWithCarryover.forEach(item => {
       if (item.date) set.add(item.date);
     });
     return Array.from(set).sort((a, b) => {
@@ -534,7 +555,7 @@ function App() {
       const db = parseDate(b).getTime();
       return da - db;
     });
-  }, [displaySchedule]);
+  }, [scheduleWithCarryover]);
 
   const dayOptions: DayOption[] = useMemo(() => {
     return filteredDaysList.map(date => {
@@ -565,8 +586,14 @@ function App() {
 
   // Мемоизация группировки по дням
   const byDay = useMemo(() => {
-    return groupBy(displaySchedule, r => `${r.date}_${r.day}`);
-  }, [displaySchedule]);
+    const grouped = groupBy(scheduleWithCarryover, r => `${r.date}_${r.day}`);
+    Object.keys(grouped).forEach(key => {
+      grouped[key] = grouped[key].filter(
+        item => !isScheduleItemEnded(item) || shownEndedDays.has(item.date)
+      );
+    });
+    return grouped;
+  }, [scheduleWithCarryover, shownEndedDays]);
 
   const rowsByDate = useMemo(() => {
     return groupBy(displaySchedule, r => r.date);
@@ -885,7 +912,10 @@ function App() {
 
   const scrollToFutureSession = useCallback(() => {
     const now = new Date();
-    const nextFutureRow = renderedRows.find(({ row }) => getScheduleItemDateTime(row, useLocalTime).getTime() > now.getTime());
+    const nextFutureRow = renderedRows.find(({ row }) => {
+      if (isScheduleItemEnded(row)) return false;
+      return getScheduleItemDateTime(row, useLocalTime).getTime() > now.getTime();
+    });
 
     if (!nextFutureRow) return;
 
@@ -909,6 +939,18 @@ function App() {
       scrollToFutureSession();
     });
   }, [scrollToFutureSession]);
+
+  const handleToggleEndedForDay = useCallback((date: string) => {
+    setShownEndedDays(current => {
+      const next = new Set(current);
+      if (next.has(date)) {
+        next.delete(date);
+      } else {
+        next.add(date);
+      }
+      return next;
+    });
+  }, []);
 
   const updateFloatingDayHeaders = useCallback(() => {
     if (!showMenu || viewMode !== 'all') {
@@ -1068,8 +1110,12 @@ function App() {
         <div className="schedule-content-zoom" style={scheduleContentStyle}>
           {loading && <div className={`loading-message ${isLightTheme ? 'loading-message--light' : 'loading-message--dark'}`}>BE ON EDGE IS COMING</div>}
           {error && <div className="error-message">{error}</div>}
-          {!loading && !error && filteredSchedule.length === 0 && (
-            <div className={`empty-message ${isLightTheme ? 'empty-message--light' : 'empty-message--dark'}`}>Упс! Ни одна гоночная серия не подходит для установленных отборов</div>
+          {!loading && !error && displaySchedule.length === 0 && (
+            <div className={`empty-message ${isLightTheme ? 'empty-message--light' : 'empty-message--dark'}`}>
+              {endedDays.size > 0
+                ? 'Все подходящие эфиры завершены. Нажмите «Показать завершённые» в блоке нужного дня.'
+                : 'Упс! Ни одна гоночная серия не подходит для установленных отборов'}
+            </div>
           )}
           {viewMode === 'all' ? (
             sortedDayEntries.map(([key, rows]) => {
@@ -1077,7 +1123,7 @@ function App() {
               const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
               return (
                 <div
-                  className="day-column"
+                  className={`day-column ${endedDays.has(date) ? 'day-column--has-ended-toggle' : ''}`}
                   key={key}
                   ref={el => {
                     dayColumnRefs.current[key] = el;
@@ -1088,7 +1134,12 @@ function App() {
                       dayHeaderRefs.current[key] = el;
                     }}
                   >
-                    <Header isLightTheme={isLightTheme}>
+                    <Header
+                      isLightTheme={isLightTheme}
+                      hasEndedEvents={endedDays.has(date)}
+                      areEndedEventsShown={shownEndedDays.has(date)}
+                      onToggleEndedEvents={() => handleToggleEndedForDay(date)}
+                    >
                       <DateDisplay date={date} isLightTheme={isLightTheme} />
                       <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
                     </Header>
@@ -1123,6 +1174,7 @@ function App() {
                           commentatorScheduleLoading={isCommentatorScheduleEvent(row) ? commentatorScheduleLoading : false}
                           commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                           weatherForecast={row.weatherForecast}
+                          isEnded={isScheduleItemEnded(row)}
                           timeContainerRef={el => {
                             rowAnchorRefs.current[rowKey] = el;
                           }}
@@ -1134,9 +1186,14 @@ function App() {
               );
             })
           ) : (
-            <div className="day-column">
+            <div className={`day-column ${selectedDayMeta && endedDays.has(selectedDayMeta.date) ? 'day-column--has-ended-toggle' : ''}`}>
               {selectedDayMeta && (
-                <Header isLightTheme={isLightTheme}>
+                <Header
+                  isLightTheme={isLightTheme}
+                  hasEndedEvents={endedDays.has(selectedDayMeta.date)}
+                  areEndedEventsShown={shownEndedDays.has(selectedDayMeta.date)}
+                  onToggleEndedEvents={() => handleToggleEndedForDay(selectedDayMeta.date)}
+                >
                   <DateDisplay date={selectedDayMeta.date} isLightTheme={isLightTheme} />
                   <DayOfWeekDisplay day={selectedDayMeta.dayName} isLightTheme={isLightTheme} />
                 </Header>
@@ -1171,6 +1228,7 @@ function App() {
                       commentatorScheduleLoading={isCommentatorScheduleEvent(row) ? commentatorScheduleLoading : false}
                       commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                       weatherForecast={row.weatherForecast}
+                      isEnded={isScheduleItemEnded(row)}
                       timeContainerRef={el => {
                         rowAnchorRefs.current[rowKey] = el;
                       }}

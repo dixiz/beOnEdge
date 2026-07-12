@@ -219,6 +219,10 @@
   margin-top: clamp(10px, 4vw, 20px);
 }
 
+.day-column--has-ended-toggle .day-rows-container {
+  margin-top: 5px;
+}
+
 @media (max-width: 720px) {
   .day-rows-container {
     grid-template-columns: clamp(112px, 30vw, 124px) minmax(0, 1fr);
