@@ -97,11 +97,13 @@
 
 .content-container {
   --event-card-radius: 18px;
+  --event-card-padding-y: clamp(8px, 1.2vw, 10px);
+  --event-card-padding-x: clamp(6px, 1vw, 8px);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   margin-left: 0;
-  padding: clamp(8px, 1.2vw, 10px) clamp(6px, 1vw, 8px);
+  padding: var(--event-card-padding-y) var(--event-card-padding-x);
   width: 100%;
   max-width: 100%;
   min-width: 0;
@@ -709,6 +711,25 @@
 
 .spotter-button:active {
   transform: scale(0.98);
+}
+
+.event-ended-strip {
+  margin:
+    8px
+    calc(0px - var(--event-card-padding-x))
+    calc(0px - var(--event-card-padding-y));
+  padding: 5px 8px;
+  border-top: 1px solid #6DD69A;
+  border-radius: 0 0 calc(var(--event-card-radius) - 1px) calc(var(--event-card-radius) - 1px);
+  background: #27975A;
+  color: #FFFFFF;
+  font-size: clamp(14px, 1.4vw, 16px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-transform: uppercase;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 /* Светлая тема: черный календарь с желтыми деталями */

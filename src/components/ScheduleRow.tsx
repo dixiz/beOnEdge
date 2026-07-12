@@ -36,6 +36,7 @@ interface ScheduleRowProps {
   commentatorScheduleLoading?: boolean;
   commentatorScheduleError?: string | null;
   weatherForecast?: WeatherForecastPoint[];
+  isEnded?: boolean;
   timeContainerRef?: React.Ref<HTMLDivElement>;
 }
 
@@ -79,6 +80,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   commentatorScheduleLoading = false,
   commentatorScheduleError,
   weatherForecast,
+  isEnded = false,
   timeContainerRef,
 }) => {
   const [isCommentatorScheduleOpen, setIsCommentatorScheduleOpen] = useState(false);
@@ -307,6 +309,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
             <WeatherBadge forecast={weatherForecast} isLightTheme={isLightTheme} />
           </div>
         )}
+        {isEnded && <div className="event-ended-strip">Завершено</div>}
       </div>
       {isCommentatorScheduleOpen && (
         <div
