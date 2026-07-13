@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-14T00:01:22.608557",
+  "last_updated": "2026-07-14T01:01:25.426413",
   "events": [
     {
       "event_row": 3,
@@ -1414,10 +1414,10 @@
         {
           "forecast_time_msk": "2026-07-18T21:30:00+03:00",
           "forecast_time_local": "2026-07-18T20:30:00+02:00",
-          "temperature_2m": 27.2,
-          "relative_humidity_2m": 82,
+          "temperature_2m": 28.4,
+          "relative_humidity_2m": 71,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.0,
+          "wind_speed_10m": 8.6,
           "weather_code": 0
         },
         {
@@ -1432,10 +1432,10 @@
         {
           "forecast_time_msk": "2026-07-18T22:30:00+03:00",
           "forecast_time_local": "2026-07-18T21:30:00+02:00",
-          "temperature_2m": 27.0,
+          "temperature_2m": 26.9,
           "relative_humidity_2m": 78,
           "precipitation": 0.0,
-          "wind_speed_10m": 5.7,
+          "wind_speed_10m": 5.9,
           "weather_code": 0
         }
       ]
