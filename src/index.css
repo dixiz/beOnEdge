@@ -1,15 +1,60 @@
+:root {
+  --boe-color-bg: #08090C;
+  --boe-color-bg-elevated: #0E1014;
+  --boe-color-surface: #14171D;
+  --boe-color-surface-strong: #191D24;
+  --boe-color-surface-muted: #20242C;
+  --boe-color-accent: #FFD600;
+  --boe-color-accent-soft: rgba(255, 214, 0, 0.14);
+  --boe-color-accent-border: rgba(255, 214, 0, 0.32);
+  --boe-color-text: #F7F8FA;
+  --boe-color-text-muted: #9CA3AF;
+  --boe-color-border: rgba(255, 255, 255, 0.09);
+  --boe-radius-card: 12px;
+  --boe-radius-control: 7px;
+  --boe-shadow-card: 0 14px 34px rgba(0, 0, 0, 0.36);
+  --boe-shadow-accent: 0 0 24px rgba(255, 214, 0, 0.08);
+  --boe-transition-fast: 160ms ease;
+  --boe-transition-base: 240ms ease;
+}
+
 body, html {
   margin: 0;
   padding: 0;
-  background: #000;
+  background-color: var(--boe-color-bg);
+  background-image:
+    radial-gradient(circle at 50% -20%, rgba(255, 214, 0, 0.08), transparent 36%),
+    linear-gradient(rgba(255, 214, 0, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 214, 0, 0.018) 1px, transparent 1px);
+  background-size: auto, 32px 32px, 32px 32px;
+  background-attachment: scroll;
   min-height: 100vh;
   font-family: 'Tektur', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media (max-width: 720px) {
+  body,
+  html {
+    background-image: none;
+    background-attachment: scroll;
+  }
+}
+
 * {
   font-family: 'Tektur', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--boe-color-accent);
+  color: #000000;
 }
 
 code {

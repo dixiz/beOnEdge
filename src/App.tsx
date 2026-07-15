@@ -16,10 +16,10 @@ import { convertFromGMT3ToLocal, isDateEqualOrAfterToday, parseDate, getDayOfWee
 import { parseBooleanFlag } from './utils/flagUtils';
 import { getTgNumbers, getBcuNumbers } from './utils/iconUtils';
 import { DayOption } from './components/DaySlider';
+import { useBodyScrollLock } from './hooks/useBodyScrollLock';
 
 const DAY_SLIDER_HEIGHT = 76;
 const DAY_SLIDER_OVERLAP = 4;
-const FLOATING_DAY_HEADER_HEIGHT = 34;
 const MIN_CONTENT_SCALE = 0.4;
 const MAX_CONTENT_SCALE = 1;
 const CONTENT_SCALE_STEP = 0.05;
@@ -31,22 +31,12 @@ type DisplayScheduleItem = ScheduleItem & {
   isCarryover?: boolean;
 };
 
-type FloatingDayHeader = {
-  key: string;
-  date: string;
-  day: string;
-  left: number;
-  width: number;
-};
-
 type ActiveFilterChip = {
   key: string;
   label: string;
   type: 'series' | 'days' | 'tracks' | 'commentators';
   value: string;
 };
-
-type SessionScrollMode = 'all' | 'future';
 
 const isScheduleFlagTrue = (value?: string): boolean => {
   const normalized = value?.trim() || '';
@@ -59,11 +49,6 @@ const isScheduleItemEnded = (item: Pick<ScheduleItem, 'Ended'>): boolean => {
 
 const isScheduleItemLive = (item: Pick<ScheduleItem, 'Live'>): boolean =>
   isScheduleFlagTrue(item.Live);
-
-type RenderedRowMeta = {
-  key: string;
-  row: DisplayScheduleItem;
-};
 
 const parseDurationMs = (duration?: string): number => {
   if (!duration) return 0;
@@ -153,6 +138,13 @@ const DAY_SHORT_LABEL: Record<string, string> = {
   'воскресенье': 'Вс'
 };
 
+const PRIORITY_SERIES: string[] = [
+  'Формула 1',
+  'Индикар',
+  'НАСКАР Кубок',
+  'WEC'
+];
+
 const shouldShowRtIcon = (value?: string): boolean => {
   const trimmed = value?.trim();
   if (!trimmed) return false;
@@ -161,31 +153,6 @@ const shouldShowRtIcon = (value?: string): boolean => {
 
 const scrollToPageTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-const toFullYear = (year: string) => year.length === 2 ? `20${year}` : year;
-
-const getScheduleItemDateTime = (item: ScheduleItem, useLocalTime: boolean): Date => {
-  const [dayRaw, monthRaw, yearRaw] = (item.date ?? '').split('.');
-  const [hoursRaw = '00', minutesRaw = '00'] = (item.time ?? '').split(':');
-
-  if (!dayRaw || !monthRaw || !yearRaw) return new Date(NaN);
-
-  const day = dayRaw.padStart(2, '0');
-  const month = monthRaw.padStart(2, '0');
-  const fullYear = toFullYear(yearRaw);
-  const hours = hoursRaw.padStart(2, '0');
-  const minutes = minutesRaw.padStart(2, '0');
-
-  if (useLocalTime) {
-    return new Date(
-      `${fullYear}-${month}-${day}T${hours}:${minutes}:00`
-    );
-  }
-
-  return new Date(
-    `${fullYear}-${month}-${day}T${hours}:${minutes}:00+03:00`
-  );
 };
 
 const buildRowKey = (row: DisplayScheduleItem, index: number) =>
@@ -231,15 +198,12 @@ function App() {
   const [tempCommentators, setTempCommentators] = useState<string[]>([]);
   const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks' | 'commentators'>('series');
   const [contentScale, setContentScale] = useState(1);
-  const [sessionScrollMode, setSessionScrollMode] = useState<SessionScrollMode>('all');
   const [shownEndedDays, setShownEndedDays] = useState<Set<string>>(() => new Set());
   const [zoomControlsHeight, setZoomControlsHeight] = useState(0);
-  const [floatingDayHeaders, setFloatingDayHeaders] = useState<FloatingDayHeader[]>([]);
   const zoomControlsRef = useRef<HTMLDivElement | null>(null);
-  const dayColumnRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const dayHeaderRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const rowAnchorRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
+  useBodyScrollLock(isFilterOpen);
 
   useEffect(() => {
     setLoading(true);
@@ -369,7 +333,18 @@ function App() {
     normalizedSchedule.forEach(item => {
       if (item.championship) set.add(item.championship);
     });
-    return Array.from(set).sort((a, b) => a.localeCompare(b, 'ru'));
+    return Array.from(set).sort((a, b) => {
+      const priorityA = PRIORITY_SERIES.indexOf(a);
+      const priorityB = PRIORITY_SERIES.indexOf(b);
+
+      if (priorityA !== -1 || priorityB !== -1) {
+        if (priorityA === -1) return 1;
+        if (priorityB === -1) return -1;
+        return priorityA - priorityB;
+      }
+
+      return a.localeCompare(b, 'ru');
+    });
   }, [normalizedSchedule]);
 
   // Все даты в расписании (для фильтра по дням), сортировка по возрастанию
@@ -847,28 +822,15 @@ function App() {
       return parseDate(aDate).getTime() - parseDate(bDate).getTime();
     });
   }, [byDay]);
-  const renderedRows = useMemo<RenderedRowMeta[]>(() => {
-    if (viewMode === 'all') {
-      return sortedDayEntries.flatMap(([, rows]) => {
-        const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
-        return sortedRows.map((row, index) => ({
-          key: buildRowKey(row, index),
-          row
-        }));
-      });
-    }
-
-    return sortedSelectedDayRows.map((row, index) => ({
-      key: buildRowKey(row, index),
-      row
-    }));
-  }, [viewMode, sortedDayEntries, sortedSelectedDayRows, sortDayRows]);
   const selectedDayMeta = selectedDay ? dayOptions.find(d => d.date === selectedDay) : undefined;
   const scaledDaySliderHeight = sliderVisible ? DAY_SLIDER_HEIGHT : 0;
   const sliderTopOffset = Math.max(0, menuHeight - (sliderVisible ? DAY_SLIDER_OVERLAP : 0));
   const menuOffsetValue = (menuHeight || 125) + scaledDaySliderHeight - (sliderVisible ? DAY_SLIDER_OVERLAP : 0);
-  const floatingDayHeaderTop = menuHeight;
-  const scheduleContainerStyle = { '--menu-offset': `${menuOffsetValue}px` } as React.CSSProperties;
+  const stickyDayHeaderTop = menuHeight;
+  const scheduleContainerStyle = {
+    '--menu-offset': `${menuOffsetValue}px`,
+    '--sticky-day-header-top': `${stickyDayHeaderTop}px`
+  } as React.CSSProperties;
   const scheduleContentStyle = { zoom: contentScale } as React.CSSProperties;
   const appContainerStyle = { '--zoom-controls-offset': `${showMenu ? zoomControlsHeight + 24 : 0}px` } as React.CSSProperties;
 
@@ -917,36 +879,6 @@ function App() {
     touchStartRef.current = null;
   }, []);
 
-  const scrollToFutureSession = useCallback(() => {
-    const now = new Date();
-    const nextFutureRow = renderedRows.find(({ row }) => {
-      if (isScheduleItemEnded(row)) return false;
-      return getScheduleItemDateTime(row, useLocalTime).getTime() > now.getTime();
-    });
-
-    if (!nextFutureRow) return;
-
-    const anchorEl = rowAnchorRefs.current[nextFutureRow.key];
-    if (!anchorEl) return;
-
-    const extraOffset = viewMode === 'all' ? FLOATING_DAY_HEADER_HEIGHT : 0;
-    const targetTop = anchorEl.getBoundingClientRect().top + window.scrollY - menuOffsetValue - extraOffset - 8;
-    window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
-  }, [renderedRows, useLocalTime, viewMode, menuOffsetValue]);
-
-  const handleToggleSessionScrollMode = useCallback((mode: SessionScrollMode) => {
-    setSessionScrollMode(mode);
-
-    if (mode === 'all') {
-      scrollToPageTop();
-      return;
-    }
-
-    window.requestAnimationFrame(() => {
-      scrollToFutureSession();
-    });
-  }, [scrollToFutureSession]);
-
   const handleToggleEndedForDay = useCallback((date: string) => {
     setShownEndedDays(current => {
       const next = new Set(current);
@@ -958,78 +890,6 @@ function App() {
       return next;
     });
   }, []);
-
-  const updateFloatingDayHeaders = useCallback(() => {
-    if (!showMenu || viewMode !== 'all') {
-      setFloatingDayHeaders([]);
-      return;
-    }
-
-    const nextHeaders: FloatingDayHeader[] = [];
-
-    sortedDayEntries.forEach(([key]) => {
-      const columnEl = dayColumnRefs.current[key];
-      const headerEl = dayHeaderRefs.current[key];
-
-      if (!columnEl || !headerEl) return;
-
-      const columnRect = columnEl.getBoundingClientRect();
-      const headerRect = headerEl.getBoundingClientRect();
-      const isHorizontallyVisible = columnRect.right > 0 && columnRect.left < window.innerWidth;
-      const hasScrolledUnderMenu = headerRect.bottom <= menuHeight;
-      const hasVisibleRowsLeft = columnRect.bottom > floatingDayHeaderTop + FLOATING_DAY_HEADER_HEIGHT;
-
-      if (!isHorizontallyVisible || !hasScrolledUnderMenu || !hasVisibleRowsLeft) return;
-
-      const left = Math.max(8, columnRect.left);
-      const right = Math.min(window.innerWidth - 8, columnRect.right);
-      const width = Math.max(0, right - left);
-
-      if (width <= 0) return;
-
-      const [date, day] = key.split('_');
-      nextHeaders.push({ key, date, day, left, width });
-    });
-
-    setFloatingDayHeaders(prev => {
-      if (
-        prev.length === nextHeaders.length &&
-        prev.every((item, index) => {
-          const next = nextHeaders[index];
-          return (
-            item.key === next.key &&
-            item.date === next.date &&
-            item.day === next.day &&
-            Math.abs(item.left - next.left) < 0.5 &&
-            Math.abs(item.width - next.width) < 0.5
-          );
-        })
-      ) {
-        return prev;
-      }
-
-      return nextHeaders;
-    });
-  }, [showMenu, viewMode, sortedDayEntries, menuHeight, floatingDayHeaderTop]);
-
-  useEffect(() => {
-    updateFloatingDayHeaders();
-
-    let rafId = 0;
-    const scheduleUpdate = () => {
-      cancelAnimationFrame(rafId);
-      rafId = window.requestAnimationFrame(updateFloatingDayHeaders);
-    };
-
-    window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', scheduleUpdate);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('scroll', scheduleUpdate);
-      window.removeEventListener('resize', scheduleUpdate);
-    };
-  }, [updateFloatingDayHeaders]);
 
   return (
     <div
@@ -1047,8 +907,6 @@ function App() {
           onToggleTime={handleToggleTime}
           viewMode={viewMode}
           onToggleViewMode={handleToggleViewMode}
-          sessionScrollMode={sessionScrollMode}
-          onToggleSessionScrollMode={handleToggleSessionScrollMode}
           onHeightChange={handleMenuHeightChange}
           onOpenFilter={handleOpenFilter}
           activeFilters={activeFilterLabels}
@@ -1101,15 +959,6 @@ function App() {
           topOffset={sliderTopOffset}
         />
       )}
-      {floatingDayHeaders.map(({ key, date, day, left, width }) => (
-        <div
-          key={key}
-          className={`floating-day-header ${isLightTheme ? 'floating-day-header--light' : 'floating-day-header--dark'}`}
-          style={{ top: `${floatingDayHeaderTop}px`, left: `${left}px`, width: `${width}px` }}
-        >
-          <span className="floating-day-header__date">{date}</span>
-        </div>
-      ))}
       <div
         className={`schedule-container ${showMenu ? 'schedule-container--with-menu' : 'schedule-container--without-menu'}`}
         style={scheduleContainerStyle}
@@ -1132,15 +981,8 @@ function App() {
                 <div
                   className={`day-column ${endedDays.has(date) ? 'day-column--has-ended-toggle' : ''}`}
                   key={key}
-                  ref={el => {
-                    dayColumnRefs.current[key] = el;
-                  }}
                 >
-                  <div
-                    ref={el => {
-                      dayHeaderRefs.current[key] = el;
-                    }}
-                  >
+                  <div className="day-header-sticky">
                     <Header
                       isLightTheme={isLightTheme}
                       hasEndedEvents={endedDays.has(date)}
@@ -1183,9 +1025,6 @@ function App() {
                           weatherForecast={row.weatherForecast}
                           isEnded={isScheduleItemEnded(row)}
                           isLive={isScheduleItemLive(row)}
-                          timeContainerRef={el => {
-                            rowAnchorRefs.current[rowKey] = el;
-                          }}
                         />
                       );
                     })}
@@ -1195,16 +1034,17 @@ function App() {
             })
           ) : (
             <div className={`day-column ${selectedDayMeta && endedDays.has(selectedDayMeta.date) ? 'day-column--has-ended-toggle' : ''}`}>
-              {selectedDayMeta && (
-                <Header
-                  isLightTheme={isLightTheme}
-                  hasEndedEvents={endedDays.has(selectedDayMeta.date)}
-                  areEndedEventsShown={shownEndedDays.has(selectedDayMeta.date)}
-                  onToggleEndedEvents={() => handleToggleEndedForDay(selectedDayMeta.date)}
-                >
-                  <DateDisplay date={selectedDayMeta.date} isLightTheme={isLightTheme} />
-                  <DayOfWeekDisplay day={selectedDayMeta.dayName} isLightTheme={isLightTheme} />
-                </Header>
+              {selectedDayMeta && endedDays.has(selectedDayMeta.date) && (
+                <div className="by-day-ended-toggle">
+                  <button
+                    type="button"
+                    className="header__ended-toggle"
+                    onClick={() => handleToggleEndedForDay(selectedDayMeta.date)}
+                    aria-pressed={shownEndedDays.has(selectedDayMeta.date)}
+                  >
+                    {shownEndedDays.has(selectedDayMeta.date) ? 'Скрыть завершённые' : 'Показать завершённые'}
+                  </button>
+                </div>
               )}
               <div className="day-rows-container">
                 {sortedSelectedDayRows.map((row, index) => {
@@ -1238,9 +1078,6 @@ function App() {
                       weatherForecast={row.weatherForecast}
                       isEnded={isScheduleItemEnded(row)}
                       isLive={isScheduleItemLive(row)}
-                      timeContainerRef={el => {
-                        rowAnchorRefs.current[rowKey] = el;
-                      }}
                     />
                   );
                 })}
@@ -1295,8 +1132,12 @@ function App() {
                   </label>
                   {seriesList.map(series => {
                     const checked = tempSeries.includes(series);
+                    const isPriority = PRIORITY_SERIES.includes(series);
                     return (
-                      <label key={series} className="filter-item">
+                      <label
+                        key={series}
+                        className={`filter-item ${isPriority ? 'filter-item--priority' : ''}`}
+                      >
                         <input
                           type="checkbox"
                           checked={checked}

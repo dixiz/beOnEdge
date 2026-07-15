@@ -35,9 +35,12 @@ const DaySlider: React.FC<DaySliderProps> = ({
           const isActive = day.date === selectedDate;
           return (
             <button
+              type="button"
               key={day.date}
               className={`day-slider__item ${isActive ? 'day-slider__item--active' : ''}`}
               onClick={() => onSelect && onSelect(day.date)}
+              aria-pressed={isActive}
+              aria-label={`${day.dayName}, ${day.dayNumber}`}
             >
               <span className="day-slider__day">{day.shortLabel}</span>
               <span className="day-slider__date">{day.dayNumber}</span>

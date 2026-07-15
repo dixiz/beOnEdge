@@ -1,8 +1,8 @@
 .date-display {
-  font-size: clamp(46px, 5vw, 60px);
+  font-size: clamp(38px, 4.45vw, 50px);
   font-weight: 900;
-  letter-spacing: 2px;
-  line-height: 0.95;
+  letter-spacing: 0.035em;
+  line-height: 0.92;
   text-align: center;
   white-space: nowrap;
   width: 100%;
@@ -11,13 +11,17 @@
   text-overflow: ellipsis;
   box-sizing: border-box;
   padding: 0 clamp(4px, 1vw, 8px);
+  color: var(--boe-color-text);
+  text-shadow:
+    0 0 18px rgba(255, 214, 0, 0.08),
+    0 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .date-display--light {
-  color: #FFD600;
+  color: #FFFFFF;
 }
 
 .date-display--dark {
-  color: #000000;
+  color: #FFFFFF;
 }
 
