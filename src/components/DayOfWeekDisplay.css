@@ -1,7 +1,11 @@
 .day-of-week-display {
-  font-size: clamp(36px, 3.375vw, 42px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(7px, 1.3vw, 12px);
+  font-size: clamp(18px, 2.2vw, 25px);
   font-weight: 800;
-  margin-top: -2px;
+  margin-top: 5px;
   text-align: center;
   width: 100%;
   max-width: 100%;
@@ -10,6 +14,22 @@
   white-space: nowrap;
   box-sizing: border-box;
   padding: 0 clamp(4px, 1vw, 8px);
+  letter-spacing: 0.055em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.day-of-week-display::before,
+.day-of-week-display::after {
+  content: "";
+  width: clamp(18px, 4vw, 34px);
+  height: 1px;
+  flex-shrink: 1;
+  background: linear-gradient(90deg, transparent, rgba(255, 214, 0, 0.72));
+}
+
+.day-of-week-display::after {
+  background: linear-gradient(90deg, rgba(255, 214, 0, 0.72), transparent);
 }
 
 .day-of-week-display--light {
@@ -17,6 +37,6 @@
 }
 
 .day-of-week-display--dark {
-  color: #000000;
+  color: #FFD600;
 }
 

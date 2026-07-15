@@ -1,11 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { WeatherForecastPoint } from '../types/weather';
 import { formatWeatherTooltip, getWeatherDescription } from '../utils/weatherUtils';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 import './WeatherBadge.css';
 
 type WeatherBadgeProps = {
   forecast: WeatherForecastPoint[];
   isLightTheme?: boolean;
+  eventName: string;
+  eventDetails?: string;
 };
 
 type WeatherIconProps = {
@@ -215,7 +219,12 @@ const formatForecastTime = (value: string): string => {
   return `${day}.${month} ${hours}:${minutes}`;
 };
 
-const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = false }) => {
+const WeatherBadge: React.FC<WeatherBadgeProps> = ({
+  forecast,
+  isLightTheme = false,
+  eventName,
+  eventDetails
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const startForecast = forecast[0];
   const tooltip = useMemo(() => formatWeatherTooltip(startForecast), [startForecast]);
@@ -224,6 +233,8 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
     () => [...forecast].sort((a, b) => a.forecast_time_msk.localeCompare(b.forecast_time_msk)),
     [forecast]
   );
+
+  useBodyScrollLock(isOpen);
 
   const handleOpen = useCallback(() => {
     setIsOpen(true);
@@ -275,7 +286,7 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
           </svg>
         </span>
       </button>
-      {isOpen && (
+      {isOpen && createPortal(
         <div
           className="weather-modal"
           role="presentation"
@@ -289,7 +300,13 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
           >
             <div className="weather-modal__header">
               <div className="weather-modal__title-group">
-                <h3 id="weather-modal-title">Прогноз погоды</h3>
+                <div className="weather-modal__heading">
+                  <h3 id="weather-modal-title">Прогноз погоды</h3>
+                  <div className="weather-modal__event">
+                    <strong>{eventName}</strong>
+                    {eventDetails && <span>{eventDetails}</span>}
+                  </div>
+                </div>
                 <div className="weather-modal__legend" aria-label="Легенда времени прогноза">
                   <span><strong>LT</strong> - локальное время</span>
                   <span><strong>TT</strong> - время трассы</span>
@@ -301,7 +318,7 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
                 aria-label="Закрыть"
                 onClick={handleClose}
               >
-                x
+                ✕
               </button>
             </div>
             <div className="weather-modal__list">
@@ -335,7 +352,8 @@ const WeatherBadge: React.FC<WeatherBadgeProps> = ({ forecast, isLightTheme = fa
               ))}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

@@ -3,7 +3,7 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   justify-items: center;
   align-items: flex-start;
-  gap: 4px 2px;
+  gap: 5px 3px;
   margin-top: 8px;
   width: 100%;
   max-width: 100%;
@@ -24,7 +24,8 @@
 }
 
 .icon-wrapper {
-  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
   padding: 2px;
   display: flex;
   align-items: center;
@@ -35,7 +36,8 @@
   height: clamp(22px, 3vw, 28px); /* Еще больше, но без переполнения */
   box-sizing: border-box;
   flex-shrink: 0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  transition: transform var(--boe-transition-fast, 160ms ease), box-shadow var(--boe-transition-fast, 160ms ease);
 }
 
 .icon-wrapper--with-number {
@@ -61,11 +63,15 @@
 .icon-link--tg:focus-visible .icon-wrapper--tg,
 .icon-link--tg:hover .icon-wrapper--tg {
   background-color: #33a9e1;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(0, 136, 204, 0.3);
 }
 
 .icon-link--pc:focus-visible .icon-wrapper--pc,
 .icon-link--pc:hover .icon-wrapper--pc {
   background-color: #0066e0;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(0, 119, 255, 0.3);
 }
 
 .icon-wrapper--bcu {
@@ -75,11 +81,13 @@
 .icon-link--bcu:focus-visible .icon-wrapper--bcu,
 .icon-link--bcu:hover .icon-wrapper--bcu {
   background-color: #ff8533;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(255, 102, 0, 0.3);
 }
 
 .icon-wrapper--rt {
   padding: 0;
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
   background: transparent;
 }
@@ -121,7 +129,8 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
-  border: 1px solid #000000;
+  border: 1px solid rgba(255, 214, 0, 0.55);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 @media (max-width: 720px) {
@@ -150,6 +159,21 @@
     width: 15px;
     height: 15px;
     font-size: 12px;
+  }
+}
+
+@media (min-width: 721px) {
+  .icon-wrapper {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+  }
+
+  .icon-link--tg:focus-visible .icon-wrapper--tg,
+  .icon-link--tg:hover .icon-wrapper--tg,
+  .icon-link--pc:focus-visible .icon-wrapper--pc,
+  .icon-link--pc:hover .icon-wrapper--pc,
+  .icon-link--bcu:focus-visible .icon-wrapper--bcu,
+  .icon-link--bcu:hover .icon-wrapper--bcu {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   }
 }
 

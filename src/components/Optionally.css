@@ -1,19 +1,27 @@
 .optionally {
-  border: 2px solid #FFD600;
-  border-radius: var(--event-card-radius, 18px);
+  border: 1px solid rgba(255, 214, 0, 0.42);
+  border-left: 3px solid #FFD600;
+  border-radius: 0;
   padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 16px);
   margin-top: 12px;
   font-size: clamp(14px, 2vw, 16px);
-  font-weight: 500;
+  font-weight: 700;
   color: #FFD600;
-  line-height: 1.4;
+  line-height: 1.3;
+  letter-spacing: 0.005em;
+  position: relative;
+  z-index: 1;
+  box-shadow: inset 0 0 18px rgba(255, 214, 0, 0.035);
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
 }
 
 .optionally--light {
-  background-color: #000000;
+  background-color: rgba(0, 0, 0, 0.88);
 }
 
 .optionally--dark {
-  background-color: transparent;
+  background:
+    linear-gradient(90deg, rgba(255, 214, 0, 0.09), transparent 66%),
+    rgba(19, 22, 27, 0.94);
 }
 

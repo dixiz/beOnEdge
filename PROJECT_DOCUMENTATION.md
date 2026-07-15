@@ -792,14 +792,14 @@ App.tsx
 │   └── EventLogo.tsx
 ├── components/DaySlider.tsx
 ├── components/Header.tsx
-│   ├── DateDisplay.tsx
-│   └── DayOfWeekDisplay.tsx
+    │   ├── DateDisplay.tsx
+    │   └── DayOfWeekDisplay.tsx
 └── components/ScheduleRow.tsx
-    ├── ScheduleIcons.tsx
-    ├── Commentator.tsx
-    ├── Optionally.tsx
-    ├── CalendarIcon.tsx
-    ├── utils/timeUtils.ts
+        ├── ScheduleIcons.tsx
+        ├── Commentator.tsx
+        ├── Optionally.tsx
+        ├── CalendarIcon.tsx
+        ├── utils/timeUtils.ts
     ├── utils/calendarUtils.ts
     └── utils/textUtils.ts
 ```

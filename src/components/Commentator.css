@@ -1,19 +1,26 @@
 .commentator {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   margin-top: 0;
-  padding: 4px 8px 4px 5px;
-  border-radius: var(--event-card-radius, 18px);
-  background: rgba(255, 214, 0, 0.12);
+  padding: 5px 10px 5px 5px;
+  border: 1px solid rgba(255, 214, 0, 0.3);
+  border-left: 2px solid #FFD600;
+  border-radius: 0;
+  background:
+    linear-gradient(90deg, rgba(255, 214, 0, 0.16), transparent 74%),
+    rgba(25, 27, 22, 0.94);
   width: fit-content;
   max-width: 100%;
   box-sizing: border-box;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+  clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
 }
 
 .commentator-icon {
   background-color: #FFD600;
-  border-radius: 4px;
+  border-radius: 3px;
   padding: 2px;
   display: flex;
   align-items: center;
@@ -23,8 +30,10 @@
 
 .commentator-name {
   font-size: clamp(16px, 1.875vw, 16.5px);
-  font-weight: 500;
+  font-weight: 750;
   line-height: 1.2;
+  letter-spacing: 0.005em;
+  color: #FFFFFF;
   min-width: 0;
   overflow-wrap: anywhere;
   white-space: normal;

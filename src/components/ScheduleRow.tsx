@@ -10,6 +10,7 @@ import { formatChampionship, formatStage } from '../utils/textUtils';
 import { CommentatorScheduleData, ScheduleItem } from '../types/schedule';
 import { WeatherForecastPoint } from '../types/weather';
 import WeatherBadge from './WeatherBadge';
+import { useBodyScrollLock } from '../hooks/useBodyScrollLock';
 
 interface ScheduleRowProps {
   date: string;
@@ -38,7 +39,6 @@ interface ScheduleRowProps {
   weatherForecast?: WeatherForecastPoint[];
   isEnded?: boolean;
   isLive?: boolean;
-  timeContainerRef?: React.Ref<HTMLDivElement>;
 }
 
 const COMMENTATOR_SCHEDULE_COLORS = [
@@ -83,9 +83,9 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   weatherForecast,
   isEnded = false,
   isLive = false,
-  timeContainerRef,
 }) => {
   const [isCommentatorScheduleOpen, setIsCommentatorScheduleOpen] = useState(false);
+  useBodyScrollLock(isCommentatorScheduleOpen);
 
   const commentators = useMemo(() => {
     const filtered = [commentator1, commentator2].filter(Boolean) as string[];
@@ -99,10 +99,15 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   // Нормализуем время к формату ЧЧ:ММ
   const normalizedTime = useMemo(() => normalizeTime(time), [time]);
   const timeLabel = displayTime ?? normalizedTime;
+  const timeParts = timeLabel.match(/^(\d{1,2}):(\d{2})$/);
   
   // Форматируем чемпионат и этап
   const formattedChampionship = useMemo(() => formatChampionship(championship), [championship]);
   const formattedStage = useMemo(() => formatStage(stage), [stage]);
+  const weatherEventDetails = useMemo(
+    () => [formattedStage, place, session].filter(Boolean).join(' · '),
+    [formattedStage, place, session]
+  );
   
   // Создаем объект ScheduleItem для календарей (мемоизируем)
   const scheduleItem = useMemo<ScheduleItem>(() => ({
@@ -188,11 +193,37 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   return (
     <div className="schedule-row-wrapper">
       <div
-        ref={timeContainerRef}
         className={`time-container ${isLightTheme ? 'time-container--light' : 'time-container--dark'}`}
       >
         {startedLabel && <div className="time-started">{startedLabel}</div>}
-        <div className="time">{timeLabel}</div>
+        <div
+          className={`time ${isLive && !isEnded ? 'time--live' : ''}`}
+          aria-label={`Время начала ${timeLabel}`}
+        >
+          {timeParts ? (
+            <>
+              <span aria-hidden="true">{timeParts[1]}</span>
+              <span className="time__separator" aria-hidden="true">:</span>
+              <span aria-hidden="true">{timeParts[2]}</span>
+            </>
+          ) : (
+            <span aria-hidden="true">{timeLabel}</span>
+          )}
+        </div>
+        {isLive && !isEnded && (
+          <div className="event-status-strip event-status-strip--live event-status-strip--time">
+            <svg
+              className="event-status-strip__live-icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="2.5" fill="currentColor" />
+              <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M5.5 5.5a9.2 9.2 0 0 0 0 13M18.5 5.5a9.2 9.2 0 0 1 0 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+            <span>В эфире</span>
+          </div>
+        )}
         <ScheduleIcons
           showPC={showPC}
           tgNumbers={tgNumbers}
@@ -308,23 +339,17 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
         )}
         {!isEnded && weatherForecast && weatherForecast.length > 0 && (
           <div className="weather-badge-container">
-            <WeatherBadge forecast={weatherForecast} isLightTheme={isLightTheme} />
+            <WeatherBadge
+              forecast={weatherForecast}
+              isLightTheme={isLightTheme}
+              eventName={formattedChampionship}
+              eventDetails={weatherEventDetails}
+            />
           </div>
         )}
-        {(isEnded || isLive) && (
-          <div className={`event-status-strip ${isEnded ? 'event-status-strip--ended' : 'event-status-strip--live'}`}>
-            {!isEnded && (
-              <svg
-                className="event-status-strip__live-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <circle cx="12" cy="12" r="2.5" fill="currentColor" />
-                <path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M5.5 5.5a9.2 9.2 0 0 0 0 13M18.5 5.5a9.2 9.2 0 0 1 0 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            )}
-            <span>{isEnded ? 'Завершено' : 'В эфире'}</span>
+        {isEnded && (
+          <div className="event-status-strip event-status-strip--ended">
+            <span>Завершено</span>
           </div>
         )}
       </div>
