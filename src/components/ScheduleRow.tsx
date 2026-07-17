@@ -38,6 +38,7 @@ interface ScheduleRowProps {
   commentatorScheduleError?: string | null;
   weatherForecast?: WeatherForecastPoint[];
   isEnded?: boolean;
+  isCancelled?: boolean;
   isLive?: boolean;
 }
 
@@ -82,6 +83,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   commentatorScheduleError,
   weatherForecast,
   isEnded = false,
+  isCancelled = false,
   isLive = false,
 }) => {
   const [isCommentatorScheduleOpen, setIsCommentatorScheduleOpen] = useState(false);
@@ -197,7 +199,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
       >
         {startedLabel && <div className="time-started">{startedLabel}</div>}
         <div
-          className={`time ${isLive && !isEnded ? 'time--live' : ''}`}
+          className={`time ${isLive ? 'time--live' : ''}`}
           aria-label={`Время начала ${timeLabel}`}
         >
           {timeParts ? (
@@ -210,7 +212,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
             <span aria-hidden="true">{timeLabel}</span>
           )}
         </div>
-        {isLive && !isEnded && (
+        {isLive && (
           <div className="event-status-strip event-status-strip--live event-status-strip--time">
             <svg
               className="event-status-strip__live-icon"
@@ -222,6 +224,17 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
               <path d="M5.5 5.5a9.2 9.2 0 0 0 0 13M18.5 5.5a9.2 9.2 0 0 1 0 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
             </svg>
             <span>В эфире</span>
+          </div>
+        )}
+        {isCancelled && (
+          <div className="event-status-strip event-status-strip--cancelled event-status-strip--time">
+            <span>ОТМЕНЕНО</span>
+          </div>
+        )}
+        {isEnded && (
+          <div className="event-status-strip event-status-strip--ended event-status-strip--time">
+            <span className="event-status-strip__ended-dot" aria-hidden="true" />
+            <span>ЗАВЕРШЕНО</span>
           </div>
         )}
         <ScheduleIcons
@@ -337,7 +350,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
         {optionally && optionally.trim() && (
           <Optionally text={optionally.trim()} isLightTheme={isLightTheme} />
         )}
-        {!isEnded && weatherForecast && weatherForecast.length > 0 && (
+        {!isEnded && !isCancelled && weatherForecast && weatherForecast.length > 0 && (
           <div className="weather-badge-container">
             <WeatherBadge
               forecast={weatherForecast}
@@ -345,11 +358,6 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
               eventName={formattedChampionship}
               eventDetails={weatherEventDetails}
             />
-          </div>
-        )}
-        {isEnded && (
-          <div className="event-status-strip event-status-strip--ended">
-            <span>Завершено</span>
           </div>
         )}
       </div>

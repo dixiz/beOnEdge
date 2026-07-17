@@ -47,8 +47,29 @@ const isScheduleItemEnded = (item: Pick<ScheduleItem, 'Ended'>): boolean => {
   return isScheduleFlagTrue(item.Ended);
 };
 
-const isScheduleItemLive = (item: Pick<ScheduleItem, 'Live'>): boolean =>
-  isScheduleFlagTrue(item.Live);
+const isScheduleItemCancelled = (item: Pick<ScheduleItem, 'Ended' | 'Cancel'>): boolean => {
+  return isScheduleFlagTrue(item.Cancel) && !isScheduleItemEnded(item);
+};
+
+const isScheduleItemHiddenByStatus = (
+  item: Pick<ScheduleItem, 'Ended' | 'Cancel'>
+): boolean => isScheduleItemEnded(item) || isScheduleFlagTrue(item.Cancel);
+
+const getHiddenEventsToggleLabel = (
+  hasEndedEvents: boolean,
+  hasCancelledEvents: boolean,
+  areEventsShown: boolean
+): string => {
+  const statusLabel = hasEndedEvents && hasCancelledEvents
+    ? 'завершённые и отменённые'
+    : hasCancelledEvents
+      ? 'отменённые'
+      : 'завершённые';
+  return `${areEventsShown ? 'Скрыть' : 'Показать'} ${statusLabel}`;
+};
+
+const isScheduleItemLive = (item: Pick<ScheduleItem, 'Live' | 'Ended'>): boolean =>
+  isScheduleFlagTrue(item.Live) && !isScheduleItemEnded(item);
 
 const parseDurationMs = (duration?: string): number => {
   if (!duration) return 0;
@@ -198,7 +219,7 @@ function App() {
   const [tempCommentators, setTempCommentators] = useState<string[]>([]);
   const [filterPage, setFilterPage] = useState<'series' | 'days' | 'tracks' | 'commentators'>('series');
   const [contentScale, setContentScale] = useState(1);
-  const [shownEndedDays, setShownEndedDays] = useState<Set<string>>(() => new Set());
+  const [shownHiddenDays, setShownHiddenDays] = useState<Set<string>>(() => new Set());
   const [zoomControlsHeight, setZoomControlsHeight] = useState(0);
   const zoomControlsRef = useRef<HTMLDivElement | null>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
@@ -519,11 +540,19 @@ function App() {
     return dates;
   }, [scheduleWithCarryover]);
 
+  const cancelledDays = useMemo(() => {
+    const dates = new Set<string>();
+    scheduleWithCarryover.forEach(item => {
+      if (isScheduleItemCancelled(item)) dates.add(item.date);
+    });
+    return dates;
+  }, [scheduleWithCarryover]);
+
   const displaySchedule = useMemo(
     () => scheduleWithCarryover.filter(
-      item => !isScheduleItemEnded(item) || shownEndedDays.has(item.date)
+      item => !isScheduleItemHiddenByStatus(item) || shownHiddenDays.has(item.date)
     ),
-    [scheduleWithCarryover, shownEndedDays]
+    [scheduleWithCarryover, shownHiddenDays]
   );
 
   // Даты после применения фильтров (для слайдера по дням)
@@ -571,11 +600,11 @@ function App() {
     const grouped = groupBy(scheduleWithCarryover, r => `${r.date}_${r.day}`);
     Object.keys(grouped).forEach(key => {
       grouped[key] = grouped[key].filter(
-        item => !isScheduleItemEnded(item) || shownEndedDays.has(item.date)
+        item => !isScheduleItemHiddenByStatus(item) || shownHiddenDays.has(item.date)
       );
     });
     return grouped;
-  }, [scheduleWithCarryover, shownEndedDays]);
+  }, [scheduleWithCarryover, shownHiddenDays]);
 
   const rowsByDate = useMemo(() => {
     return groupBy(displaySchedule, r => r.date);
@@ -879,8 +908,8 @@ function App() {
     touchStartRef.current = null;
   }, []);
 
-  const handleToggleEndedForDay = useCallback((date: string) => {
-    setShownEndedDays(current => {
+  const handleToggleHiddenForDay = useCallback((date: string) => {
+    setShownHiddenDays(current => {
       const next = new Set(current);
       if (next.has(date)) {
         next.delete(date);
@@ -968,8 +997,8 @@ function App() {
           {error && <div className="error-message">{error}</div>}
           {!loading && !error && displaySchedule.length === 0 && (
             <div className={`empty-message ${isLightTheme ? 'empty-message--light' : 'empty-message--dark'}`}>
-              {endedDays.size > 0
-                ? 'Все подходящие эфиры завершены. Нажмите «Показать завершённые» в блоке нужного дня.'
+              {endedDays.size > 0 || cancelledDays.size > 0
+                ? 'Все подходящие события завершены или отменены. Покажите скрытые события в блоке нужного дня.'
                 : 'Упс! Ни одна гоночная серия не подходит для установленных отборов'}
             </div>
           )}
@@ -977,17 +1006,21 @@ function App() {
             sortedDayEntries.map(([key, rows]) => {
               const [date, day] = key.split('_');
               const sortedRows = sortDayRows(rows as DisplayScheduleItem[]);
+              const hasEndedEvents = endedDays.has(date);
+              const hasCancelledEvents = cancelledDays.has(date);
+              const hasHiddenEvents = hasEndedEvents || hasCancelledEvents;
               return (
                 <div
-                  className={`day-column ${endedDays.has(date) ? 'day-column--has-ended-toggle' : ''}`}
+                  className={`day-column ${hasHiddenEvents ? 'day-column--has-ended-toggle' : ''}`}
                   key={key}
                 >
                   <div className="day-header-sticky">
                     <Header
                       isLightTheme={isLightTheme}
-                      hasEndedEvents={endedDays.has(date)}
-                      areEndedEventsShown={shownEndedDays.has(date)}
-                      onToggleEndedEvents={() => handleToggleEndedForDay(date)}
+                      hasEndedEvents={hasEndedEvents}
+                      hasCancelledEvents={hasCancelledEvents}
+                      areEndedEventsShown={shownHiddenDays.has(date)}
+                      onToggleEndedEvents={() => handleToggleHiddenForDay(date)}
                     >
                       <DateDisplay date={date} isLightTheme={isLightTheme} />
                       <DayOfWeekDisplay day={day} isLightTheme={isLightTheme} />
@@ -1024,6 +1057,7 @@ function App() {
                           commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                           weatherForecast={row.weatherForecast}
                           isEnded={isScheduleItemEnded(row)}
+                          isCancelled={isScheduleItemCancelled(row)}
                           isLive={isScheduleItemLive(row)}
                         />
                       );
@@ -1033,16 +1067,20 @@ function App() {
               );
             })
           ) : (
-            <div className={`day-column ${selectedDayMeta && endedDays.has(selectedDayMeta.date) ? 'day-column--has-ended-toggle' : ''}`}>
-              {selectedDayMeta && endedDays.has(selectedDayMeta.date) && (
+            <div className={`day-column ${selectedDayMeta && (endedDays.has(selectedDayMeta.date) || cancelledDays.has(selectedDayMeta.date)) ? 'day-column--has-ended-toggle' : ''}`}>
+              {selectedDayMeta && (endedDays.has(selectedDayMeta.date) || cancelledDays.has(selectedDayMeta.date)) && (
                 <div className="by-day-ended-toggle">
                   <button
                     type="button"
                     className="header__ended-toggle"
-                    onClick={() => handleToggleEndedForDay(selectedDayMeta.date)}
-                    aria-pressed={shownEndedDays.has(selectedDayMeta.date)}
+                    onClick={() => handleToggleHiddenForDay(selectedDayMeta.date)}
+                    aria-pressed={shownHiddenDays.has(selectedDayMeta.date)}
                   >
-                    {shownEndedDays.has(selectedDayMeta.date) ? 'Скрыть завершённые' : 'Показать завершённые'}
+                    {getHiddenEventsToggleLabel(
+                      endedDays.has(selectedDayMeta.date),
+                      cancelledDays.has(selectedDayMeta.date),
+                      shownHiddenDays.has(selectedDayMeta.date)
+                    )}
                   </button>
                 </div>
               )}
@@ -1077,6 +1115,7 @@ function App() {
                       commentatorScheduleError={isCommentatorScheduleEvent(row) ? commentatorScheduleError : null}
                       weatherForecast={row.weatherForecast}
                       isEnded={isScheduleItemEnded(row)}
+                      isCancelled={isScheduleItemCancelled(row)}
                       isLive={isScheduleItemLive(row)}
                     />
                   );
