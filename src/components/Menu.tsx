@@ -96,27 +96,7 @@ const Menu: React.FC<MenuProps> = ({
               </div>
             </div>
           )}
-          {onToggleViewMode && (
-            <div className="view-toggle-container">
-              <div className="view-toggle menu-toggle--vertical">
-                <button
-                  onClick={() => onToggleViewMode && onToggleViewMode('all')}
-                  className={`time-toggle-option ${viewMode === 'all' ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
-                >
-                  Все дни
-                </button>
-                <button
-                  onClick={() => onToggleViewMode && onToggleViewMode('byDay')}
-                  className={`time-toggle-option ${viewMode === 'byDay' ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
-                >
-                  По дням
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="menu-center__row menu-center__row--secondary">
-          <div className="quick-actions">
+          <div className="quick-actions quick-actions--desktop-center">
             {onToggleTheme && (
               <button
                 onClick={onToggleTheme}
@@ -173,6 +153,24 @@ const Menu: React.FC<MenuProps> = ({
               </svg>
             </button>
           </div>
+          {onToggleViewMode && (
+            <div className="view-toggle-container">
+              <div className="view-toggle menu-toggle--vertical">
+                <button
+                  onClick={() => onToggleViewMode && onToggleViewMode('all')}
+                  className={`time-toggle-option ${viewMode === 'all' ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
+                >
+                  Все дни
+                </button>
+                <button
+                  onClick={() => onToggleViewMode && onToggleViewMode('byDay')}
+                  className={`time-toggle-option ${viewMode === 'byDay' ? 'time-toggle-option--active' : ''} ${isLightTheme ? 'time-toggle-option--light' : 'time-toggle-option--dark'}`}
+                >
+                  По дням
+                </button>
+              </div>
+            </div>
+          )}
         </div>
         {activeFilters.length > 0 && (
           <div className="active-filters active-filters--desktop" aria-label="Выбранные фильтры">
