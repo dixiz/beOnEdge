@@ -39,11 +39,17 @@
 
 .menu-center__row--primary {
   flex-wrap: nowrap;
+  gap: 10px;
 }
 
 .menu-center__row--secondary {
   width: 100%;
   gap: 14px;
+}
+
+.quick-actions--desktop-center {
+  align-self: center;
+  flex-shrink: 0;
 }
 
 .quick-actions {

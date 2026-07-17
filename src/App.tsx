@@ -172,8 +172,37 @@ const shouldShowRtIcon = (value?: string): boolean => {
   return parseBooleanFlag(trimmed);
 };
 
-const scrollToPageTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+const scrollToPageTop = (options?: { fast?: boolean }) => {
+  const startY = window.scrollY || window.pageYOffset || 0;
+  if (startY <= 0) return;
+
+  if (!options?.fast) {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  const prefersReducedMotion =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReducedMotion) {
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  const durationMs = 280;
+  const startTime = performance.now();
+  const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - startTime) / durationMs);
+    window.scrollTo(0, startY * (1 - easeOutCubic(progress)));
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  };
+
+  requestAnimationFrame(step);
 };
 
 const buildRowKey = (row: DisplayScheduleItem, index: number) =>
@@ -918,6 +947,7 @@ function App() {
       }
       return next;
     });
+    scrollToPageTop({ fast: true });
   }, []);
 
   return (

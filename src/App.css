@@ -256,9 +256,24 @@
 }
 
 .by-day-ended-toggle {
+  position: sticky;
+  top: var(--menu-offset, 125px);
+  z-index: 940;
   display: flex;
   justify-content: center;
   margin: 5px 0 0;
+  padding: 6px 0 8px;
+  box-sizing: border-box;
+}
+
+.app-container--dark .by-day-ended-toggle {
+  background:
+    linear-gradient(180deg, rgba(8, 10, 13, 0.97) 55%, rgba(8, 10, 13, 0));
+}
+
+.app-container--light .by-day-ended-toggle {
+  background:
+    linear-gradient(180deg, rgba(233, 201, 0, 0.96) 55%, rgba(233, 201, 0, 0));
 }
 
 .by-day-ended-toggle .header__ended-toggle {

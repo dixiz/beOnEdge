@@ -269,16 +269,20 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
                 {place && <span className="event-meta__place">{place}</span>}
               </div>
             )}
-            {session && (
-              <div className="event-meta">
-                <span className="event-meta__session">{session}</span>
+            {(session || commentators.length > 0) && (
+              <div className="event-session-block">
+                {session && (
+                  <div className="event-meta">
+                    <span className="event-meta__session">{session}</span>
+                  </div>
+                )}
+                <div className="commentators-container">
+                  {commentators.map((name, idx) => (
+                    <Commentator key={`${name}-${idx}`} name={name} />
+                  ))}
+                </div>
               </div>
             )}
-            <div className="commentators-container">
-                {commentators.map((name, idx) => (
-                <Commentator key={`${name}-${idx}`} name={name} />
-                ))}
-              </div>
             {shouldShowCommentatorSchedule && (
               <button
                 type="button"
