@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-21T23:01:11.262457",
+  "last_updated": "2026-07-22T01:01:10.705864",
   "events": [
     {
       "event_row": 6,
@@ -1255,20 +1255,20 @@
         {
           "forecast_time_msk": "2026-07-26T10:00:00+03:00",
           "forecast_time_local": "2026-07-26T09:00:00+02:00",
-          "temperature_2m": 19.4,
-          "relative_humidity_2m": 95,
-          "precipitation": 0.2,
-          "wind_speed_10m": 7.1,
-          "weather_code": 80
+          "temperature_2m": 20.0,
+          "relative_humidity_2m": 91,
+          "precipitation": 0.0,
+          "wind_speed_10m": 5.4,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-07-26T10:30:00+03:00",
           "forecast_time_local": "2026-07-26T09:30:00+02:00",
-          "temperature_2m": 19.5,
-          "relative_humidity_2m": 94,
-          "precipitation": 0.2,
-          "wind_speed_10m": 6.7,
-          "weather_code": 80
+          "temperature_2m": 20.2,
+          "relative_humidity_2m": 91,
+          "precipitation": 0.0,
+          "wind_speed_10m": 5.4,
+          "weather_code": 3
         }
       ]
     },
