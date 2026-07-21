@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-21T17:01:06.641994",
+  "last_updated": "2026-07-21T19:01:19.922656",
   "events": [
     {
       "event_row": 6,
@@ -1237,6 +1237,38 @@
           "precipitation": 0.0,
           "wind_speed_10m": 6.4,
           "weather_code": 2
+        }
+      ]
+    },
+    {
+      "event_row": 40,
+      "Date": "26.07.2026",
+      "Start": "10:00",
+      "LocalDate": "26.07.2026",
+      "LocalStart": "09:00",
+      "Championship": "Ф4 Италия",
+      "Stage": "4-й этап",
+      "latitude": 43.9975,
+      "longitude": 11.371944444444445,
+      "timezone": "Europe/Rome",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-07-26T10:00:00+03:00",
+          "forecast_time_local": "2026-07-26T09:00:00+02:00",
+          "temperature_2m": 19.4,
+          "relative_humidity_2m": 95,
+          "precipitation": 0.2,
+          "wind_speed_10m": 7.1,
+          "weather_code": 80
+        },
+        {
+          "forecast_time_msk": "2026-07-26T10:30:00+03:00",
+          "forecast_time_local": "2026-07-26T09:30:00+02:00",
+          "temperature_2m": 19.5,
+          "relative_humidity_2m": 94,
+          "precipitation": 0.2,
+          "wind_speed_10m": 6.7,
+          "weather_code": 80
         }
       ]
     },
