@@ -1,570 +1,8 @@
 {
-  "last_updated": "2026-07-27T01:01:02.343322",
+  "last_updated": "2026-07-27T02:00:43.569067",
   "events": [
     {
       "event_row": 2,
-      "Date": "26.07.2026",
-      "Start": "07:30",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "13:30",
-      "Championship": "Формула Е",
-      "Stage": "15-й этап",
-      "latitude": 35.63333333333333,
-      "longitude": 139.80055555555555,
-      "timezone": "Asia/Tokyo",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T07:30:00+03:00",
-          "forecast_time_local": "2026-07-26T13:30:00+09:00",
-          "temperature_2m": 29.8,
-          "relative_humidity_2m": 78,
-          "precipitation": 0.0,
-          "wind_speed_10m": 6.2,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T08:00:00+03:00",
-          "forecast_time_local": "2026-07-26T14:00:00+09:00",
-          "temperature_2m": 29.8,
-          "relative_humidity_2m": 78,
-          "precipitation": 0.0,
-          "wind_speed_10m": 6.2,
-          "weather_code": 1
-        }
-      ]
-    },
-    {
-      "event_row": 5,
-      "Date": "26.07.2026",
-      "Start": "10:00",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "09:00",
-      "Championship": "Ф4 Италия",
-      "Stage": "4-й этап",
-      "latitude": 43.9975,
-      "longitude": 11.371944444444445,
-      "timezone": "Europe/Rome",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T10:00:00+03:00",
-          "forecast_time_local": "2026-07-26T09:00:00+02:00",
-          "temperature_2m": 19.3,
-          "relative_humidity_2m": 92,
-          "precipitation": 0.0,
-          "wind_speed_10m": 5.3,
-          "weather_code": 96
-        },
-        {
-          "forecast_time_msk": "2026-07-26T10:30:00+03:00",
-          "forecast_time_local": "2026-07-26T09:30:00+02:00",
-          "temperature_2m": 19.6,
-          "relative_humidity_2m": 93,
-          "precipitation": 0.0,
-          "wind_speed_10m": 2.9,
-          "weather_code": 3
-        }
-      ]
-    },
-    {
-      "event_row": 8,
-      "Date": "26.07.2026",
-      "Start": "13:45",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "11:45",
-      "Championship": "BTCC",
-      "Stage": "13-й этап",
-      "latitude": 51.210277777777776,
-      "longitude": -1.6005555555555555,
-      "timezone": "Europe/London",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T13:45:00+03:00",
-          "forecast_time_local": "2026-07-26T11:45:00+01:00",
-          "temperature_2m": 22.7,
-          "relative_humidity_2m": 52,
-          "precipitation": 0.0,
-          "wind_speed_10m": 23.0,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-26T14:15:00+03:00",
-          "forecast_time_local": "2026-07-26T12:15:00+01:00",
-          "temperature_2m": 23.3,
-          "relative_humidity_2m": 48,
-          "precipitation": 0.0,
-          "wind_speed_10m": 23.8,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-26T14:45:00+03:00",
-          "forecast_time_local": "2026-07-26T12:45:00+01:00",
-          "temperature_2m": 23.7,
-          "relative_humidity_2m": 45,
-          "precipitation": 0.0,
-          "wind_speed_10m": 24.5,
-          "weather_code": 1
-        }
-      ]
-    },
-    {
-      "event_row": 10,
-      "Date": "26.07.2026",
-      "Start": "15:00",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "13:00",
-      "Championship": "Ф4 Британия",
-      "Stage": "17-й этап",
-      "latitude": 51.210277777777776,
-      "longitude": -1.6005555555555555,
-      "timezone": "Europe/London",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T15:00:00+03:00",
-          "forecast_time_local": "2026-07-26T13:00:00+01:00",
-          "temperature_2m": 23.9,
-          "relative_humidity_2m": 44,
-          "precipitation": 0.0,
-          "wind_speed_10m": 24.8,
-          "weather_code": 1
-        }
-      ]
-    },
-    {
-      "event_row": 11,
-      "Date": "26.07.2026",
-      "Start": "16:00",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "15:00",
-      "Championship": "Формула 1",
-      "Stage": "11-й этап",
-      "latitude": 47.58222222222222,
-      "longitude": 19.25111111111111,
-      "timezone": "Europe/Budapest",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T16:00:00+03:00",
-          "forecast_time_local": "2026-07-26T15:00:00+02:00",
-          "temperature_2m": 29.6,
-          "relative_humidity_2m": 24,
-          "precipitation": 0.0,
-          "wind_speed_10m": 11.5,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T16:30:00+03:00",
-          "forecast_time_local": "2026-07-26T15:30:00+02:00",
-          "temperature_2m": 29.9,
-          "relative_humidity_2m": 24,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.8,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T17:00:00+03:00",
-          "forecast_time_local": "2026-07-26T16:00:00+02:00",
-          "temperature_2m": 30.4,
-          "relative_humidity_2m": 24,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.8,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T17:30:00+03:00",
-          "forecast_time_local": "2026-07-26T16:30:00+02:00",
-          "temperature_2m": 31.2,
-          "relative_humidity_2m": 24,
-          "precipitation": 0.0,
-          "wind_speed_10m": 11.2,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T18:00:00+03:00",
-          "forecast_time_local": "2026-07-26T17:00:00+02:00",
-          "temperature_2m": 31.6,
-          "relative_humidity_2m": 24,
-          "precipitation": 0.0,
-          "wind_speed_10m": 13.0,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T18:30:00+03:00",
-          "forecast_time_local": "2026-07-26T17:30:00+02:00",
-          "temperature_2m": 30.8,
-          "relative_humidity_2m": 28,
-          "precipitation": 0.0,
-          "wind_speed_10m": 18.0,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T19:00:00+03:00",
-          "forecast_time_local": "2026-07-26T18:00:00+02:00",
-          "temperature_2m": 29.8,
-          "relative_humidity_2m": 32,
-          "precipitation": 0.0,
-          "wind_speed_10m": 21.6,
-          "weather_code": 3
-        }
-      ]
-    },
-    {
-      "event_row": 15,
-      "Date": "26.07.2026",
-      "Start": "19:00",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "09:00",
-      "Championship": "NHRA",
-      "Stage": "12-й этап",
-      "latitude": 47.320055555555555,
-      "longitude": -122.14516666666667,
-      "timezone": "America/Los_Angeles",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T19:00:00+03:00",
-          "forecast_time_local": "2026-07-26T09:00:00-07:00",
-          "temperature_2m": 17.2,
-          "relative_humidity_2m": 90,
-          "precipitation": 0.0,
-          "wind_speed_10m": 0.8,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T19:30:00+03:00",
-          "forecast_time_local": "2026-07-26T09:30:00-07:00",
-          "temperature_2m": 17.8,
-          "relative_humidity_2m": 87,
-          "precipitation": 0.0,
-          "wind_speed_10m": 5.0,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-26T20:00:00+03:00",
-          "forecast_time_local": "2026-07-26T10:00:00-07:00",
-          "temperature_2m": 17.9,
-          "relative_humidity_2m": 84,
-          "precipitation": 0.0,
-          "wind_speed_10m": 3.1,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T20:30:00+03:00",
-          "forecast_time_local": "2026-07-26T10:30:00-07:00",
-          "temperature_2m": 18.6,
-          "relative_humidity_2m": 81,
-          "precipitation": 0.0,
-          "wind_speed_10m": 5.0,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T21:00:00+03:00",
-          "forecast_time_local": "2026-07-26T11:00:00-07:00",
-          "temperature_2m": 19.4,
-          "relative_humidity_2m": 77,
-          "precipitation": 0.0,
-          "wind_speed_10m": 5.5,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T21:30:00+03:00",
-          "forecast_time_local": "2026-07-26T11:30:00-07:00",
-          "temperature_2m": 19.8,
-          "relative_humidity_2m": 72,
-          "precipitation": 0.0,
-          "wind_speed_10m": 7.6,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-26T22:00:00+03:00",
-          "forecast_time_local": "2026-07-26T12:00:00-07:00",
-          "temperature_2m": 21.0,
-          "relative_humidity_2m": 67,
-          "precipitation": 0.0,
-          "wind_speed_10m": 7.7,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T22:30:00+03:00",
-          "forecast_time_local": "2026-07-26T12:30:00-07:00",
-          "temperature_2m": 21.6,
-          "relative_humidity_2m": 68,
-          "precipitation": 0.0,
-          "wind_speed_10m": 6.6,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T23:00:00+03:00",
-          "forecast_time_local": "2026-07-26T13:00:00-07:00",
-          "temperature_2m": 22.5,
-          "relative_humidity_2m": 66,
-          "precipitation": 0.0,
-          "wind_speed_10m": 5.4,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T23:30:00+03:00",
-          "forecast_time_local": "2026-07-26T13:30:00-07:00",
-          "temperature_2m": 22.9,
-          "relative_humidity_2m": 53,
-          "precipitation": 0.0,
-          "wind_speed_10m": 9.1,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-27T00:00:00+03:00",
-          "forecast_time_local": "2026-07-26T14:00:00-07:00",
-          "temperature_2m": 23.5,
-          "relative_humidity_2m": 39,
-          "precipitation": 0.0,
-          "wind_speed_10m": 8.0,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-27T00:30:00+03:00",
-          "forecast_time_local": "2026-07-26T14:30:00-07:00",
-          "temperature_2m": 24.1,
-          "relative_humidity_2m": 36,
-          "precipitation": 0.0,
-          "wind_speed_10m": 9.8,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-27T01:00:00+03:00",
-          "forecast_time_local": "2026-07-26T15:00:00-07:00",
-          "temperature_2m": 24.3,
-          "relative_humidity_2m": 36,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.8,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-27T01:30:00+03:00",
-          "forecast_time_local": "2026-07-26T15:30:00-07:00",
-          "temperature_2m": 24.2,
-          "relative_humidity_2m": 38,
-          "precipitation": 0.0,
-          "wind_speed_10m": 13.7,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-27T02:00:00+03:00",
-          "forecast_time_local": "2026-07-26T16:00:00-07:00",
-          "temperature_2m": 23.9,
-          "relative_humidity_2m": 41,
-          "precipitation": 0.0,
-          "wind_speed_10m": 13.8,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-27T02:30:00+03:00",
-          "forecast_time_local": "2026-07-26T16:30:00-07:00",
-          "temperature_2m": 23.8,
-          "relative_humidity_2m": 42,
-          "precipitation": 0.0,
-          "wind_speed_10m": 13.6,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-27T03:00:00+03:00",
-          "forecast_time_local": "2026-07-26T17:00:00-07:00",
-          "temperature_2m": 23.8,
-          "relative_humidity_2m": 42,
-          "precipitation": 0.0,
-          "wind_speed_10m": 13.2,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-27T03:30:00+03:00",
-          "forecast_time_local": "2026-07-26T17:30:00-07:00",
-          "temperature_2m": 23.4,
-          "relative_humidity_2m": 43,
-          "precipitation": 0.0,
-          "wind_speed_10m": 13.1,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-27T04:00:00+03:00",
-          "forecast_time_local": "2026-07-26T18:00:00-07:00",
-          "temperature_2m": 22.9,
-          "relative_humidity_2m": 44,
-          "precipitation": 0.0,
-          "wind_speed_10m": 12.0,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-27T04:30:00+03:00",
-          "forecast_time_local": "2026-07-26T18:30:00-07:00",
-          "temperature_2m": 22.4,
-          "relative_humidity_2m": 46,
-          "precipitation": 0.0,
-          "wind_speed_10m": 12.8,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-27T05:00:00+03:00",
-          "forecast_time_local": "2026-07-26T19:00:00-07:00",
-          "temperature_2m": 21.7,
-          "relative_humidity_2m": 49,
-          "precipitation": 0.0,
-          "wind_speed_10m": 12.6,
-          "weather_code": 3
-        }
-      ]
-    },
-    {
-      "event_row": 16,
-      "Date": "26.07.2026",
-      "Start": "19:30",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "17:30",
-      "Championship": "BTCC",
-      "Stage": "15-й этап",
-      "latitude": 51.210277777777776,
-      "longitude": -1.6005555555555555,
-      "timezone": "Europe/London",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T19:30:00+03:00",
-          "forecast_time_local": "2026-07-26T17:30:00+01:00",
-          "temperature_2m": 23.2,
-          "relative_humidity_2m": 39,
-          "precipitation": 0.0,
-          "wind_speed_10m": 25.9,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-26T20:00:00+03:00",
-          "forecast_time_local": "2026-07-26T18:00:00+01:00",
-          "temperature_2m": 22.8,
-          "relative_humidity_2m": 40,
-          "precipitation": 0.0,
-          "wind_speed_10m": 25.6,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T20:30:00+03:00",
-          "forecast_time_local": "2026-07-26T18:30:00+01:00",
-          "temperature_2m": 22.3,
-          "relative_humidity_2m": 43,
-          "precipitation": 0.0,
-          "wind_speed_10m": 23.0,
-          "weather_code": 2
-        }
-      ]
-    },
-    {
-      "event_row": 17,
-      "Date": "26.07.2026",
-      "Start": "21:00",
-      "LocalDate": "26.07.2026",
-      "LocalStart": "14:00",
-      "Championship": "НАСКАР Кубок",
-      "Stage": "22-й этап",
-      "latitude": 39.79833333333333,
-      "longitude": -86.23277777777778,
-      "timezone": "America/Indiana/Indianapolis",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-07-26T21:00:00+03:00",
-          "forecast_time_local": "2026-07-26T14:00:00-04:00",
-          "temperature_2m": 28.9,
-          "relative_humidity_2m": 67,
-          "precipitation": 0.0,
-          "wind_speed_10m": 5.1,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T21:30:00+03:00",
-          "forecast_time_local": "2026-07-26T14:30:00-04:00",
-          "temperature_2m": 29.2,
-          "relative_humidity_2m": 64,
-          "precipitation": 0.0,
-          "wind_speed_10m": 3.3,
-          "weather_code": 0
-        },
-        {
-          "forecast_time_msk": "2026-07-26T22:00:00+03:00",
-          "forecast_time_local": "2026-07-26T15:00:00-04:00",
-          "temperature_2m": 30.0,
-          "relative_humidity_2m": 61,
-          "precipitation": 0.0,
-          "wind_speed_10m": 3.6,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-07-26T22:30:00+03:00",
-          "forecast_time_local": "2026-07-26T15:30:00-04:00",
-          "temperature_2m": 30.4,
-          "relative_humidity_2m": 62,
-          "precipitation": 0.0,
-          "wind_speed_10m": 7.9,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-26T23:00:00+03:00",
-          "forecast_time_local": "2026-07-26T16:00:00-04:00",
-          "temperature_2m": 30.5,
-          "relative_humidity_2m": 63,
-          "precipitation": 0.0,
-          "wind_speed_10m": 8.8,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-26T23:30:00+03:00",
-          "forecast_time_local": "2026-07-26T16:30:00-04:00",
-          "temperature_2m": 30.9,
-          "relative_humidity_2m": 60,
-          "precipitation": 0.0,
-          "wind_speed_10m": 9.1,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-27T00:00:00+03:00",
-          "forecast_time_local": "2026-07-26T17:00:00-04:00",
-          "temperature_2m": 31.0,
-          "relative_humidity_2m": 56,
-          "precipitation": 0.0,
-          "wind_speed_10m": 11.2,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-27T00:30:00+03:00",
-          "forecast_time_local": "2026-07-26T17:30:00-04:00",
-          "temperature_2m": 31.2,
-          "relative_humidity_2m": 57,
-          "precipitation": 0.0,
-          "wind_speed_10m": 9.1,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-07-27T01:00:00+03:00",
-          "forecast_time_local": "2026-07-26T18:00:00-04:00",
-          "temperature_2m": 30.8,
-          "relative_humidity_2m": 58,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.5,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-27T01:30:00+03:00",
-          "forecast_time_local": "2026-07-26T18:30:00-04:00",
-          "temperature_2m": 30.6,
-          "relative_humidity_2m": 58,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.8,
-          "weather_code": 3
-        },
-        {
-          "forecast_time_msk": "2026-07-27T02:00:00+03:00",
-          "forecast_time_local": "2026-07-26T19:00:00-04:00",
-          "temperature_2m": 30.3,
-          "relative_humidity_2m": 59,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.8,
-          "weather_code": 3
-        }
-      ]
-    },
-    {
-      "event_row": 18,
       "Date": "31.07.2026",
       "Start": "04:45",
       "LocalDate": "31.07.2026",
@@ -695,7 +133,7 @@
       ]
     },
     {
-      "event_row": 20,
+      "event_row": 4,
       "Date": "01.08.2026",
       "Start": "07:45",
       "LocalDate": "01.08.2026",
@@ -754,7 +192,7 @@
       ]
     },
     {
-      "event_row": 22,
+      "event_row": 6,
       "Date": "01.08.2026",
       "Start": "09:30",
       "LocalDate": "01.08.2026",
@@ -813,7 +251,7 @@
       ]
     },
     {
-      "event_row": 24,
+      "event_row": 8,
       "Date": "01.08.2026",
       "Start": "13:00",
       "LocalDate": "01.08.2026",
@@ -944,7 +382,7 @@
       ]
     },
     {
-      "event_row": 25,
+      "event_row": 9,
       "Date": "01.08.2026",
       "Start": "13:15",
       "LocalDate": "01.08.2026",
@@ -976,7 +414,7 @@
       ]
     },
     {
-      "event_row": 32,
+      "event_row": 16,
       "Date": "02.08.2026",
       "Start": "02:30",
       "LocalDate": "01.08.2026",
@@ -1053,7 +491,7 @@
       ]
     },
     {
-      "event_row": 34,
+      "event_row": 18,
       "Date": "02.08.2026",
       "Start": "06:00",
       "LocalDate": "02.08.2026",
@@ -1130,7 +568,7 @@
       ]
     },
     {
-      "event_row": 39,
+      "event_row": 23,
       "Date": "02.08.2026",
       "Start": "13:30",
       "LocalDate": "02.08.2026",
@@ -1162,7 +600,7 @@
       ]
     },
     {
-      "event_row": 41,
+      "event_row": 25,
       "Date": "02.08.2026",
       "Start": "16:30",
       "LocalDate": "02.08.2026",
@@ -1203,7 +641,7 @@
       ]
     },
     {
-      "event_row": 42,
+      "event_row": 26,
       "Date": "02.08.2026",
       "Start": "17:00",
       "LocalDate": "02.08.2026",
@@ -1235,7 +673,7 @@
       ]
     },
     {
-      "event_row": 43,
+      "event_row": 27,
       "Date": "02.08.2026",
       "Start": "18:45",
       "LocalDate": "02.08.2026",
@@ -1258,7 +696,7 @@
       ]
     },
     {
-      "event_row": 44,
+      "event_row": 28,
       "Date": "02.08.2026",
       "Start": "20:30",
       "LocalDate": "02.08.2026",
