@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-02T21:00:39.925751",
+  "last_updated": "2026-08-02T22:00:39.077167",
   "events": [
     {
       "event_row": 2,
@@ -723,19 +723,19 @@
         {
           "forecast_time_msk": "2026-08-02T17:15:00+03:00",
           "forecast_time_local": "2026-08-02T15:15:00+01:00",
-          "temperature_2m": 25.3,
-          "relative_humidity_2m": 32,
+          "temperature_2m": 25.4,
+          "relative_humidity_2m": 30,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.0,
+          "wind_speed_10m": 9.7,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-02T17:45:00+03:00",
           "forecast_time_local": "2026-08-02T15:45:00+01:00",
-          "temperature_2m": 25.5,
-          "relative_humidity_2m": 31,
+          "temperature_2m": 25.6,
+          "relative_humidity_2m": 30,
           "precipitation": 0.0,
-          "wind_speed_10m": 8.6,
+          "wind_speed_10m": 9.7,
           "weather_code": 3
         }
       ]
@@ -755,11 +755,11 @@
         {
           "forecast_time_msk": "2026-08-02T19:00:00+03:00",
           "forecast_time_local": "2026-08-02T17:00:00+01:00",
-          "temperature_2m": 25.8,
-          "relative_humidity_2m": 31,
+          "temperature_2m": 25.9,
+          "relative_humidity_2m": 30,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.4,
-          "weather_code": 1
+          "wind_speed_10m": 10.1,
+          "weather_code": 2
         }
       ]
     }
