@@ -1,12 +1,12 @@
 {
-  "last_updated": "2026-08-05T02:00:28.489734",
+  "last_updated": "2026-08-05T06:00:53.148798",
   "events": [
     {
       "event_row": 3,
       "Date": "06.08.2026",
-      "Start": "12:00",
+      "Start": "13:00",
       "LocalDate": "06.08.2026",
-      "LocalStart": "10:00",
+      "LocalStart": "11:00",
       "Championship": "Мото ГП",
       "Stage": "12-й этап",
       "latitude": 52.07111111111111,
@@ -14,49 +14,49 @@
       "timezone": "Europe/London",
       "forecast": [
         {
-          "forecast_time_msk": "2026-08-06T12:00:00+03:00",
-          "forecast_time_local": "2026-08-06T10:00:00+01:00",
-          "temperature_2m": 16.6,
-          "relative_humidity_2m": 48,
-          "precipitation": 0.0,
-          "wind_speed_10m": 20.5,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-08-06T12:30:00+03:00",
-          "forecast_time_local": "2026-08-06T10:30:00+01:00",
-          "temperature_2m": 16.9,
-          "relative_humidity_2m": 47,
-          "precipitation": 0.0,
-          "wind_speed_10m": 20.9,
-          "weather_code": 2
-        },
-        {
           "forecast_time_msk": "2026-08-06T13:00:00+03:00",
           "forecast_time_local": "2026-08-06T11:00:00+01:00",
-          "temperature_2m": 17.1,
-          "relative_humidity_2m": 46,
+          "temperature_2m": 16.5,
+          "relative_humidity_2m": 47,
           "precipitation": 0.0,
-          "wind_speed_10m": 21.2,
+          "wind_speed_10m": 20.2,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-06T13:30:00+03:00",
           "forecast_time_local": "2026-08-06T11:30:00+01:00",
-          "temperature_2m": 17.4,
-          "relative_humidity_2m": 45,
+          "temperature_2m": 16.8,
+          "relative_humidity_2m": 46,
           "precipitation": 0.0,
-          "wind_speed_10m": 20.5,
-          "weather_code": 2
+          "wind_speed_10m": 19.8,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-06T14:00:00+03:00",
           "forecast_time_local": "2026-08-06T12:00:00+01:00",
-          "temperature_2m": 17.8,
-          "relative_humidity_2m": 44,
+          "temperature_2m": 17.2,
+          "relative_humidity_2m": 45,
+          "precipitation": 0.0,
+          "wind_speed_10m": 19.1,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-06T14:30:00+03:00",
+          "forecast_time_local": "2026-08-06T12:30:00+01:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 42,
           "precipitation": 0.0,
           "wind_speed_10m": 19.8,
           "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-06T15:00:00+03:00",
+          "forecast_time_local": "2026-08-06T13:00:00+01:00",
+          "temperature_2m": 18.9,
+          "relative_humidity_2m": 39,
+          "precipitation": 0.0,
+          "wind_speed_10m": 20.2,
+          "weather_code": 1
         }
       ]
     },
@@ -264,6 +264,138 @@
       ]
     },
     {
+      "event_row": 5,
+      "Date": "07.08.2026",
+      "Start": "23:30",
+      "LocalDate": "07.08.2026",
+      "LocalStart": "13:30",
+      "Championship": "Инди Некст",
+      "Stage": "14-й этап",
+      "latitude": 45.596944444444446,
+      "longitude": -122.69583333333334,
+      "timezone": "America/Los_Angeles",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-07T23:30:00+03:00",
+          "forecast_time_local": "2026-08-07T13:30:00-07:00",
+          "temperature_2m": 32.3,
+          "relative_humidity_2m": 18,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.4,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T00:00:00+03:00",
+          "forecast_time_local": "2026-08-07T14:00:00-07:00",
+          "temperature_2m": 33.1,
+          "relative_humidity_2m": 16,
+          "precipitation": 0.0,
+          "wind_speed_10m": 8.5,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 7,
+      "Date": "08.08.2026",
+      "Start": "02:00",
+      "LocalDate": "07.08.2026",
+      "LocalStart": "18:00",
+      "Championship": "АРКА",
+      "Stage": "14-й этап",
+      "latitude": 41.67777777777778,
+      "longitude": -93.01444444444445,
+      "timezone": "America/Chicago",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-08T02:00:00+03:00",
+          "forecast_time_local": "2026-08-07T18:00:00-05:00",
+          "temperature_2m": 30.3,
+          "relative_humidity_2m": 60,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.4,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T02:30:00+03:00",
+          "forecast_time_local": "2026-08-07T18:30:00-05:00",
+          "temperature_2m": 29.9,
+          "relative_humidity_2m": 64,
+          "precipitation": 0.0,
+          "wind_speed_10m": 5.2,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T03:00:00+03:00",
+          "forecast_time_local": "2026-08-07T19:00:00-05:00",
+          "temperature_2m": 29.1,
+          "relative_humidity_2m": 68,
+          "precipitation": 0.0,
+          "wind_speed_10m": 4.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T03:30:00+03:00",
+          "forecast_time_local": "2026-08-07T19:30:00-05:00",
+          "temperature_2m": 27.6,
+          "relative_humidity_2m": 69,
+          "precipitation": 0.0,
+          "wind_speed_10m": 4.6,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T04:00:00+03:00",
+          "forecast_time_local": "2026-08-07T20:00:00-05:00",
+          "temperature_2m": 26.0,
+          "relative_humidity_2m": 69,
+          "precipitation": 0.0,
+          "wind_speed_10m": 4.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T04:30:00+03:00",
+          "forecast_time_local": "2026-08-07T20:30:00-05:00",
+          "temperature_2m": 25.4,
+          "relative_humidity_2m": 69,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.7,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 11,
+      "Date": "08.08.2026",
+      "Start": "16:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "14:00",
+      "Championship": "BTCC",
+      "Stage": "16-й этап",
+      "latitude": 56.128861111111114,
+      "longitude": -3.503522222222222,
+      "timezone": "Europe/London",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-08T16:00:00+03:00",
+          "forecast_time_local": "2026-08-08T14:00:00+01:00",
+          "temperature_2m": 15.5,
+          "relative_humidity_2m": 90,
+          "precipitation": 0.1,
+          "wind_speed_10m": 25.6,
+          "weather_code": 51
+        },
+        {
+          "forecast_time_msk": "2026-08-08T16:30:00+03:00",
+          "forecast_time_local": "2026-08-08T14:30:00+01:00",
+          "temperature_2m": 15.7,
+          "relative_humidity_2m": 89,
+          "precipitation": 0.1,
+          "wind_speed_10m": 25.9,
+          "weather_code": 51
+        }
+      ]
+    },
+    {
       "event_row": 14,
       "Date": "08.08.2026",
       "Start": "18:00",
@@ -300,6 +432,474 @@
           "relative_humidity_2m": 29,
           "precipitation": 0.0,
           "wind_speed_10m": 15.8,
+          "weather_code": 3
+        }
+      ]
+    },
+    {
+      "event_row": 15,
+      "Date": "08.08.2026",
+      "Start": "18:30",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "10:30",
+      "Championship": "НАСКАР О'Райли",
+      "Stage": "23-й этап",
+      "latitude": 41.67777777777778,
+      "longitude": -93.01444444444445,
+      "timezone": "America/Chicago",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-08T18:30:00+03:00",
+          "forecast_time_local": "2026-08-08T10:30:00-05:00",
+          "temperature_2m": 28.4,
+          "relative_humidity_2m": 67,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.6,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T19:00:00+03:00",
+          "forecast_time_local": "2026-08-08T11:00:00-05:00",
+          "temperature_2m": 29.1,
+          "relative_humidity_2m": 65,
+          "precipitation": 0.0,
+          "wind_speed_10m": 17.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T19:30:00+03:00",
+          "forecast_time_local": "2026-08-08T11:30:00-05:00",
+          "temperature_2m": 29.8,
+          "relative_humidity_2m": 63,
+          "precipitation": 0.0,
+          "wind_speed_10m": 18.4,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 16,
+      "Date": "08.08.2026",
+      "Start": "19:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "09:00",
+      "Championship": "Инди Некст",
+      "Stage": "14-й этап",
+      "latitude": 45.596944444444446,
+      "longitude": -122.69583333333334,
+      "timezone": "America/Los_Angeles",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-08T19:00:00+03:00",
+          "forecast_time_local": "2026-08-08T09:00:00-07:00",
+          "temperature_2m": 19.0,
+          "relative_humidity_2m": 54,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.6,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T19:30:00+03:00",
+          "forecast_time_local": "2026-08-08T09:30:00-07:00",
+          "temperature_2m": 20.6,
+          "relative_humidity_2m": 49,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.8,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 19,
+      "Date": "08.08.2026",
+      "Start": "21:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "13:00",
+      "Championship": "НАСКАР Кубок",
+      "Stage": "23-й этап",
+      "latitude": 41.67777777777778,
+      "longitude": -93.01444444444445,
+      "timezone": "America/Chicago",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-08T21:00:00+03:00",
+          "forecast_time_local": "2026-08-08T13:00:00-05:00",
+          "temperature_2m": 31.6,
+          "relative_humidity_2m": 56,
+          "precipitation": 0.0,
+          "wind_speed_10m": 22.0,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T21:30:00+03:00",
+          "forecast_time_local": "2026-08-08T13:30:00-05:00",
+          "temperature_2m": 32.2,
+          "relative_humidity_2m": 54,
+          "precipitation": 0.0,
+          "wind_speed_10m": 22.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T22:00:00+03:00",
+          "forecast_time_local": "2026-08-08T14:00:00-05:00",
+          "temperature_2m": 32.7,
+          "relative_humidity_2m": 52,
+          "precipitation": 0.0,
+          "wind_speed_10m": 23.0,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 20,
+      "Date": "08.08.2026",
+      "Start": "22:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "12:00",
+      "Championship": "Инди Некст",
+      "Stage": "14-й этап",
+      "latitude": 45.596944444444446,
+      "longitude": -122.69583333333334,
+      "timezone": "America/Los_Angeles",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-08T22:00:00+03:00",
+          "forecast_time_local": "2026-08-08T12:00:00-07:00",
+          "temperature_2m": 28.1,
+          "relative_humidity_2m": 26,
+          "precipitation": 0.0,
+          "wind_speed_10m": 10.2,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-08T22:30:00+03:00",
+          "forecast_time_local": "2026-08-08T12:30:00-07:00",
+          "temperature_2m": 29.1,
+          "relative_humidity_2m": 24,
+          "precipitation": 0.0,
+          "wind_speed_10m": 11.7,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 22,
+      "Date": "09.08.2026",
+      "Start": "00:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "16:00",
+      "Championship": "НАСКАР О'Райли",
+      "Stage": "23-й этап",
+      "latitude": 41.67777777777778,
+      "longitude": -93.01444444444445,
+      "timezone": "America/Chicago",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T00:00:00+03:00",
+          "forecast_time_local": "2026-08-08T16:00:00-05:00",
+          "temperature_2m": 33.8,
+          "relative_humidity_2m": 50,
+          "precipitation": 0.0,
+          "wind_speed_10m": 25.8,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T00:30:00+03:00",
+          "forecast_time_local": "2026-08-08T16:30:00-05:00",
+          "temperature_2m": 33.8,
+          "relative_humidity_2m": 51,
+          "precipitation": 0.0,
+          "wind_speed_10m": 25.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T01:00:00+03:00",
+          "forecast_time_local": "2026-08-08T17:00:00-05:00",
+          "temperature_2m": 33.5,
+          "relative_humidity_2m": 53,
+          "precipitation": 0.0,
+          "wind_speed_10m": 24.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T01:30:00+03:00",
+          "forecast_time_local": "2026-08-08T17:30:00-05:00",
+          "temperature_2m": 33.1,
+          "relative_humidity_2m": 54,
+          "precipitation": 0.0,
+          "wind_speed_10m": 24.0,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T02:00:00+03:00",
+          "forecast_time_local": "2026-08-08T18:00:00-05:00",
+          "temperature_2m": 32.4,
+          "relative_humidity_2m": 56,
+          "precipitation": 0.0,
+          "wind_speed_10m": 23.1,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T02:30:00+03:00",
+          "forecast_time_local": "2026-08-08T18:30:00-05:00",
+          "temperature_2m": 31.6,
+          "relative_humidity_2m": 58,
+          "precipitation": 0.0,
+          "wind_speed_10m": 21.6,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T03:00:00+03:00",
+          "forecast_time_local": "2026-08-08T19:00:00-05:00",
+          "temperature_2m": 30.7,
+          "relative_humidity_2m": 61,
+          "precipitation": 0.0,
+          "wind_speed_10m": 19.9,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T03:30:00+03:00",
+          "forecast_time_local": "2026-08-08T19:30:00-05:00",
+          "temperature_2m": 29.6,
+          "relative_humidity_2m": 65,
+          "precipitation": 0.0,
+          "wind_speed_10m": 19.5,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T04:00:00+03:00",
+          "forecast_time_local": "2026-08-08T20:00:00-05:00",
+          "temperature_2m": 28.9,
+          "relative_humidity_2m": 67,
+          "precipitation": 0.0,
+          "wind_speed_10m": 21.6,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 23,
+      "Date": "09.08.2026",
+      "Start": "02:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "16:00",
+      "Championship": "Индикар",
+      "Stage": "13-й этап",
+      "latitude": 45.596944444444446,
+      "longitude": -122.69583333333334,
+      "timezone": "America/Los_Angeles",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T02:00:00+03:00",
+          "forecast_time_local": "2026-08-08T16:00:00-07:00",
+          "temperature_2m": 31.3,
+          "relative_humidity_2m": 21,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.1,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T02:30:00+03:00",
+          "forecast_time_local": "2026-08-08T16:30:00-07:00",
+          "temperature_2m": 31.2,
+          "relative_humidity_2m": 21,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.0,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T03:00:00+03:00",
+          "forecast_time_local": "2026-08-08T17:00:00-07:00",
+          "temperature_2m": 30.8,
+          "relative_humidity_2m": 21,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.0,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T03:30:00+03:00",
+          "forecast_time_local": "2026-08-08T17:30:00-07:00",
+          "temperature_2m": 30.3,
+          "relative_humidity_2m": 22,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.6,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 24,
+      "Date": "09.08.2026",
+      "Start": "04:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "20:00",
+      "Championship": "USAC Silver Crown",
+      "Stage": "7-й этап",
+      "latitude": 41.67777777777778,
+      "longitude": -93.01444444444445,
+      "timezone": "America/Chicago",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T04:00:00+03:00",
+          "forecast_time_local": "2026-08-08T20:00:00-05:00",
+          "temperature_2m": 28.9,
+          "relative_humidity_2m": 67,
+          "precipitation": 0.0,
+          "wind_speed_10m": 21.6,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T04:30:00+03:00",
+          "forecast_time_local": "2026-08-08T20:30:00-05:00",
+          "temperature_2m": 29.4,
+          "relative_humidity_2m": 62,
+          "precipitation": 0.0,
+          "wind_speed_10m": 25.6,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T05:00:00+03:00",
+          "forecast_time_local": "2026-08-08T21:00:00-05:00",
+          "temperature_2m": 30.1,
+          "relative_humidity_2m": 56,
+          "precipitation": 0.0,
+          "wind_speed_10m": 28.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T05:30:00+03:00",
+          "forecast_time_local": "2026-08-08T21:30:00-05:00",
+          "temperature_2m": 30.2,
+          "relative_humidity_2m": 54,
+          "precipitation": 0.0,
+          "wind_speed_10m": 28.4,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T06:00:00+03:00",
+          "forecast_time_local": "2026-08-08T22:00:00-05:00",
+          "temperature_2m": 30.1,
+          "relative_humidity_2m": 54,
+          "precipitation": 0.0,
+          "wind_speed_10m": 26.6,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T06:30:00+03:00",
+          "forecast_time_local": "2026-08-08T22:30:00-05:00",
+          "temperature_2m": 30.0,
+          "relative_humidity_2m": 54,
+          "precipitation": 0.0,
+          "wind_speed_10m": 25.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T07:00:00+03:00",
+          "forecast_time_local": "2026-08-08T23:00:00-05:00",
+          "temperature_2m": 29.8,
+          "relative_humidity_2m": 53,
+          "precipitation": 0.0,
+          "wind_speed_10m": 24.9,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 25,
+      "Date": "09.08.2026",
+      "Start": "04:00",
+      "LocalDate": "08.08.2026",
+      "LocalStart": "18:00",
+      "Championship": "АРКА Запад",
+      "Stage": "8-й этап",
+      "latitude": 45.596944444444446,
+      "longitude": -122.69583333333334,
+      "timezone": "America/Los_Angeles",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T04:00:00+03:00",
+          "forecast_time_local": "2026-08-08T18:00:00-07:00",
+          "temperature_2m": 29.6,
+          "relative_humidity_2m": 23,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.9,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T04:30:00+03:00",
+          "forecast_time_local": "2026-08-08T18:30:00-07:00",
+          "temperature_2m": 28.7,
+          "relative_humidity_2m": 26,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.9,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T05:00:00+03:00",
+          "forecast_time_local": "2026-08-08T19:00:00-07:00",
+          "temperature_2m": 27.5,
+          "relative_humidity_2m": 29,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T05:30:00+03:00",
+          "forecast_time_local": "2026-08-08T19:30:00-07:00",
+          "temperature_2m": 25.9,
+          "relative_humidity_2m": 34,
+          "precipitation": 0.0,
+          "wind_speed_10m": 15.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T06:00:00+03:00",
+          "forecast_time_local": "2026-08-08T20:00:00-07:00",
+          "temperature_2m": 24.1,
+          "relative_humidity_2m": 39,
+          "precipitation": 0.0,
+          "wind_speed_10m": 14.8,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 27,
+      "Date": "09.08.2026",
+      "Start": "13:15",
+      "LocalDate": "09.08.2026",
+      "LocalStart": "11:15",
+      "Championship": "BTCC",
+      "Stage": "16-й этап",
+      "latitude": 56.128861111111114,
+      "longitude": -3.503522222222222,
+      "timezone": "Europe/London",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T13:15:00+03:00",
+          "forecast_time_local": "2026-08-09T11:15:00+01:00",
+          "temperature_2m": 14.1,
+          "relative_humidity_2m": 75,
+          "precipitation": 0.0,
+          "wind_speed_10m": 26.3,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-09T13:45:00+03:00",
+          "forecast_time_local": "2026-08-09T11:45:00+01:00",
+          "temperature_2m": 14.6,
+          "relative_humidity_2m": 72,
+          "precipitation": 0.0,
+          "wind_speed_10m": 26.6,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-09T14:15:00+03:00",
+          "forecast_time_local": "2026-08-09T12:15:00+01:00",
+          "temperature_2m": 15.0,
+          "relative_humidity_2m": 70,
+          "precipitation": 0.0,
+          "wind_speed_10m": 27.4,
           "weather_code": 3
         }
       ]
@@ -414,6 +1014,47 @@
       ]
     },
     {
+      "event_row": 30,
+      "Date": "09.08.2026",
+      "Start": "16:15",
+      "LocalDate": "09.08.2026",
+      "LocalStart": "14:15",
+      "Championship": "BTCC",
+      "Stage": "17-й этап",
+      "latitude": 56.128861111111114,
+      "longitude": -3.503522222222222,
+      "timezone": "Europe/London",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T16:15:00+03:00",
+          "forecast_time_local": "2026-08-09T14:15:00+01:00",
+          "temperature_2m": 16.2,
+          "relative_humidity_2m": 62,
+          "precipitation": 0.0,
+          "wind_speed_10m": 27.0,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-09T16:45:00+03:00",
+          "forecast_time_local": "2026-08-09T14:45:00+01:00",
+          "temperature_2m": 16.4,
+          "relative_humidity_2m": 60,
+          "precipitation": 0.0,
+          "wind_speed_10m": 26.3,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-09T17:15:00+03:00",
+          "forecast_time_local": "2026-08-09T15:15:00+01:00",
+          "temperature_2m": 16.5,
+          "relative_humidity_2m": 58,
+          "precipitation": 0.0,
+          "wind_speed_10m": 25.6,
+          "weather_code": 3
+        }
+      ]
+    },
+    {
       "event_row": 31,
       "Date": "09.08.2026",
       "Start": "16:30",
@@ -460,6 +1101,196 @@
           "precipitation": 0.0,
           "wind_speed_10m": 14.8,
           "weather_code": 3
+        }
+      ]
+    },
+    {
+      "event_row": 35,
+      "Date": "09.08.2026",
+      "Start": "22:30",
+      "LocalDate": "09.08.2026",
+      "LocalStart": "14:30",
+      "Championship": "НАСКАР Кубок",
+      "Stage": "23-й этап",
+      "latitude": 41.67777777777778,
+      "longitude": -93.01444444444445,
+      "timezone": "America/Chicago",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T22:30:00+03:00",
+          "forecast_time_local": "2026-08-09T14:30:00-05:00",
+          "temperature_2m": 37.0,
+          "relative_humidity_2m": 34,
+          "precipitation": 0.0,
+          "wind_speed_10m": 14.5,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-09T23:00:00+03:00",
+          "forecast_time_local": "2026-08-09T15:00:00-05:00",
+          "temperature_2m": 37.4,
+          "relative_humidity_2m": 33,
+          "precipitation": 0.0,
+          "wind_speed_10m": 14.1,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-09T23:30:00+03:00",
+          "forecast_time_local": "2026-08-09T15:30:00-05:00",
+          "temperature_2m": 37.6,
+          "relative_humidity_2m": 33,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.8,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-10T00:00:00+03:00",
+          "forecast_time_local": "2026-08-09T16:00:00-05:00",
+          "temperature_2m": 37.4,
+          "relative_humidity_2m": 35,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.4,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-10T00:30:00+03:00",
+          "forecast_time_local": "2026-08-09T16:30:00-05:00",
+          "temperature_2m": 36.9,
+          "relative_humidity_2m": 38,
+          "precipitation": 0.0,
+          "wind_speed_10m": 12.6,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-10T01:00:00+03:00",
+          "forecast_time_local": "2026-08-09T17:00:00-05:00",
+          "temperature_2m": 36.0,
+          "relative_humidity_2m": 43,
+          "precipitation": 0.0,
+          "wind_speed_10m": 12.2,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-10T01:30:00+03:00",
+          "forecast_time_local": "2026-08-09T17:30:00-05:00",
+          "temperature_2m": 34.8,
+          "relative_humidity_2m": 49,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.2,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-08-10T02:00:00+03:00",
+          "forecast_time_local": "2026-08-09T18:00:00-05:00",
+          "temperature_2m": 33.6,
+          "relative_humidity_2m": 55,
+          "precipitation": 0.0,
+          "wind_speed_10m": 15.0,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-10T02:30:00+03:00",
+          "forecast_time_local": "2026-08-09T18:30:00-05:00",
+          "temperature_2m": 32.3,
+          "relative_humidity_2m": 60,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.2,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-10T03:00:00+03:00",
+          "forecast_time_local": "2026-08-09T19:00:00-05:00",
+          "temperature_2m": 31.0,
+          "relative_humidity_2m": 64,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.2,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-10T03:30:00+03:00",
+          "forecast_time_local": "2026-08-09T19:30:00-05:00",
+          "temperature_2m": 29.6,
+          "relative_humidity_2m": 66,
+          "precipitation": 0.2,
+          "wind_speed_10m": 13.4,
+          "weather_code": 53
+        }
+      ]
+    },
+    {
+      "event_row": 36,
+      "Date": "09.08.2026",
+      "Start": "23:00",
+      "LocalDate": "09.08.2026",
+      "LocalStart": "13:00",
+      "Championship": "Индикар",
+      "Stage": "13-й этап",
+      "latitude": 45.596944444444446,
+      "longitude": -122.69583333333334,
+      "timezone": "America/Los_Angeles",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-09T23:00:00+03:00",
+          "forecast_time_local": "2026-08-09T13:00:00-07:00",
+          "temperature_2m": 27.5,
+          "relative_humidity_2m": 33,
+          "precipitation": 0.0,
+          "wind_speed_10m": 10.0,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-09T23:30:00+03:00",
+          "forecast_time_local": "2026-08-09T13:30:00-07:00",
+          "temperature_2m": 28.4,
+          "relative_humidity_2m": 31,
+          "precipitation": 0.0,
+          "wind_speed_10m": 10.7,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-10T00:00:00+03:00",
+          "forecast_time_local": "2026-08-09T14:00:00-07:00",
+          "temperature_2m": 29.2,
+          "relative_humidity_2m": 29,
+          "precipitation": 0.0,
+          "wind_speed_10m": 11.5,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-10T00:30:00+03:00",
+          "forecast_time_local": "2026-08-09T14:30:00-07:00",
+          "temperature_2m": 30.0,
+          "relative_humidity_2m": 27,
+          "precipitation": 0.0,
+          "wind_speed_10m": 12.0,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-10T01:00:00+03:00",
+          "forecast_time_local": "2026-08-09T15:00:00-07:00",
+          "temperature_2m": 30.6,
+          "relative_humidity_2m": 26,
+          "precipitation": 0.0,
+          "wind_speed_10m": 12.2,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-10T01:30:00+03:00",
+          "forecast_time_local": "2026-08-09T15:30:00-07:00",
+          "temperature_2m": 31.1,
+          "relative_humidity_2m": 25,
+          "precipitation": 0.0,
+          "wind_speed_10m": 12.8,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-10T02:00:00+03:00",
+          "forecast_time_local": "2026-08-09T16:00:00-07:00",
+          "temperature_2m": 31.4,
+          "relative_humidity_2m": 24,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.0,
+          "weather_code": 0
         }
       ]
     }
