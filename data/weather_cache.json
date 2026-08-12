@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-13T01:00:40.576274",
+  "last_updated": "2026-08-13T02:00:46.855168",
   "events": [
     {
       "event_row": 3,
@@ -17,19 +17,19 @@
           "forecast_time_msk": "2026-08-14T18:00:00+03:00",
           "forecast_time_local": "2026-08-14T16:00:00+01:00",
           "temperature_2m": 31.8,
-          "relative_humidity_2m": 30,
+          "relative_humidity_2m": 31,
           "precipitation": 0.0,
-          "wind_speed_10m": 4.0,
-          "weather_code": 0
+          "wind_speed_10m": 2.5,
+          "weather_code": 2
         },
         {
           "forecast_time_msk": "2026-08-14T18:30:00+03:00",
           "forecast_time_local": "2026-08-14T16:30:00+01:00",
-          "temperature_2m": 32.1,
-          "relative_humidity_2m": 29,
+          "temperature_2m": 32.2,
+          "relative_humidity_2m": 30,
           "precipitation": 0.0,
-          "wind_speed_10m": 4.7,
-          "weather_code": 0
+          "wind_speed_10m": 3.6,
+          "weather_code": 1
         }
       ]
     },
