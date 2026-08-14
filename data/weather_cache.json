@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-14T22:00:38.956615",
+  "last_updated": "2026-08-14T23:00:37.076643",
   "events": [
     {
       "event_row": 3,
@@ -16,20 +16,20 @@
         {
           "forecast_time_msk": "2026-08-14T18:00:00+03:00",
           "forecast_time_local": "2026-08-14T16:00:00+01:00",
-          "temperature_2m": 33.1,
-          "relative_humidity_2m": 29,
+          "temperature_2m": 33.4,
+          "relative_humidity_2m": 27,
           "precipitation": 0.0,
-          "wind_speed_10m": 4.7,
-          "weather_code": 0
+          "wind_speed_10m": 5.0,
+          "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-08-14T18:30:00+03:00",
           "forecast_time_local": "2026-08-14T16:30:00+01:00",
-          "temperature_2m": 33.5,
-          "relative_humidity_2m": 29,
+          "temperature_2m": 33.7,
+          "relative_humidity_2m": 27,
           "precipitation": 0.0,
           "wind_speed_10m": 5.8,
-          "weather_code": 0
+          "weather_code": 2
         }
       ]
     },
@@ -66,10 +66,10 @@
         {
           "forecast_time_msk": "2026-08-14T21:00:00+03:00",
           "forecast_time_local": "2026-08-14T14:00:00-04:00",
-          "temperature_2m": 31.7,
+          "temperature_2m": 31.5,
           "relative_humidity_2m": 67,
           "precipitation": 0.0,
-          "wind_speed_10m": 8.4,
+          "wind_speed_10m": 8.8,
           "weather_code": 3
         }
       ]
@@ -89,28 +89,28 @@
         {
           "forecast_time_msk": "2026-08-14T22:30:00+03:00",
           "forecast_time_local": "2026-08-14T15:30:00-04:00",
-          "temperature_2m": 31.3,
+          "temperature_2m": 31.1,
           "relative_humidity_2m": 69,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.8,
+          "wind_speed_10m": 10.0,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-14T23:00:00+03:00",
           "forecast_time_local": "2026-08-14T16:00:00-04:00",
-          "temperature_2m": 31.4,
+          "temperature_2m": 31.7,
           "relative_humidity_2m": 69,
           "precipitation": 0.0,
-          "wind_speed_10m": 11.3,
+          "wind_speed_10m": 7.1,
           "weather_code": 2
         },
         {
           "forecast_time_msk": "2026-08-14T23:30:00+03:00",
           "forecast_time_local": "2026-08-14T16:30:00-04:00",
-          "temperature_2m": 31.4,
+          "temperature_2m": 31.9,
           "relative_humidity_2m": 67,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.8,
+          "wind_speed_10m": 7.6,
           "weather_code": 1
         }
       ]
@@ -130,64 +130,64 @@
         {
           "forecast_time_msk": "2026-08-15T02:30:00+03:00",
           "forecast_time_local": "2026-08-14T19:30:00-04:00",
-          "temperature_2m": 28.5,
+          "temperature_2m": 27.9,
           "relative_humidity_2m": 80,
-          "precipitation": 0.0,
-          "wind_speed_10m": 5.4,
-          "weather_code": 3
+          "precipitation": 0.2,
+          "wind_speed_10m": 9.9,
+          "weather_code": 53
         },
         {
           "forecast_time_msk": "2026-08-15T03:00:00+03:00",
           "forecast_time_local": "2026-08-14T20:00:00-04:00",
-          "temperature_2m": 27.3,
+          "temperature_2m": 26.6,
           "relative_humidity_2m": 82,
-          "precipitation": 0.8,
-          "wind_speed_10m": 9.9,
+          "precipitation": 1.1,
+          "wind_speed_10m": 7.2,
           "weather_code": 81
         },
         {
           "forecast_time_msk": "2026-08-15T03:30:00+03:00",
           "forecast_time_local": "2026-08-14T20:30:00-04:00",
-          "temperature_2m": 25.6,
+          "temperature_2m": 26.1,
           "relative_humidity_2m": 87,
-          "precipitation": 6.1,
-          "wind_speed_10m": 9.6,
-          "weather_code": 82
+          "precipitation": 0.0,
+          "wind_speed_10m": 8.9,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-15T04:00:00+03:00",
           "forecast_time_local": "2026-08-14T21:00:00-04:00",
-          "temperature_2m": 25.6,
+          "temperature_2m": 26.0,
           "relative_humidity_2m": 92,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.6,
+          "wind_speed_10m": 4.3,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-15T04:30:00+03:00",
           "forecast_time_local": "2026-08-14T21:30:00-04:00",
-          "temperature_2m": 25.3,
+          "temperature_2m": 26.0,
           "relative_humidity_2m": 91,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.0,
+          "wind_speed_10m": 3.3,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-15T05:00:00+03:00",
           "forecast_time_local": "2026-08-14T22:00:00-04:00",
-          "temperature_2m": 25.1,
+          "temperature_2m": 25.6,
           "relative_humidity_2m": 89,
           "precipitation": 0.0,
-          "wind_speed_10m": 3.2,
+          "wind_speed_10m": 8.6,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-15T05:30:00+03:00",
           "forecast_time_local": "2026-08-14T22:30:00-04:00",
-          "temperature_2m": 25.0,
+          "temperature_2m": 25.1,
           "relative_humidity_2m": 90,
           "precipitation": 0.0,
-          "wind_speed_10m": 3.3,
+          "wind_speed_10m": 6.7,
           "weather_code": 2
         }
       ]
@@ -207,20 +207,20 @@
         {
           "forecast_time_msk": "2026-08-15T10:30:00+03:00",
           "forecast_time_local": "2026-08-15T08:30:00+01:00",
-          "temperature_2m": 21.8,
-          "relative_humidity_2m": 70,
+          "temperature_2m": 22.1,
+          "relative_humidity_2m": 71,
           "precipitation": 0.0,
-          "wind_speed_10m": 14.8,
-          "weather_code": 3
+          "wind_speed_10m": 14.4,
+          "weather_code": 2
         },
         {
           "forecast_time_msk": "2026-08-15T11:00:00+03:00",
           "forecast_time_local": "2026-08-15T09:00:00+01:00",
-          "temperature_2m": 22.3,
+          "temperature_2m": 22.6,
           "relative_humidity_2m": 69,
           "precipitation": 0.0,
-          "wind_speed_10m": 15.1,
-          "weather_code": 3
+          "wind_speed_10m": 14.4,
+          "weather_code": 2
         }
       ]
     },
@@ -411,19 +411,19 @@
         {
           "forecast_time_msk": "2026-08-16T10:30:00+03:00",
           "forecast_time_local": "2026-08-16T08:30:00+01:00",
-          "temperature_2m": 18.3,
-          "relative_humidity_2m": 68,
+          "temperature_2m": 18.4,
+          "relative_humidity_2m": 71,
           "precipitation": 0.0,
-          "wind_speed_10m": 3.2,
-          "weather_code": 3
+          "wind_speed_10m": 1.8,
+          "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-08-16T11:00:00+03:00",
           "forecast_time_local": "2026-08-16T09:00:00+01:00",
-          "temperature_2m": 18.7,
-          "relative_humidity_2m": 65,
+          "temperature_2m": 18.9,
+          "relative_humidity_2m": 69,
           "precipitation": 0.0,
-          "wind_speed_10m": 2.9,
+          "wind_speed_10m": 2.2,
           "weather_code": 3
         }
       ]
@@ -475,10 +475,10 @@
         {
           "forecast_time_msk": "2026-08-16T19:00:00+03:00",
           "forecast_time_local": "2026-08-16T17:00:00+01:00",
-          "temperature_2m": 23.5,
-          "relative_humidity_2m": 39,
+          "temperature_2m": 22.6,
+          "relative_humidity_2m": 48,
           "precipitation": 0.0,
-          "wind_speed_10m": 3.2,
+          "wind_speed_10m": 15.8,
           "weather_code": 3
         }
       ]
