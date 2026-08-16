@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-17T01:00:48.010519",
+  "last_updated": "2026-08-17T02:00:41.709604",
   "events": [
     {
       "event_row": 3,
@@ -62,7 +62,7 @@
           "forecast_time_msk": "2026-08-16T21:30:00+03:00",
           "forecast_time_local": "2026-08-16T14:30:00-04:00",
           "temperature_2m": 25.7,
-          "relative_humidity_2m": 67,
+          "relative_humidity_2m": 66,
           "precipitation": 0.0,
           "wind_speed_10m": 10.3,
           "weather_code": 0
