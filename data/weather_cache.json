@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-16T18:00:11.944682",
+  "last_updated": "2026-08-16T19:01:13.876925",
   "events": [
     {
       "event_row": 3,
@@ -75,6 +75,594 @@
           "precipitation": 0.0,
           "wind_speed_10m": 13.4,
           "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 7,
+      "Date": "21.08.2026",
+      "Start": "13:30",
+      "LocalDate": "21.08.2026",
+      "LocalStart": "12:30",
+      "Championship": "Формула 1",
+      "Stage": "12-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-21T13:30:00+03:00",
+          "forecast_time_local": "2026-08-21T12:30:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 75,
+          "precipitation": 0.1,
+          "wind_speed_10m": 27.5,
+          "weather_code": 51
+        },
+        {
+          "forecast_time_msk": "2026-08-21T14:00:00+03:00",
+          "forecast_time_local": "2026-08-21T13:00:00+02:00",
+          "temperature_2m": 18.2,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.1,
+          "wind_speed_10m": 27.4,
+          "weather_code": 51
+        },
+        {
+          "forecast_time_msk": "2026-08-21T14:30:00+03:00",
+          "forecast_time_local": "2026-08-21T13:30:00+02:00",
+          "temperature_2m": 18.3,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.1,
+          "wind_speed_10m": 27.5,
+          "weather_code": 51
+        }
+      ]
+    },
+    {
+      "event_row": 8,
+      "Date": "21.08.2026",
+      "Start": "15:00",
+      "LocalDate": "21.08.2026",
+      "LocalStart": "14:00",
+      "Championship": "Ф1 Академия",
+      "Stage": "4-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-21T15:00:00+03:00",
+          "forecast_time_local": "2026-08-21T14:00:00+02:00",
+          "temperature_2m": 18.3,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.1,
+          "wind_speed_10m": 27.4,
+          "weather_code": 51
+        },
+        {
+          "forecast_time_msk": "2026-08-21T15:30:00+03:00",
+          "forecast_time_local": "2026-08-21T14:30:00+02:00",
+          "temperature_2m": 18.3,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.2,
+          "wind_speed_10m": 27.1,
+          "weather_code": 53
+        }
+      ]
+    },
+    {
+      "event_row": 10,
+      "Date": "21.08.2026",
+      "Start": "17:30",
+      "LocalDate": "21.08.2026",
+      "LocalStart": "16:30",
+      "Championship": "Формула 1",
+      "Stage": "12-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-21T17:30:00+03:00",
+          "forecast_time_local": "2026-08-21T16:30:00+02:00",
+          "temperature_2m": 18.1,
+          "relative_humidity_2m": 78,
+          "precipitation": 0.2,
+          "wind_speed_10m": 25.2,
+          "weather_code": 53
+        },
+        {
+          "forecast_time_msk": "2026-08-21T18:00:00+03:00",
+          "forecast_time_local": "2026-08-21T17:00:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 78,
+          "precipitation": 0.2,
+          "wind_speed_10m": 24.6,
+          "weather_code": 53
+        },
+        {
+          "forecast_time_msk": "2026-08-21T18:30:00+03:00",
+          "forecast_time_local": "2026-08-21T17:30:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 78,
+          "precipitation": 0.0,
+          "wind_speed_10m": 24.0,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 11,
+      "Date": "21.08.2026",
+      "Start": "19:00",
+      "LocalDate": "21.08.2026",
+      "LocalStart": "18:00",
+      "Championship": "Суперкубок Порше",
+      "Stage": "6-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-21T19:00:00+03:00",
+          "forecast_time_local": "2026-08-21T18:00:00+02:00",
+          "temperature_2m": 18.1,
+          "relative_humidity_2m": 78,
+          "precipitation": 0.0,
+          "wind_speed_10m": 23.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-21T19:30:00+03:00",
+          "forecast_time_local": "2026-08-21T18:30:00+02:00",
+          "temperature_2m": 18.2,
+          "relative_humidity_2m": 77,
+          "precipitation": 0.0,
+          "wind_speed_10m": 22.4,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 19,
+      "Date": "22.08.2026",
+      "Start": "11:15",
+      "LocalDate": "22.08.2026",
+      "LocalStart": "10:15",
+      "Championship": "Суперкубок Порше",
+      "Stage": "6-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-22T11:15:00+03:00",
+          "forecast_time_local": "2026-08-22T10:15:00+02:00",
+          "temperature_2m": 16.5,
+          "relative_humidity_2m": 86,
+          "precipitation": 0.3,
+          "wind_speed_10m": 23.0,
+          "weather_code": 55
+        },
+        {
+          "forecast_time_msk": "2026-08-22T11:45:00+03:00",
+          "forecast_time_local": "2026-08-22T10:45:00+02:00",
+          "temperature_2m": 16.7,
+          "relative_humidity_2m": 85,
+          "precipitation": 0.3,
+          "wind_speed_10m": 22.3,
+          "weather_code": 55
+        }
+      ]
+    },
+    {
+      "event_row": 20,
+      "Date": "22.08.2026",
+      "Start": "13:00",
+      "LocalDate": "22.08.2026",
+      "LocalStart": "12:00",
+      "Championship": "Формула 1",
+      "Stage": "12-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-22T13:00:00+03:00",
+          "forecast_time_local": "2026-08-22T12:00:00+02:00",
+          "temperature_2m": 17.0,
+          "relative_humidity_2m": 82,
+          "precipitation": 0.3,
+          "wind_speed_10m": 21.1,
+          "weather_code": 55
+        },
+        {
+          "forecast_time_msk": "2026-08-22T13:30:00+03:00",
+          "forecast_time_local": "2026-08-22T12:30:00+02:00",
+          "temperature_2m": 17.1,
+          "relative_humidity_2m": 81,
+          "precipitation": 0.3,
+          "wind_speed_10m": 20.6,
+          "weather_code": 55
+        },
+        {
+          "forecast_time_msk": "2026-08-22T14:00:00+03:00",
+          "forecast_time_local": "2026-08-22T13:00:00+02:00",
+          "temperature_2m": 17.2,
+          "relative_humidity_2m": 80,
+          "precipitation": 0.3,
+          "wind_speed_10m": 20.4,
+          "weather_code": 55
+        }
+      ]
+    },
+    {
+      "event_row": 22,
+      "Date": "22.08.2026",
+      "Start": "16:00",
+      "LocalDate": "22.08.2026",
+      "LocalStart": "14:00",
+      "Championship": "BTCC",
+      "Stage": "19-й этап",
+      "latitude": 52.829166666666666,
+      "longitude": -1.375,
+      "timezone": "Europe/London",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-22T16:00:00+03:00",
+          "forecast_time_local": "2026-08-22T14:00:00+01:00",
+          "temperature_2m": 17.9,
+          "relative_humidity_2m": 45,
+          "precipitation": 0.0,
+          "wind_speed_10m": 5.4,
+          "weather_code": 1
+        },
+        {
+          "forecast_time_msk": "2026-08-22T16:30:00+03:00",
+          "forecast_time_local": "2026-08-22T14:30:00+01:00",
+          "temperature_2m": 18.2,
+          "relative_humidity_2m": 44,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.1,
+          "weather_code": 1
+        }
+      ]
+    },
+    {
+      "event_row": 24,
+      "Date": "22.08.2026",
+      "Start": "17:00",
+      "LocalDate": "22.08.2026",
+      "LocalStart": "16:00",
+      "Championship": "Формула 1",
+      "Stage": "12-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-22T17:00:00+03:00",
+          "forecast_time_local": "2026-08-22T16:00:00+02:00",
+          "temperature_2m": 17.5,
+          "relative_humidity_2m": 75,
+          "precipitation": 0.2,
+          "wind_speed_10m": 17.7,
+          "weather_code": 53
+        },
+        {
+          "forecast_time_msk": "2026-08-22T17:30:00+03:00",
+          "forecast_time_local": "2026-08-22T16:30:00+02:00",
+          "temperature_2m": 17.6,
+          "relative_humidity_2m": 75,
+          "precipitation": 0.2,
+          "wind_speed_10m": 16.9,
+          "weather_code": 53
+        },
+        {
+          "forecast_time_msk": "2026-08-22T18:00:00+03:00",
+          "forecast_time_local": "2026-08-22T17:00:00+02:00",
+          "temperature_2m": 17.6,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.2,
+          "wind_speed_10m": 16.2,
+          "weather_code": 53
+        }
+      ]
+    },
+    {
+      "event_row": 29,
+      "Date": "22.08.2026",
+      "Start": "19:00",
+      "LocalDate": "22.08.2026",
+      "LocalStart": "18:00",
+      "Championship": "Суперкубок Порше",
+      "Stage": "6-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-22T19:00:00+03:00",
+          "forecast_time_local": "2026-08-22T18:00:00+02:00",
+          "temperature_2m": 17.6,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.2,
+          "wind_speed_10m": 14.9,
+          "weather_code": 53
+        },
+        {
+          "forecast_time_msk": "2026-08-22T19:30:00+03:00",
+          "forecast_time_local": "2026-08-22T18:30:00+02:00",
+          "temperature_2m": 17.6,
+          "relative_humidity_2m": 73,
+          "precipitation": 0.2,
+          "wind_speed_10m": 14.3,
+          "weather_code": 53
+        }
+      ]
+    },
+    {
+      "event_row": 35,
+      "Date": "23.08.2026",
+      "Start": "00:45",
+      "LocalDate": "22.08.2026",
+      "LocalStart": "17:45",
+      "Championship": "Mazda MX-5 Cup",
+      "Stage": "5-й этап",
+      "latitude": 36.56166666666667,
+      "longitude": -79.20472222222222,
+      "timezone": "America/New_York",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-23T00:45:00+03:00",
+          "forecast_time_local": "2026-08-22T17:45:00-04:00",
+          "temperature_2m": 31.5,
+          "relative_humidity_2m": 53,
+          "precipitation": 0.2,
+          "wind_speed_10m": 11.2,
+          "weather_code": 53
+        },
+        {
+          "forecast_time_msk": "2026-08-23T01:15:00+03:00",
+          "forecast_time_local": "2026-08-22T18:15:00-04:00",
+          "temperature_2m": 29.3,
+          "relative_humidity_2m": 63,
+          "precipitation": 0.2,
+          "wind_speed_10m": 7.9,
+          "weather_code": 53
+        }
+      ]
+    },
+    {
+      "event_row": 42,
+      "Date": "23.08.2026",
+      "Start": "13:45",
+      "LocalDate": "23.08.2026",
+      "LocalStart": "11:45",
+      "Championship": "BTCC",
+      "Stage": "19-й этап",
+      "latitude": 52.829166666666666,
+      "longitude": -1.375,
+      "timezone": "Europe/London",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-23T13:45:00+03:00",
+          "forecast_time_local": "2026-08-23T11:45:00+01:00",
+          "temperature_2m": 15.9,
+          "relative_humidity_2m": 52,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.9,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-23T14:15:00+03:00",
+          "forecast_time_local": "2026-08-23T12:15:00+01:00",
+          "temperature_2m": 16.4,
+          "relative_humidity_2m": 50,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.9,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-23T14:45:00+03:00",
+          "forecast_time_local": "2026-08-23T12:45:00+01:00",
+          "temperature_2m": 16.9,
+          "relative_humidity_2m": 48,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.9,
+          "weather_code": 3
+        }
+      ]
+    },
+    {
+      "event_row": 43,
+      "Date": "23.08.2026",
+      "Start": "16:00",
+      "LocalDate": "23.08.2026",
+      "LocalStart": "15:00",
+      "Championship": "Формула 1",
+      "Stage": "12-й этап",
+      "latitude": 52.388888888888886,
+      "longitude": 4.5408333333333335,
+      "timezone": "Europe/Amsterdam",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-23T16:00:00+03:00",
+          "forecast_time_local": "2026-08-23T15:00:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 64,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.4,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-23T16:30:00+03:00",
+          "forecast_time_local": "2026-08-23T15:30:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 64,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.8,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-23T17:00:00+03:00",
+          "forecast_time_local": "2026-08-23T16:00:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 65,
+          "precipitation": 0.0,
+          "wind_speed_10m": 14.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-23T17:30:00+03:00",
+          "forecast_time_local": "2026-08-23T16:30:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 65,
+          "precipitation": 0.0,
+          "wind_speed_10m": 15.0,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-23T18:00:00+03:00",
+          "forecast_time_local": "2026-08-23T17:00:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 66,
+          "precipitation": 0.0,
+          "wind_speed_10m": 15.8,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-23T18:30:00+03:00",
+          "forecast_time_local": "2026-08-23T17:30:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 66,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-08-23T19:00:00+03:00",
+          "forecast_time_local": "2026-08-23T18:00:00+02:00",
+          "temperature_2m": 18.0,
+          "relative_humidity_2m": 67,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.9,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 44,
+      "Date": "23.08.2026",
+      "Start": "16:45",
+      "LocalDate": "23.08.2026",
+      "LocalStart": "14:45",
+      "Championship": "BTCC",
+      "Stage": "19-й этап",
+      "latitude": 52.829166666666666,
+      "longitude": -1.375,
+      "timezone": "Europe/London",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-23T16:45:00+03:00",
+          "forecast_time_local": "2026-08-23T14:45:00+01:00",
+          "temperature_2m": 17.7,
+          "relative_humidity_2m": 44,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.6,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-23T17:15:00+03:00",
+          "forecast_time_local": "2026-08-23T15:15:00+01:00",
+          "temperature_2m": 17.7,
+          "relative_humidity_2m": 44,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.4,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-08-23T17:45:00+03:00",
+          "forecast_time_local": "2026-08-23T15:45:00+01:00",
+          "temperature_2m": 17.7,
+          "relative_humidity_2m": 44,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.4,
+          "weather_code": 2
+        }
+      ]
+    },
+    {
+      "event_row": 48,
+      "Date": "23.08.2026",
+      "Start": "19:30",
+      "LocalDate": "23.08.2026",
+      "LocalStart": "17:30",
+      "Championship": "BTCC",
+      "Stage": "19-й этап",
+      "latitude": 52.829166666666666,
+      "longitude": -1.375,
+      "timezone": "Europe/London",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-23T19:30:00+03:00",
+          "forecast_time_local": "2026-08-23T17:30:00+01:00",
+          "temperature_2m": 17.3,
+          "relative_humidity_2m": 45,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.4,
+          "weather_code": 1
+        },
+        {
+          "forecast_time_msk": "2026-08-23T20:00:00+03:00",
+          "forecast_time_local": "2026-08-23T18:00:00+01:00",
+          "temperature_2m": 17.1,
+          "relative_humidity_2m": 46,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.4,
+          "weather_code": 1
+        },
+        {
+          "forecast_time_msk": "2026-08-23T20:30:00+03:00",
+          "forecast_time_local": "2026-08-23T18:30:00+01:00",
+          "temperature_2m": 16.9,
+          "relative_humidity_2m": 47,
+          "precipitation": 0.0,
+          "wind_speed_10m": 6.4,
+          "weather_code": 1
+        }
+      ]
+    },
+    {
+      "event_row": 52,
+      "Date": "23.08.2026",
+      "Start": "22:30",
+      "LocalDate": "23.08.2026",
+      "LocalStart": "15:30",
+      "Championship": "Mazda MX-5 Cup",
+      "Stage": "5-й этап",
+      "latitude": 36.56166666666667,
+      "longitude": -79.20472222222222,
+      "timezone": "America/New_York",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-08-23T22:30:00+03:00",
+          "forecast_time_local": "2026-08-23T15:30:00-04:00",
+          "temperature_2m": 25.5,
+          "relative_humidity_2m": 80,
+          "precipitation": 0.1,
+          "wind_speed_10m": 6.5,
+          "weather_code": 51
+        },
+        {
+          "forecast_time_msk": "2026-08-23T23:00:00+03:00",
+          "forecast_time_local": "2026-08-23T16:00:00-04:00",
+          "temperature_2m": 25.1,
+          "relative_humidity_2m": 83,
+          "precipitation": 0.1,
+          "wind_speed_10m": 5.6,
+          "weather_code": 51
         }
       ]
     }
