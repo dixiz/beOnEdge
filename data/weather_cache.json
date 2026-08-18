@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-18T20:00:43.231305",
+  "last_updated": "2026-08-18T21:00:42.326790",
   "events": [
     {
       "event_row": 7,
@@ -340,20 +340,20 @@
         {
           "forecast_time_msk": "2026-08-23T00:45:00+03:00",
           "forecast_time_local": "2026-08-22T17:45:00-04:00",
-          "temperature_2m": 30.3,
-          "relative_humidity_2m": 52,
+          "temperature_2m": 29.2,
+          "relative_humidity_2m": 59,
           "precipitation": 0.0,
-          "wind_speed_10m": 4.0,
-          "weather_code": 0
+          "wind_speed_10m": 4.7,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-23T01:15:00+03:00",
           "forecast_time_local": "2026-08-22T18:15:00-04:00",
-          "temperature_2m": 29.5,
-          "relative_humidity_2m": 55,
+          "temperature_2m": 28.4,
+          "relative_humidity_2m": 63,
           "precipitation": 0.0,
-          "wind_speed_10m": 3.1,
-          "weather_code": 1
+          "wind_speed_10m": 5.8,
+          "weather_code": 2
         }
       ]
     },
@@ -572,20 +572,20 @@
         {
           "forecast_time_msk": "2026-08-23T22:30:00+03:00",
           "forecast_time_local": "2026-08-23T15:30:00-04:00",
-          "temperature_2m": 34.0,
-          "relative_humidity_2m": 33,
-          "precipitation": 0.0,
-          "wind_speed_10m": 11.4,
-          "weather_code": 0
+          "temperature_2m": 29.0,
+          "relative_humidity_2m": 61,
+          "precipitation": 0.2,
+          "wind_speed_10m": 7.7,
+          "weather_code": 53
         },
         {
           "forecast_time_msk": "2026-08-23T23:00:00+03:00",
           "forecast_time_local": "2026-08-23T16:00:00-04:00",
-          "temperature_2m": 33.9,
-          "relative_humidity_2m": 33,
-          "precipitation": 0.0,
-          "wind_speed_10m": 12.0,
-          "weather_code": 1
+          "temperature_2m": 28.5,
+          "relative_humidity_2m": 65,
+          "precipitation": 0.2,
+          "wind_speed_10m": 8.4,
+          "weather_code": 53
         }
       ]
     }
