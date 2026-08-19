@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-19T06:00:51.189808",
+  "last_updated": "2026-08-19T07:00:40.775887",
   "events": [
     {
       "event_row": 7,
@@ -16,8 +16,8 @@
         {
           "forecast_time_msk": "2026-08-21T13:30:00+03:00",
           "forecast_time_local": "2026-08-21T12:30:00+02:00",
-          "temperature_2m": 19.5,
-          "relative_humidity_2m": 61,
+          "temperature_2m": 19.2,
+          "relative_humidity_2m": 63,
           "precipitation": 0.0,
           "wind_speed_10m": 13.3,
           "weather_code": 1
@@ -25,20 +25,20 @@
         {
           "forecast_time_msk": "2026-08-21T14:00:00+03:00",
           "forecast_time_local": "2026-08-21T13:00:00+02:00",
-          "temperature_2m": 19.6,
-          "relative_humidity_2m": 61,
+          "temperature_2m": 19.2,
+          "relative_humidity_2m": 64,
           "precipitation": 0.0,
           "wind_speed_10m": 13.7,
-          "weather_code": 1
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-21T14:30:00+03:00",
           "forecast_time_local": "2026-08-21T13:30:00+02:00",
-          "temperature_2m": 19.7,
-          "relative_humidity_2m": 59,
-          "precipitation": 0.03,
-          "wind_speed_10m": 13.0,
-          "weather_code": 2
+          "temperature_2m": 19.2,
+          "relative_humidity_2m": 64,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.3,
+          "weather_code": 3
         }
       ]
     },
@@ -57,19 +57,19 @@
         {
           "forecast_time_msk": "2026-08-21T15:00:00+03:00",
           "forecast_time_local": "2026-08-21T14:00:00+02:00",
-          "temperature_2m": 19.8,
-          "relative_humidity_2m": 58,
-          "precipitation": 0.08,
-          "wind_speed_10m": 12.2,
+          "temperature_2m": 19.2,
+          "relative_humidity_2m": 64,
+          "precipitation": 0.0,
+          "wind_speed_10m": 13.0,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-08-21T15:30:00+03:00",
           "forecast_time_local": "2026-08-21T14:30:00+02:00",
-          "temperature_2m": 19.1,
-          "relative_humidity_2m": 61,
+          "temperature_2m": 19.3,
+          "relative_humidity_2m": 63,
           "precipitation": 0.0,
-          "wind_speed_10m": 14.7,
+          "wind_speed_10m": 12.6,
           "weather_code": 3
         }
       ]
