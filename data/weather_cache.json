@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-25T16:00:47.653577",
+  "last_updated": "2026-08-25T17:00:44.996771",
   "events": [
     {
       "event_row": 4,
@@ -364,7 +364,7 @@
           "relative_humidity_2m": 97,
           "precipitation": 0.4,
           "wind_speed_10m": 10.5,
-          "weather_code": 95
+          "weather_code": 80
         },
         {
           "forecast_time_msk": "2026-08-29T01:30:00+03:00",
