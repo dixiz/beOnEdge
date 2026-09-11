@@ -1,148 +1,218 @@
-﻿# BeOnEdge Schedule - подробная документация проекта
+﻿# BeOnEdge Schedule — подробная документация проекта
+
+Документ описывает **текущее** состояние приложения: архитектуру, потоки данных, модули, UI и деплой. Актуален для каталога `schedule/` в репозитории beOnEdge.
+
+---
 
 ## 1. Назначение
 
-`BeOnEdge Schedule` - React/TypeScript-приложение для отображения расписания трансляций и гоночных событий Be On Edge.
+`BeOnEdge Schedule` — одностраничное React/TypeScript-приложение для отображения расписания трансляций и гоночных событий **Be On Edge**.
 
-Приложение загружает расписание из опубликованной Google Sheets таблицы в формате CSV, преобразует строки в типизированные объекты, фильтрует их и отображает адаптивное расписание с карточками событий, фильтрами, переключением часового пояса, темой, масштабом и интеграциями с календарями.
+Приложение:
 
-Основной пользовательский сценарий:
+- загружает основное расписание из Google Sheets (CSV);
+- загружает отдельный лист с сеткой комментаторов для длинных эндуранс-трансляций;
+- подмешивает прогноз погоды из JSON-кэша;
+- фильтрует, группирует и показывает события в адаптивном интерфейсе с hi-tech визуальным языком (тёмная/светлая тема, жёлтые акценты);
+- поддерживает статусы **Live / Завершено / Отменено** и скрытие завершённых/отменённых по дням;
+- даёт ссылки на платформы, календари, live timing, spotter guide и погоду.
 
-1. Пользователь открывает сайт.
-2. Приложение загружает CSV из `CSV_URL`.
-3. Пользователь выбирает `МСК` или `Ваш пояс`.
-4. Пользователь выбирает режим `Все дни` или `По дням`.
-5. Пользователь применяет фильтры по сериям, дням, трассам и комментаторам.
-6. Пользователь видит карточки событий, платформы трансляции, комментаторов, live timing, spotter guide и кнопки добавления в календарь.
+### Основной пользовательский сценарий
+
+1. Пользователь открывает сайт (GitHub Pages или локально).
+2. Приложение параллельно запрашивает: `CSV_URL`, `COMMENTATOR_SCHEDULE_CSV_URL`, `WEATHER_CACHE_URL`.
+3. Пользователь выбирает **МСК** или **Ваш пояс**.
+4. Пользователь выбирает **Все дни** или **По дням** (на мобильном — свайп между днями в режиме «По дням»).
+5. Пользователь открывает фильтры (серии, дни, трассы, комментаторы) и при необходимости снимает отдельные значения через плашки активных фильтров.
+6. Пользователь просматривает карточки: время, статус, платформы, этап/трассу, сессию и комментаторов, погоду (если есть данные), опциональный блок «Важно», кнопки календаря.
+7. Для отдельных событий (24h Le Mans / GTWEC) доступно **Расписание комментаторов** в модальном окне.
+8. Для дней с завершёнными или отменёнными событиями — кнопка **Показать / Скрыть**; при любом нажатии страница быстро прокручивается вверх.
+
+---
 
 ## 2. Технологии
 
-- `React 19.2.0`
-- `TypeScript 4.9.5`
-- `react-scripts 5.0.1`
-- CSS без препроцессора
-- CSS Grid
-- Flexbox
-- CSS variables
-- `gh-pages` для деплоя
+| Категория | Версия / подход |
+| --- | --- |
+| React | 19.2.0 |
+| React DOM | 19.2.0 |
+| TypeScript | 4.9.5 |
+| Create React App | react-scripts 5.0.1 |
+| Стили | CSS без препроцессора; CSS Grid, Flexbox, CSS variables (`--boe-*` в `index.css`) |
+| Шрифт | Google Fonts — **Tektur** (подключён в `public/index.html`) |
+| Деплой | `gh-pages` → ветка `gh-pages` |
+| CI | GitHub Actions — обновление `data/weather_cache.json` на `gh-pages` |
 
-## 3. Скрипты
+Тестирование: `@testing-library/react`, Jest (стандарт CRA). Production-сборка — статические файлы в `build/`.
+
+---
+
+## 3. Скрипты и окружение
 
 Файл: `package.json`
 
 ```bash
+npm install
 npm start
 npm run build
 npm test
 npm run deploy
 ```
 
-- `npm start` - запускает dev-сервер Create React App.
-- `npm run build` - собирает production-версию в папку `build`.
-- `npm test` - запускает тесты CRA.
-- `npm run deploy` - собирает приложение и публикует папку `build` в ветку `gh-pages`.
+| Скрипт | Действие |
+| --- | --- |
+| `npm start` | Dev-сервер CRA (обычно `http://localhost:3000`) |
+| `npm run build` | Production-сборка в `build/` |
+| `npm test` | Интерактивные тесты CRA |
+| `npm run deploy` | `predeploy` → build, затем публикация `build/` в ветку `gh-pages` |
 
-## 4. Структура проекта
+Переменные окружения (см. `.env.example`, `.env.development`, `.env.production`):
+
+| Переменная | Назначение |
+| --- | --- |
+| `REACT_APP_WEATHER_CACHE_URL` | URL JSON с прогнозом; по умолчанию в коде — `./data/weather_cache.json` |
+
+`homepage` в `package.json` задан как `"."` — относительные пути для GitHub Pages.
+
+---
+
+## 4. Структура проекта (файлы и папки)
 
 ```text
 schedule/
-├── public/
-│   └── index.html
-├── src/
-│   ├── assets/
-│   │   └── indy500.png
-│   ├── components/
-│   │   ├── CalendarIcon.tsx
-│   │   ├── Commentator.tsx
-│   │   ├── Commentator.css
-│   │   ├── DateDisplay.tsx
-│   │   ├── DateDisplay.css
-│   │   ├── DayOfWeekDisplay.tsx
-│   │   ├── DayOfWeekDisplay.css
-│   │   ├── DaySlider.tsx
-│   │   ├── DaySlider.css
-│   │   ├── DonationButtons.tsx
-│   │   ├── EventLogo.tsx
-│   │   ├── EventLogo.css
-│   │   ├── Header.tsx
-│   │   ├── Header.css
-│   │   ├── Menu.tsx
-│   │   ├── Menu.css
-│   │   ├── Optionally.tsx
-│   │   ├── Optionally.css
-│   │   ├── ScheduleIcons.tsx
-│   │   ├── ScheduleIcons.css
-│   │   ├── ScheduleRow.tsx
-│   │   └── ScheduleRow.css
-│   ├── constants/
-│   │   └── index.ts
-│   ├── types/
-│   │   └── schedule.ts
-│   ├── utils/
-│   │   ├── calendarUtils.ts
-│   │   ├── csvParser.ts
-│   │   ├── dataUtils.ts
-│   │   ├── dateUtils.ts
-│   │   ├── flagUtils.ts
-│   │   ├── iconUtils.ts
-│   │   ├── textUtils.ts
-│   │   ├── timeUtils.ts
-│   │   └── timezoneUtils.ts
-│   ├── App.tsx
-│   ├── App.css
-│   ├── App.test.tsx
-│   ├── index.tsx
-│   ├── index.css
-│   ├── react-app-env.d.ts
-│   ├── reportWebVitals.ts
-│   └── setupTests.ts
+├── .github/
+│   └── workflows/
+│       └── update-weather.yml      # CI: скачивание weather_cache.json на gh-pages
+├── .env.example
+├── .env.development
+├── .env.production
+├── package.json
+├── package-lock.json
+├── tsconfig.json
 ├── README.md
-├── PROJECT_DOCUMENTATION.md
-└── package.json
+├── PROJECT_DOCUMENTATION.md        # этот файл
+├── GIT_BRANCHES_FIX.md             # заметки по веткам git (операционное)
+├── fix-git-branches.ps1
+├── public/
+│   ├── index.html                  # точка входа HTML, шрифт Tektur
+│   ├── favicon.svg / favicon.ico
+│   ├── manifest.json
+│   ├── robots.txt
+│   ├── CNAME                       # домен GitHub Pages (если настроен)
+│   ├── logo192.png, logo512.png
+│   └── data/
+│       └── weather_cache.json      # локальный/дефолтный кэш погоды для dev и fallback
+└── src/
+    ├── index.tsx                   # монтирование React
+    ├── index.css                   # глобальные токены --boe-*, body/html
+    ├── App.tsx                     # оркестрация: данные, фильтры, режимы, модалки
+    ├── App.css                     # layout, фильтры, sticky, by-day toggle, zoom
+    ├── App.test.tsx
+    ├── react-app-env.d.ts
+    ├── reportWebVitals.ts
+    ├── setupTests.ts
+    ├── logo.svg                    # legacy CRA (в UI не используется)
+    ├── assets/
+    │   └── indy500.png             # промо EventLogo
+    ├── constants/
+    │   └── index.ts                # URL источников, TRUE_VALUES, DAYS_OF_WEEK
+    ├── types/
+    │   ├── schedule.ts             # ScheduleItem, CommentatorScheduleData
+    │   └── weather.ts              # WeatherCacheData, WeatherForecastPoint
+    ├── hooks/
+    │   └── useBodyScrollLock.ts    # блокировка scroll body при модалках
+    ├── utils/
+    │   ├── csvParser.ts            # parseCSV, parseCommentatorScheduleCSV
+    │   ├── weatherUtils.ts         # ключи событий, parseWeatherCache, tooltip
+    │   ├── dateUtils.ts
+    │   ├── timeUtils.ts
+    │   ├── flagUtils.ts
+    │   ├── iconUtils.ts
+    │   ├── textUtils.ts
+    │   ├── calendarUtils.ts
+    │   ├── dataUtils.ts
+    │   └── timezoneUtils.ts        # не используется в UI
+    └── components/
+        ├── Menu.tsx / Menu.css
+        ├── DonationButtons.tsx
+        ├── EventLogo.tsx / EventLogo.css
+        ├── DaySlider.tsx / DaySlider.css
+        ├── Header.tsx / Header.css
+        ├── DateDisplay.tsx / DateDisplay.css
+        ├── DayOfWeekDisplay.tsx / DayOfWeekDisplay.css
+        ├── ScheduleRow.tsx / ScheduleRow.css
+        ├── ScheduleIcons.tsx / ScheduleIcons.css
+        ├── Commentator.tsx / Commentator.css
+        ├── CalendarIcon.tsx
+        ├── Optionally.tsx / Optionally.css
+        └── WeatherBadge.tsx / WeatherBadge.css
 ```
 
-## 5. Архитектура и поток данных
+---
+
+## 5. Архитектура и поток данных (обзор)
 
 ```text
-Google Sheets CSV
-  ↓
-constants/CSV_URL
-  ↓
-App.tsx fetch()
-  ↓
-utils/csvParser.ts
-  ↓
-ScheduleItem[]
-  ↓
-App.tsx:
-  - Shed-фильтр
-  - timezone conversion
-  - date normalization
-  - today/future filtering
-  - carryover events
-  - applied filters
-  - grouping by day
-  ↓
-UI:
-  Menu
-  DaySlider
-  Header + DateDisplay + DayOfWeekDisplay
-  ScheduleRow
-    ScheduleIcons
-    Commentator
-    CalendarIcon
-    Optionally
+┌─────────────────────────────────────────────────────────────────────────┐
+│                              App.tsx                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+         │                    │                         │
+         ▼                    ▼                         ▼
+   CSV_URL              COMMENTATOR_SCHEDULE_CSV_URL   WEATHER_CACHE_URL
+         │                    │                         │
+         ▼                    ▼                         ▼
+  parseCSV()         parseCommentatorScheduleCSV()   parseWeatherCache()
+         │                    │                         │
+         ▼                    ▼                         ▼
+ originalSchedule     commentatorSchedule         weatherLookupMap
+         │                    │                         │
+         └──────────► convertedSchedule ◄──────────────┘
+                    (Shed, timezone, dates, weatherForecast)
+                              │
+                              ▼
+                    normalizedSchedule (dd.mm.yy)
+                              │
+                              ▼
+                    filteredSchedule (applied filters)
+                              │
+                              ▼
+                    scheduleWithCarryover (+ isCarryover, startedLabel)
+                              │
+              ┌───────────────┴───────────────┐
+              ▼                               ▼
+        displaySchedule                  byDay / rowsByDate
+   (скрытые Ended/Cancel)              (группировка для UI)
+              │
+              ▼
+         ScheduleRow (+ WeatherBadge, modals, statuses)
 ```
 
-## 6. Контракт CSV
+### Параллельные источники данных
 
-Источник задается в `src/constants/index.ts`:
+1. **Расписание** — обязательно; при ошибке показывается `error`, меню скрыто (`showMenu = false`).
+2. **Расписание комментаторов** — опционально для UX; ошибка только в модалке на спец-событиях.
+3. **Погода** — опционально; при ошибке `weatherLookupMap` пуст, карточки без бейджа погоды.
 
-```ts
-export const CSV_URL = "...";
-```
+---
 
-Ожидаемые заголовки CSV:
+## 6. Источники данных и константы
+
+Файл: `src/constants/index.ts`
+
+| Константа | Назначение |
+| --- | --- |
+| `CSV_URL` | Pub CSV основного листа Google Sheets |
+| `COMMENTATOR_SCHEDULE_CSV_URL` | CSV того же документа, лист `gid=1952221950` — сетка комментаторов по времени |
+| `WEATHER_CACHE_URL` | `process.env.REACT_APP_WEATHER_CACHE_URL` или `./data/weather_cache.json` |
+| `DAYS_OF_WEEK` | Русские названия дней для `dateUtils` |
+| `TRUE_VALUES` | `['TRUE', 'true', '1', '✓']` для флагов |
+| `DEFAULT_TIMEZONE` | `'GMT +3'` — **не используется** в текущем UI |
+
+---
+
+## 7. Контракт CSV (основное расписание)
+
+Ожидаемые заголовки (регистр при парсинге не важен — нормализуется к lowercase):
 
 ```text
 Shed, Live, Ended, Delay, Cancel, Date, Start, Championship, Stage,
@@ -151,788 +221,599 @@ Commentator1, Commentator2, Optionally, Duration, Live Timing,
 RuTube, Spotter
 ```
 
-Маппинг колонок:
+Маппинг в `csvParser.ts` (`HEADER_MAP`):
 
-```text
-Shed          -> Shed
-Live          -> Live
-Ended         -> Ended
-Delay         -> Delay
-Cancel        -> Cancel
-Date          -> date
-Start / Time  -> time
-Championship  -> championship
-Stage         -> stage
-Place         -> place
-Session       -> session
-PC            -> PC
-TG1..TG3      -> TG1..TG3
-BCU1..BCU3    -> BCU1..BCU3
-RT            -> RT
-Commentator1  -> Commentator1
-Commentator2  -> Commentator2
-Optionally    -> Optionally
-Duration      -> Duration
-Live Timing   -> LiveTiming
-RuTube        -> RuTube
-Spotter       -> Spotter
-```
+| Колонка CSV | Поле `ScheduleItem` |
+| --- | --- |
+| Shed | Shed |
+| Live | Live |
+| Ended | Ended |
+| Delay | Delay |
+| Cancel | Cancel |
+| Date | date |
+| Start / Time | time |
+| Championship | championship |
+| Stage | stage |
+| Place | place |
+| Session | session |
+| PC | PC |
+| TG1..TG3 | TG1..TG3 |
+| BCU1..BCU3 | BCU1..BCU3 |
+| RT | RT |
+| Commentator1 / Commentator2 | Commentator1 / Commentator2 |
+| Optionally | Optionally |
+| Duration | Duration |
+| Live Timing | LiveTiming |
+| RuTube | RuTube |
+| Spotter | Spotter |
 
-Строка считается валидной, если заполнены:
+**Валидная строка:** заполнены `date`, `time`, `championship`, `session`.  
+`place` не обязателен для парсера, но используется в UI и фильтре «Трассы».
 
-- `date`
-- `time`
-- `championship`
-- `session`
+**Shed:** строка попадает в расписание, если `parseBooleanFlag(Shed)` или значение `истина` (без учёта регистра).
 
-`place` используется в интерфейсе и фильтрах, но текущий валидатор не требует его обязательного заполнения.
+**Истинные флаги:** см. `TRUE_VALUES`; для Shed дополнительно слово `истина`.
 
-Истинные значения:
+---
+
+## 8. Контракт CSV (расписание комментаторов)
+
+Парсер: `parseCommentatorScheduleCSV` в `csvParser.ts`.
+
+- Первая колонка — имя комментатора.
+- Колонки времени начинаются с индекса 3; заголовок колонки должен совпадать с `HH:MM` или `H:MM`.
+- Ячейка считается «активной» (комментатор в эфире в этот слот), если значение не пустое и не `0`, `false`, `нет`.
+
+Результат: `{ times: string[], rows: { commentator, slots: boolean[] }[] }`.
+
+---
+
+## 9. Контракт JSON (погода)
+
+Типы: `src/types/weather.ts`.
 
 ```ts
-export const TRUE_VALUES = ['TRUE', 'true', '1', '✓'];
-```
+WeatherCacheData {
+  last_updated?: string;
+  events: WeatherCacheEvent[];
+}
 
-Для `Shed` дополнительно истинным считается значение `истина`.
+WeatherCacheEvent {
+  Date, Start, Championship, Stage?;
+  latitude?, longitude?;
+  forecast: WeatherForecastPoint[];
+}
 
-## 7. Типы данных
-
-Основной тип: `src/types/schedule.ts`.
-
-```ts
-export interface ScheduleItem {
-  Shed?: string;
-  Live?: string;
-  Ended?: string;
-  Delay?: string;
-  Cancel?: string;
-  date: string;
-  day: string;
-  time: string;
-  championship: string;
-  stage?: string;
-  place: string;
-  session: string;
-  PC?: string;
-  TG1?: string;
-  TG2?: string;
-  TG3?: string;
-  BCU1?: string;
-  BCU2?: string;
-  BCU3?: string;
-  RT?: string;
-  Commentator1?: string;
-  Commentator2?: string;
-  Optionally?: string;
-  Duration?: string;
-  LiveTiming?: string;
-  RuTube?: string;
-  Spotter?: string;
+WeatherForecastPoint {
+  forecast_time_msk, forecast_time_local,
+  temperature_2m, relative_humidity_2m,
+  precipitation, wind_speed_10m, weather_code
 }
 ```
 
-Внутренние типы `App.tsx`:
+Сопоставление с событием расписания: `buildWeatherEventKey` в `weatherUtils.ts` — нормализованные `date`, `time`, `championship`, `stage` (без точки в конце stage), joined через `|`.
 
-- `DisplayScheduleItem` - расширяет `ScheduleItem` полями `displayTime`, `startedLabel`, `isCarryover`.
-- `FloatingDayHeader` - данные fixed-заголовка дня.
-- `ActiveFilterChip` - данные плашки активного фильтра.
-- `SessionScrollMode` - `'all' | 'future'`.
-- `RenderedRowMeta` - ключ строки и объект события.
+---
 
-## 8. Главный поток в `App.tsx`
+## 10. Типы данных
 
-### Загрузка
+### `ScheduleItem` (`src/types/schedule.ts`)
 
-1. `loading = true`.
-2. `fetch(CSV_URL)`.
-3. Ответ читается как текст.
-4. `parseCSV(text)`.
-5. Результат сохраняется в `originalSchedule`.
-6. Ошибка сохраняется в `error`.
+Поля CSV + опционально `weatherForecast?: WeatherForecastPoint[]` (добавляется в `App`, не из CSV).
 
-### Подготовка расписания
+### Внутренние типы `App.tsx`
 
-`convertedSchedule`:
+| Тип | Назначение |
+| --- | --- |
+| `DisplayScheduleItem` | `ScheduleItem` + `displayTime?`, `startedLabel?`, `isCarryover?` |
+| `ActiveFilterChip` | Плашка активного фильтра: `key`, `label`, `type`, `value` |
+| `DayOption` | Элемент слайдера дней: `date`, `dayName`, `shortLabel`, `dayNumber` |
 
-1. Берет `originalSchedule`.
-2. Оставляет только строки, где `Shed` истинный.
-3. Если включен `useLocalTime`, применяет `convertFromGMT3ToLocal`.
-4. Оставляет даты сегодня и позже.
-5. Дополнительно оставляет события, начавшиеся вчера и продолжающиеся сегодня.
+### `CommentatorScheduleData`
 
-`normalizedSchedule`:
+Используется в `ScheduleRow` для модальной таблицы.
 
-- приводит дату к `DD.MM.YY`;
-- используется для списков фильтров и группировки.
+---
 
-### Списки фильтров
+## 11. Главный поток в `App.tsx`
 
-Из `normalizedSchedule` вычисляются:
+### 11.1. Загрузка данных
 
-- `seriesList`
-- `daysList`
-- `tracksList`
-- `commentatorsList`
+Три `useEffect` при монтировании:
 
-Для комментаторов:
+1. `fetch(CSV_URL)` → `parseCSV` → `originalSchedule` или `error`.
+2. `fetch(COMMENTATOR_SCHEDULE_CSV_URL)` → `parseCommentatorScheduleCSV` → state комментаторов или error string.
+3. `fetch(WEATHER_CACHE_URL)` → `parseWeatherCache` → `buildWeatherLookupMap` или пустая Map (без блокировки UI).
 
-- если `Commentator1` и `Commentator2` пустые, используется `Оригинальная дорожка`.
+`useBodyScrollLock(isFilterOpen)` — блокировка прокрутки при модалке фильтров.
 
-### Применение фильтров
+### 11.2. `convertedSchedule`
 
-`filteredSchedule` строится из:
+1. Фильтр `Shed` (истина / TRUE / ✓ / 1 / «истина»).
+2. Обогащение `weatherForecast` из Map.
+3. При `useLocalTime` — `convertFromGMT3ToLocal` для каждой строки.
+4. Фильтр дат: сегодня и позже **или** carryover из вчера (см. ниже).
 
-- `appliedSeries`
-- `appliedDays`
-- `appliedTracks`
-- `appliedCommentators`
+### 11.3. `normalizedSchedule`
 
-Если выбраны все значения категории, категория не ограничивает расписание.
+Дата приводится к короткому виду `DD.MM.YY` через `normalizeDateShort`.
 
-### Carryover-события
+### 11.4. Списки для фильтров
 
-Если событие началось вчера и по `Duration` продолжается сегодня:
+| Список | Источник |
+| --- | --- |
+| `seriesList` | Уникальные `championship`; сортировка: `PRIORITY_SERIES` сверху, остальные `localeCompare('ru')` |
+| `daysList` | Уникальные `date`, сортировка по `parseDate` |
+| `tracksList` | Уникальные непустые `place` |
+| `commentatorsList` | Commentator1/2; если оба пусты — виртуальное значение **`Оригинальная дорожка`** |
 
-- оно добавляется в сегодняшний день;
-- в строке показывается время окончания;
-- добавляется метка `с DD.MM.YY до`;
-- вчерашний день скрывается из итогового списка.
+`PRIORITY_SERIES` в `App.tsx`: `Формула 1`, `Индикар`, `НАСКАР Кубок`, `WEC`.
 
-### Группировка и сортировка
+### 11.5. `filteredSchedule`
 
-`byDay` группирует данные по ключу:
+Пересечение по:
+
+- серии (`appliedSeries` или все, если пусто/полный набор);
+- день;
+- трасса (`place`), если фильтр трасс активен не на «все»;
+- комментатор (включая «Оригинальная дорожка»).
+
+Если в категории выбраны **все** значения списка, категория не сужает выборку (логика «как без фильтра»).
+
+### 11.6. Carryover-события
+
+`addCarryoverItems`:
+
+- событие началось **вчера**, по `Duration` заканчивается **сегодня или позже**;
+- копия добавляется на сегодня с `isCarryover: true`, `startedLabel` вида «с DD.MM.YY до», `displayTime` — время окончания;
+- из итогового списка **удаляется** вчерашний день (`yesterdayStr`), чтобы не дублировать колонку.
+
+Вспомогательные функции: `parseDurationMs`, `getStartDate`, `formatDateShort`.
+
+### 11.7. Статусы и видимость строк
+
+| Функция | Логика |
+| --- | --- |
+| `isScheduleItemEnded` | `Ended` истинный |
+| `isScheduleItemCancelled` | `Cancel` истинный и **не** ended |
+| `isScheduleItemLive` | `Live` истинный и **не** ended |
+| `isScheduleItemHiddenByStatus` | ended **или** cancel (без проверки ended для cancel в скрытии — cancel скрывается отдельно) |
+
+**По умолчанию** завершённые и отменённые **не показываются** в `displaySchedule` и в строках `byDay`, если дата **не** в `shownHiddenDays`.
+
+`endedDays` / `cancelledDays` — Set дат для отображения кнопки toggle.
+
+`handleToggleHiddenForDay(date)` — переключает дату в `shownHiddenDays`; **всегда** вызывает `scrollToPageTop({ fast: true })` (~280 ms ease-out или мгновенно при `prefers-reduced-motion`).
+
+### 11.8. Группировка и сортировка
+
+- `byDay` — ключ `` `${date}_${day}` ``, строки с учётом скрытия статусов.
+- `rowsByDate` — из `displaySchedule` по `date` (режим «По дням»).
+- `sortDayRows` — сначала carryover, затем по минутам времени.
+
+### 11.9. Отступы под fixed UI
 
 ```ts
-`${item.date}_${item.day}`
+DAY_SLIDER_HEIGHT = 76
+DAY_SLIDER_OVERLAP = 4
+menuOffsetValue = menuHeight + sliderHeight - overlap (если слайдер виден)
+--menu-offset, --sticky-day-header-top на schedule-container
 ```
 
-`rowsByDate` группирует данные только по дате и используется в режиме `По дням`.
+`showMenu = !loading && !error && originalSchedule.length > 0` — меню, zoom и слайдер только при успешных данных.
 
-`sortDayRows`:
+---
 
-1. Сначала поднимает carryover-события.
-2. Затем сортирует по времени в минутах.
-
-## 9. Состояние `App.tsx`
+## 12. Состояние `App.tsx`
 
 | State | Назначение |
 | --- | --- |
-| `originalSchedule` | Исходные данные из CSV |
-| `loading` | Флаг загрузки |
-| `error` | Ошибка загрузки или обработки |
-| `isLightTheme` | Текущая тема |
-| `useLocalTime` | `false` = МСК, `true` = локальный часовой пояс |
-| `viewMode` | `all` или `byDay` |
-| `selectedDay` | Выбранный день в режиме `byDay` |
-| `menuHeight` | Измеренная высота меню |
-| `isFilterOpen` | Открыта ли модалка фильтров |
-| `applied*` | Примененные фильтры |
-| `temp*` | Временные значения фильтров в модалке |
-| `filterPage` | Активная вкладка фильтра |
-| `filterError` | Ошибка в модалке фильтра |
-| `contentScale` | Масштаб контента расписания |
-| `sessionScrollMode` | `all` или `future` |
-| `zoomControlsHeight` | Измеренная высота блока масштаба |
-| `floatingDayHeaders` | Активные плавающие заголовки дней |
+| `originalSchedule` | Сырые данные после parseCSV |
+| `loading`, `error` | Загрузка / ошибка CSV |
+| `commentatorSchedule`, `commentatorScheduleLoading`, `commentatorScheduleError` | Данные сетки комментаторов |
+| `weatherLookupMap` | Map ключ → массив точек прогноза |
+| `isLightTheme` | Светлая / тёмная тема |
+| `useLocalTime` | false = МСК, true = локальный пояс браузера |
+| `viewMode` | `'all'` \| `'byDay'` |
+| `selectedDay` | Дата в режиме byDay |
+| `menuHeight` | Высота Menu (ResizeObserver) |
+| `isFilterOpen` | Модалка фильтров |
+| `appliedSeries/Days/Tracks/Commentators` | Применённые фильтры |
+| `tempSeries/Days/Tracks/Commentators` | Черновик в модалке |
+| `filterPage` | `'series' \| 'days' \| 'tracks' \| 'commentators'` |
+| `filterError` | Ошибка валидации «ничего не выбрано» |
+| `contentScale` | Масштаб `.schedule-content-zoom` |
+| `shownHiddenDays` | Set дат, где показаны скрытые ended/cancel |
+| `zoomControlsHeight` | Для `--zoom-controls-offset` |
+| `touchStartRef` | Свайп между днями (mobile byDay) |
 
-## 10. Фильтры
+---
 
-Фильтры находятся в модальном окне в `App.tsx`.
+## 13. Фильтры
 
-Вкладки:
+Модальное окно рендерится в `App.tsx` (не отдельный компонент).
 
-- `Серии`
-- `Дни`
-- `Трассы`
-- `Комментаторы`
+**Вкладки:** Серии, Дни, Трассы, Комментаторы.  
+**Чекбокс «Все …»** на каждой вкладке.
 
-У каждой вкладки есть чекбокс `Все ...`.
+**Применение (`handleApplyFilter`):**
 
-При открытии:
+- если во всех четырёх категориях пусто — `filterError`;
+- пустая категория при apply трактуется как «все значения списка»;
+- закрытие модалки + `scrollToPageTop()` (smooth).
 
-- если категория не активна, чекбоксы могут быть пустыми;
-- если категория активна, отмечены текущие выбранные значения.
+**Сброс:** все категории → полные списки, закрытие, scroll top.
 
-При применении:
+**Приоритетные серии** в UI: класс `filter-item--priority` для `PRIORITY_SERIES`.
 
-- если не выбрано ничего во всех категориях, показывается ошибка;
-- если категория пустая, она трактуется как `все значения`;
-- после применения модалка закрывается и страница прокручивается вверх.
+**Активные плашки** (`activeFilterLabels`):
 
-Активные фильтры представлены плашками:
+- только если выбрано **строго меньше**, чем всего в категории;
+- desktop — под `menu-center` (второй ряд EventLogo area);
+- mobile — под `DA` / `ODA`;
+- удаление → `removeFilterValue`; если в категории 0 значений — снова «все».
 
-```ts
-{
-  key: string;
-  label: string;
-  type: 'series' | 'days' | 'tracks' | 'commentators';
-  value: string;
-}
-```
+---
 
-Плашки показывают только значение:
-
-```text
-Moto GP   Муджелло   29.05.26, пятница   Дима Искрыч
-```
-
-Плашки отображаются:
-
-- на десктопе - под вторым рядом меню;
-- на мобильной версии - под верхним рядом `DA` / `ODA`.
-
-Удаление плашки:
-
-- вызывает `removeFilterValue`;
-- удаляет значение из соответствующего `applied*`;
-- если в категории больше ничего не осталось, категория возвращается к состоянию `все`.
-
-## 11. Режимы отображения
+## 14. Режимы отображения
 
 ### `viewMode = 'all'`
 
-Показывает все отфильтрованные дни колонками.
-
-Каждая колонка:
-
-- `Header`
-- `DateDisplay`
-- `DayOfWeekDisplay`
-- список `ScheduleRow`
+- Колонки по дням из `byDay` (отсортированные по дате).
+- Заголовок дня: `day-header-sticky` + `Header` (sticky под меню, `--sticky-day-header-top`).
+- В `Header` — кнопка show/hide ended/cancel для этого дня (если есть такие события).
+- Список `ScheduleRow`.
 
 ### `viewMode = 'byDay'`
 
-Показывает:
+- Fixed `DaySlider` под меню (`topOffset`, overlap 4px).
+- Одна колонка `selectedDay`; строки из `rowsByDate`.
+- Кнопка show/hide — блок `.by-day-ended-toggle` (**sticky**, `top: var(--menu-offset)`).
+- **Свайп** по контейнеру приложения (ширина ≤720px): горизонтальный жест >50px переключает соседний день.
 
-- `DaySlider`;
-- один выбранный день;
-- строки выбранного дня.
+`DaySlider` строится из `dayOptions`, derived from `filteredDaysList` после фильтров (не из «сырых» дней CSV).
 
-`DaySlider` учитывает активные фильтры и показывает только даты, оставшиеся после фильтрации.
+---
 
-## 12. Режим будущих сессий
+## 15. Статусы на карточке (`ScheduleRow`)
 
-`sessionScrollMode = 'future'` не фильтрует строки.
+Под временем (колонка слева):
 
-Поведение:
+| UI | Условие |
+| --- | --- |
+| LIVE | `isLive` |
+| ОТМЕНЕНО | `isCancelled` |
+| ЗАВЕРШЕНО | `isEnded` (приоритет над live/cancel в логике отображения статусов) |
 
-1. Пользователь нажимает `Будущие`.
-2. `App` ищет первую строку, время которой больше текущего времени.
-3. Страница прокручивается к этой строке.
+Погода **не** показывается для ended/cancel.
 
-Это режим прокрутки, а не режим скрытия прошедших событий.
+---
 
-## 13. Масштабирование
-
-Кнопки масштаба:
-
-- `-`
-- `100%`
-- `+`
+## 16. Масштабирование
 
 Константы:
 
 ```ts
-const MIN_CONTENT_SCALE = 0.4;
-const MAX_CONTENT_SCALE = 1;
-const CONTENT_SCALE_STEP = 0.05;
+MIN_CONTENT_SCALE = 0.4
+MAX_CONTENT_SCALE = 1
+CONTENT_SCALE_STEP = 0.05
 ```
 
-Масштаб применяется к `.schedule-content-zoom` через CSS `zoom`. Меню и слайдер дней не масштабируются.
+Блок `.zoom-controls` fixed снизу; масштаб через CSS `zoom` на `.schedule-content-zoom`. Меню и DaySlider **не** масштабируются.
 
-## 14. Плавающие заголовки дней
+---
 
-Работают в режиме `Все дни`.
+## 17. Погода (`WeatherBadge`)
 
-Логика:
+- Компонент: `WeatherBadge.tsx` + `WeatherBadge.css`.
+- Показ: полоска/кнопка под контентом карточки; клик открывает модалку (portal), `useBodyScrollLock`.
+- Иконки по WMO-like `weather_code`; палитра cyan/blue отличима от жёлтого акцента BOE.
+- Tooltip/детали: `formatWeatherTooltip`, `getWeatherDescription` в `weatherUtils.ts`.
 
-1. `App` хранит refs колонок дней и их заголовков.
-2. При scroll/resize вычисляет, какие заголовки ушли под меню.
-3. Для таких колонок показывает fixed-заголовок с датой.
+---
 
-Плавающий заголовок скрывается, если:
+## 18. Расписание комментаторов на карточке
 
-- колонка не видна по горизонтали;
-- основной заголовок еще не ушел под меню;
-- в колонке больше нет видимых строк.
+Условие `isCommentatorScheduleEvent` в `App.tsx`:
 
-## 15. Компоненты
+- WEC + session `94-я гонка "24 часа Ле-Мана"`;
+- `ГТВЧ Европа (Эндуранс)` + session `Гонка (24 часа)`.
+
+На таких строках показывается кнопка «Расписание комментаторов»; данные — общий `commentatorSchedule` из App. Модалка: desktop table + mobile table, цвета строк через CSS variable `--commentator-schedule-color`.
+
+---
+
+## 19. Компоненты (назначение и связи)
 
 ### `Menu.tsx`
 
-Фиксированное меню управления.
-
-Desktop layout:
-
-```text
-Row 1:
-[МСК / Ваш пояс] [Все дни / По дням] [Все сессии / Будущие]
-
-Row 2:
-[theme | filter]
-
-Row 3:
-active filter chips, если есть
-```
-
-Mobile layout:
-
-```text
-Top:
-[DA] [ODA]
-[active filter chips, если есть]
-
-Bottom:
-[Настройки]
-
-Bottom sheet:
-[МСК / Ваш пояс] [Все дни / По дням] [Все сессии / Будущие]
-[theme | filter]
-```
-
-Особенности:
-
-- `ResizeObserver` измеряет высоту меню и передает ее в `App`.
-- Кнопка `Настройки` пульсирует.
-- `prefers-reduced-motion: reduce` отключает пульсацию.
+- Fixed верхнее меню; измеряет высоту → `onHeightChange`.
+- **Desktop:** слева `DonationButtons`; центр `menu-center`:
+  - row primary: `[МСК/пояс] [filter quick-actions] [Все дни/По дням]`;
+  - active filters desktop;
+  - `EventLogo`.
+- **Mobile (≤720px):** `menu-center` скрыт; сверху DA/ODA + mobile chips; кнопка «Настройки» + bottom sheet (время, режим, filter; theme в sheet, но theme-кнопка скрыта CSS).
+- Переключатель темы в DOM есть, класс `.quick-actions__button--theme { display: none }` — временно скрыт.
+- `useBodyScrollLock(isMobileSettingsOpen)`.
 
 ### `DonationButtons.tsx`
 
-Показывает ссылки:
-
-- `DA` -> DonationAlerts
-- `ODA` -> `http://be-on-edge.oda.digital/`
-
-На мобильной версии это единственный верхний ряд.
-
-### `DaySlider.tsx`
-
-Используется только в `viewMode = 'byDay'`.
-
-Props:
-
-```ts
-days: DayOption[];
-selectedDate: string | null;
-onSelect?: (date: string) => void;
-isLightTheme?: boolean;
-topOffset?: number;
-```
-
-### `Header.tsx`, `DateDisplay.tsx`, `DayOfWeekDisplay.tsx`
-
-`Header` - обертка для заголовка дня.
-
-Обычно содержит:
-
-- `DateDisplay`
-- `DayOfWeekDisplay`
-
-`DateDisplay` показывает дату в `DD.MM.YY`.
-
-`DayOfWeekDisplay` показывает день недели.
-
-### `ScheduleRow.tsx`
-
-Карточка одного события.
-
-Структура:
-
-```text
-schedule-row-wrapper
-  time-container
-    time-started
-    time
-    ScheduleIcons
-    spotter-button
-
-  content-container
-    content-header
-      content-text
-        championship
-        event-stage-row
-          stage
-          place chip
-        event-meta
-          session chip
-        commentators-container
-          Commentator[]
-      calendar-buttons
-        Google Calendar
-        .ics
-        live timing
-    Optionally
-```
-
-Комментаторы:
-
-- если оба поля пустые, выводится `Оригинальная дорожка`;
-- если один или два комментатора заполнены, выводятся отдельные плашки;
-- на маленьком экране текст может переноситься на две строки.
-
-Календарь:
-
-- `G` открывает Google Calendar;
-- `.ics` скачивает файл iCalendar;
-- секундомер открывает `LiveTiming`, если ссылка заполнена и не равна `нет`.
-
-### `ScheduleIcons.tsx`
-
-Показывает платформенные иконки.
-
-Ссылки:
-
-- PC/VK: `https://vk.com/be_on_edge`
-- TG1: `https://t.me/BoE_LIVE_1`
-- TG2: `https://t.me/BoE_LIVE_2`
-- TG3: `https://t.me/BoE_LIVE_3`
-- BCU: `https://bcumedia.su/`
-
-Если `RT` включен:
-
-- показывается иконка RuTube;
-- если `RuTube` содержит ссылку, иконка кликабельна;
-- если ссылка пустая или `нет`, иконка статическая.
-
-### `Commentator.tsx`
-
-Показывает плашку комментатора:
-
-- иконка микрофона;
-- имя комментатора;
-- адаптивный перенос имени на две строки.
-
-### `Optionally.tsx`
-
-Показывает блок:
-
-```text
-Важно: {text}
-```
-
-### `CalendarIcon.tsx`
-
-SVG-иконка календаря с текстом внутри:
-
-- `G`
-- `.ics`
-
-Цвет задается CSS-классами родителя в `ScheduleRow.css`.
+- `DA` → DonationAlerts; `ODA` → be-on-edge.oda.digital.
 
 ### `EventLogo.tsx`
 
-Временный промо-компонент Indy 500:
+- Промо Indy 500 до `HIDE_AFTER` (25.05.2026); ротация текстов; `indy500.png`.
 
-- использует `src/assets/indy500.png`;
-- имеет `HIDE_AFTER`;
-- после даты скрытия возвращает `null`;
-- переключает текстовые сообщения по таймеру.
+### `DaySlider.tsx`
 
-## 16. Утилиты
+- Props: `days`, `selectedDate`, `onSelect`, `isLightTheme`, `topOffset`.
+- Fixed, z-index 950.
 
-### `csvParser.ts`
+### `Header.tsx`
 
-- парсит CSV-строки с учетом кавычек;
-- мапит заголовки в поля `ScheduleItem`;
-- валидирует обязательные поля;
-- нормализует время через `normalizeTime`;
-- вычисляет день недели через `getDayOfWeekFromDate`.
+- Обёртка дня + опциональная `header__ended-toggle` (текст Show/Hide внутри компонента; в byDay используется общий класс и `getHiddenEventsToggleLabel` из App).
 
-### `dateUtils.ts`
+### `DateDisplay.tsx` / `DayOfWeekDisplay.tsx`
 
-Функции:
+- Дата `DD.MM.YY` и день недели.
 
-- `parseDate`
-- `getCurrentDate`
-- `isDateEqualOrAfterToday`
-- `getDayOfWeekFromDate`
-- `convertFromGMT3ToLocal`
+### `ScheduleRow.tsx`
 
-Важное поведение:
+Структура (логическая):
 
-- `parseDate` создает дату с временем `12:00:00`.
-- `convertFromGMT3ToLocal` создает дату как `...+03:00` и форматирует ее в локальные дату/время браузера.
-
-### `timeUtils.ts`
-
-`normalizeTime(timeStr)` приводит время к `HH:MM`.
-
-### `flagUtils.ts`
-
-`parseBooleanFlag(value)` сравнивает значение с `TRUE_VALUES`.
-
-### `iconUtils.ts`
-
-- `getTgNumbers(item)`
-- `getBcuNumbers(item)`
-
-Возвращают массивы активных номеров.
-
-### `textUtils.ts`
-
-- `formatChampionship` добавляет точку в конце, если ее нет.
-- `formatStage` убирает точку в конце.
-
-### `calendarUtils.ts`
-
-Функции:
-
-- `generateGoogleCalendarUrl`
-- `generateICalendarFile`
-- `downloadICalendarFile`
-
-Дата начала события создается в GMT+3. Если `Duration` заполнен, окончание рассчитывается по нему. Если нет - используется fallback `2 часа`.
-
-### `dataUtils.ts`
-
-`groupBy` используется для группировки расписания по дням и датам.
-
-### `timezoneUtils.ts`
-
-`getUserTimeZone` возвращает строку вида `GMT +3`.
-
-В текущем интерфейсе не используется.
-
-## 17. Константы
-
-Файл: `src/constants/index.ts`
-
-- `CSV_URL` - используется в `App.tsx`.
-- `DAYS_OF_WEEK` - используется в `dateUtils.ts`.
-- `TRUE_VALUES` - используется в `flagUtils.ts`.
-- `DEFAULT_TIMEZONE` - сейчас не используется.
-
-## 18. Стили
-
-### `App.css`
-
-Отвечает за:
-
-- фон приложения;
-- контейнер расписания;
-- zoom controls;
-- плавающие заголовки дней;
-- ширину колонок дней;
-- grid строк расписания;
-- модальное окно фильтров.
-
-### `Menu.css`
-
-Отвечает за:
-
-- фиксированное меню;
-- donation buttons;
-- desktop-переключатели;
-- quick actions;
-- active filter chips;
-- mobile bottom sheet;
-- mobile settings trigger.
-
-### `ScheduleRow.css`
-
-Отвечает за:
-
-- карточку события;
-- левую колонку времени;
-- метаданные события;
-- кнопки календарей;
-- spotter button.
-
-### Остальные стили
-
-- `Header.css` - форма заголовка дня.
-- `DateDisplay.css` - крупная дата.
-- `DayOfWeekDisplay.css` - день недели.
-- `DaySlider.css` - fixed-слайдер дней.
-- `ScheduleIcons.css` - сетка иконок.
-- `Commentator.css` - плашка комментатора.
-- `Optionally.css` - блок важной информации.
-- `EventLogo.css` - промо-блок.
-
-## 19. Адаптивность
-
-Основной breakpoint:
-
-```css
-@media (max-width: 720px)
+```text
+schedule-row-wrapper
+├── time-container
+│   ├── time (+ startedLabel для carryover)
+│   ├── event-status-strip (LIVE / ЗАВЕРШЕНО / ОТМЕНЕНО)
+│   ├── ScheduleIcons
+│   └── spotter-button?
+└── content-container
+    ├── championship, event-stage-row (stage + place текст)
+    ├── event-session-block (session + commentators-container)
+    ├── commentator-schedule-trigger? (спец-события)
+    ├── calendar-buttons (G, .ics, live timing)
+    ├── Optionally?
+    └── WeatherBadge?
 ```
 
-На мобильной версии:
+Комментаторы: пустые оба поля → одна строка «Оригинальная дорожка» (логика в useMemo commentators).
 
-- центральное меню скрыто;
-- сверху остается только `DA` / `ODA`;
-- активные фильтры показываются под верхним рядом;
-- кнопка `Настройки` фиксируется снизу и пульсирует;
-- bottom sheet открывается снизу;
-- сетка настроек в bottom sheet состоит из трех равных колонок;
-- колонка времени в расписании становится шире;
-- время и иконки центрируются;
-- карточка события занимает оставшуюся ширину;
-- комментаторы могут переноситься в две строки.
+### `ScheduleIcons.tsx`
 
-## 20. Связи между модулями
+Платформы: PC/VK, TG1-3, BCU, RuTube при RT.
+
+### `Commentator.tsx`
+
+Иконка микрофона на жёлтом фоне + имя.
+
+### `Optionally.tsx`
+
+«Важно: …» с жёлтой левой границей.
+
+### `CalendarIcon.tsx`
+
+SVG для G / .ics.
+
+### `WeatherBadge.tsx`
+
+См. §17.
+
+---
+
+## 20. Утилиты
+
+| Модуль | Назначение |
+| --- | --- |
+| `csvParser.ts` | CSV строки с кавычками; `parseCSV`, `parseCommentatorScheduleCSV` |
+| `weatherUtils.ts` | Ключи, map, parse JSON, описания погоды |
+| `dateUtils.ts` | parseDate, today filter, getDayOfWeekFromDate, convertFromGMT3ToLocal |
+| `timeUtils.ts` | normalizeTime → HH:MM |
+| `flagUtils.ts` | parseBooleanFlag |
+| `iconUtils.ts` | getTgNumbers, getBcuNumbers |
+| `textUtils.ts` | formatChampionship, formatStage |
+| `calendarUtils.ts` | Google Calendar URL, iCal download (GMT+3, Duration или +2h) |
+| `dataUtils.ts` | groupBy |
+| `timezoneUtils.ts` | getUserTimeZone — **не используется** |
+
+### `useBodyScrollLock.ts`
+
+Reference-counted lock: несколько модалок могут держать lock; компенсация ширины scrollbar через `padding-right`.
+
+---
+
+## 21. Стили (слои)
+
+| Файл | Зона ответственности |
+| --- | --- |
+| `index.css` | Design tokens `--boe-*`, Tektur, body background grid |
+| `App.css` | app-container themes, schedule padding `--menu-offset`, sticky day header, by-day-ended-toggle, filter modal hi-tech, zoom, empty/loading |
+| `Menu.css` | fixed menu, donation, toggles, filter button, chips, mobile sheet |
+| `ScheduleRow.css` | карточка, session block, statuses, commentator modal, calendar buttons |
+| `Header.css` | форма заголовка дня, ended toggle pulse |
+| `DaySlider.css` | fixed slider |
+| `WeatherBadge.css` | badge + weather modal (cyan accent) |
+| Остальные component CSS | локальные блоки |
+
+Breakpoint основной: **`max-width: 720px`**. Дополнительно menu: `max-width: 960px` (wrap donation row).
+
+---
+
+## 22. Адаптивность (mobile)
+
+- Центральное desktop-меню скрыто.
+- Фильтры и время — в bottom sheet «Настройки».
+- Active filters под DA/ODA.
+- Grid настроек в sheet: **2 колонки** (`repeat(2, minmax(0, 1fr))`).
+- У schedule-row шире колонка времени; backdrop-filter на menu может быть отключён для perf.
+- Свайп дней в byDay.
+
+---
+
+## 23. Связи между модулями (import graph)
 
 ```text
 App.tsx
-├── constants/index.ts
-│   └── CSV_URL
+├── constants/index.ts          (CSV_URL, COMMENTATOR_*, WEATHER_*)
+├── types/schedule.ts, types/weather.ts
+├── hooks/useBodyScrollLock.ts
 ├── utils/csvParser.ts
-│   ├── utils/timeUtils.ts
-│   └── utils/dateUtils.ts
-├── utils/dateUtils.ts
-│   ├── constants/index.ts
-│   └── utils/timeUtils.ts
-├── utils/dataUtils.ts
-├── utils/flagUtils.ts
-│   └── constants/index.ts
-├── utils/iconUtils.ts
-│   └── utils/flagUtils.ts
+│   ├── timeUtils.ts
+│   └── dateUtils.ts
+├── utils/weatherUtils.ts
+│   └── timeUtils.ts
+├── utils/dateUtils.ts, dataUtils.ts, flagUtils.ts
 ├── components/Menu.tsx
 │   ├── DonationButtons.tsx
-│   └── EventLogo.tsx
+│   ├── EventLogo.tsx
+│   └── useBodyScrollLock
 ├── components/DaySlider.tsx
 ├── components/Header.tsx
-    │   ├── DateDisplay.tsx
-    │   └── DayOfWeekDisplay.tsx
+│   ├── DateDisplay.tsx
+│   └── DayOfWeekDisplay.tsx
 └── components/ScheduleRow.tsx
-        ├── ScheduleIcons.tsx
-        ├── Commentator.tsx
-        ├── Optionally.tsx
-        ├── CalendarIcon.tsx
-        ├── utils/timeUtils.ts
-    ├── utils/calendarUtils.ts
-    └── utils/textUtils.ts
+    ├── ScheduleIcons.tsx
+    ├── Commentator.tsx
+    ├── Optionally.tsx
+    ├── CalendarIcon.tsx
+    ├── WeatherBadge.tsx
+    ├── calendarUtils.ts, textUtils.ts, timeUtils.ts
+    └── useBodyScrollLock
 ```
 
-## 21. Render tree
+---
+
+## 24. Render tree (упрощённо)
 
 ```text
-App
-├── Menu
-│   ├── DonationButtons
-│   ├── active filter chips mobile
-│   ├── desktop controls
-│   ├── active filter chips desktop
-│   ├── EventLogo
-│   └── mobile settings bottom sheet
-├── zoom-controls
+App (app-container, touch handlers for swipe)
+├── Menu?
+├── zoom-controls?
 ├── DaySlider?
-├── floating-day-header[]
-├── schedule-container
-│   └── schedule-content-zoom
-│       └── day-column[]
-│           ├── Header
-│           │   ├── DateDisplay
-│           │   └── DayOfWeekDisplay
-│           └── day-rows-container
-│               └── ScheduleRow[]
-│                   ├── ScheduleIcons
-│                   ├── Commentator[]
-│                   ├── CalendarIcon[]
-│                   └── Optionally?
-└── filter modal?
+├── schedule-container (--menu-offset)
+│   └── schedule-content-zoom (zoom)
+│       ├── loading / error / empty
+│       ├── [viewMode=all] day-column[]
+│       │   ├── day-header-sticky → Header → DateDisplay, DayOfWeekDisplay, ended toggle
+│       │   └── ScheduleRow[]
+│       └── [viewMode=byDay] day-column
+│           ├── by-day-ended-toggle?
+│           └── ScheduleRow[]
+└── filter-overlay? (modal)
 ```
 
-## 22. Темы
+Порталы: weather modal, commentator schedule modal (внутри ScheduleRow).
 
-Тема задается через `isLightTheme`.
+---
 
-Основные классы:
+## 25. Темы
 
-- `app-container--light`
-- `app-container--dark`
-- `menu--light`
-- `menu--dark`
-- `schedule-row--light`
-- `schedule-row--dark`
+`isLightTheme` переключает классы:
 
-Цветовая схема:
+- `app-container--light` / `--dark`
+- `menu--light` / `--dark`
+- `schedule-row--light` / `--dark`
+- и аналоги у дочерних блоков
 
-- светлая тема: желтый фон, черные акценты;
-- темная тема: темный фон, желтые акценты.
+Светлая: жёлтый фон `#E9C900`, чёрные акценты.  
+Тёмная: `--boe-color-bg`, жёлтый акcent `#FFD600`.
 
-## 23. Интеграции
+---
 
-### Google Calendar
+## 26. Интеграции
 
-Кнопка `G` вызывает:
+| Интеграция | Реализация |
+| --- | --- |
+| Google Calendar | `generateGoogleCalendarUrl` + `window.open` |
+| iCalendar / Яндекс | `downloadICalendarFile` |
+| Live Timing | кнопка-секундомер если URL есть и ≠ `нет` |
+| Spotter Guide | кнопка под иконками если Spotter заполнен |
+| Платформы | фиксированные URL в ScheduleIcons |
+| Погода | JSON cache + modal |
 
-```ts
-generateGoogleCalendarUrl(scheduleItem)
-window.open(url, '_blank')
-```
+---
 
-### iCalendar / Яндекс Календарь
+## 27. CI: обновление погоды
 
-Кнопка `.ics` вызывает:
+Файл: `.github/workflows/update-weather.yml`
 
-```ts
-downloadICalendarFile(scheduleItem)
-```
+- Триггер: cron каждый час (`15 * * * *`) и `workflow_dispatch`.
+- Checkout ветки **`gh-pages`**.
+- `curl` weather JSON с внешнего сервера → `data/weather_cache.json`.
+- Commit/push при изменениях.
 
-### Live Timing
+Production-сайт читает `./data/weather_cache.json` относительно корня Pages; локально — копия в `public/data/`.
 
-Если `LiveTiming` заполнен и не равен `нет`, показывается кнопка секундомера.
+---
 
-### Spotter Guide
+## 28. Важные особенности поведения
 
-Если `Spotter` заполнен и не равен `нет`, под иконками слева показывается кнопка `SPOTTER GUIDE`.
+- Завершённые и отменённые **скрыты по умолчанию**; показ — per-day через `shownHiddenDays`.
+- **Ended** блокирует трактовку Live и Cancelled на карточке.
+- Toggle show/hide **всегда** прокручивает страницу вверх (fast scroll).
+- Carryover не показывает вчерашнюю колонку, только сегодняшнюю копию.
+- `showMenu` false при loading/error/пустом CSV — пользователь видит только loading/error UI.
+- Масштаб — CSS `zoom`, не `transform`.
+- Фильтр трасс сопоставляет `place`; пустой place не матчится при активном узком фильтре трасс.
+- Комментатор «Оригинальная дорожка» — синтетическая опция фильтра, не поле CSV.
 
-## 24. Важные особенности поведения
+---
 
-- `sessionScrollMode = future` не фильтрует строки, а только прокручивает к ближайшей будущей сессии.
-- `Shed` должен быть истинным, иначе строка не попадет в расписание.
-- При пустых комментаторах событие считается `Оригинальная дорожка`.
-- Активные фильтры показываются только если выбрана не вся категория.
-- Удаление последней плашки категории возвращает категорию в состояние `все`.
-- Мобильный `Menu` остается источником высоты верхнего offset, потому ряд `DA` / `ODA` влияет на отступ расписания.
-- Масштаб применяется через CSS `zoom`, а не `transform`.
-
-## 25. Технический долг
+## 29. Технический долг
 
 ### Безопасный
 
-- Удалить или задействовать `timezoneUtils.ts`.
-- Удалить или задействовать `DEFAULT_TIMEZONE`.
-- Удалить устаревший `logo.svg`, если он не используется.
-- Переписать или удалить CRA-тест `App.test.tsx`.
-- Удалить `EventLogo`, если промо-блок больше не нужен.
+- Удалить или использовать `timezoneUtils.ts`, `DEFAULT_TIMEZONE`.
+- Удалить неиспользуемый `src/logo.svg`.
+- Актуализировать/удалить `App.test.tsx`.
+- Убрать или включить переключатель темы (сейчас скрыт CSS).
+- Удалить `EventLogo` после окончания промо-периода.
 
 ### Средний
 
 - Вынести `FilterModal` из `App.tsx`.
-- Вынести повторяющиеся переключатели из `Menu.tsx`:
-  - `TimeToggle`
-  - `ViewModeToggle`
-  - `SessionScrollToggle`
-  - `QuickActions`
-  - `ActiveFilterChips`
-- Вынести общий форматтер дня для фильтров.
-- Вынести общий рендер `ScheduleRow`, потому props дублируются в двух ветках `viewMode`.
+- Вынести повторяющиеся toggles из `Menu.tsx` в подкомпоненты.
+- Унифицировать текст ended-toggle (`Header` vs `getHiddenEventsToggleLabel`).
+- Общий рендер props `ScheduleRow` (две ветки viewMode дублируют props).
 
 ### Осторожный
 
-- Объединить date/time parsing между `App.tsx` и `calendarUtils.ts`.
-- Пересмотреть carryover-логику с учетом локального часового пояса.
-- Заменить CSS `zoom` на `transform: scale`, если потребуется более стандартное поведение. Это может затронуть плавающие заголовки и scroll-позиционирование.
+- Единый parsing date/time между App и `calendarUtils`.
+- Carryover при `useLocalTime` — перепроверка границ «вчера/сегодня».
+- Замена CSS `zoom` на `transform: scale` (влияет на sticky и scroll).
 
-## 26. Проверка после изменений
+---
 
-Рекомендуемый минимум:
+## 30. Проверка после изменений
 
 ```bash
 npm run build
 ```
 
-Что проверить вручную:
+Ручной чеклист:
 
-- загрузка расписания;
-- переключение `МСК` / `Ваш пояс`;
-- режимы `Все дни` / `По дням`;
-- открытие и применение фильтров;
-- удаление плашек активных фильтров;
-- mobile bottom sheet;
-- кнопки масштаба;
-- календарные кнопки;
-- live timing / spotter guide;
-- отображение carryover-событий.
+- загрузка CSV, ошибки сети;
+- МСК / локальный пояс;
+- Все дни / По дням, слайдер, свайп на mobile;
+- фильтры: apply, reset, priority series, плашки, удаление;
+- скрытие/показ ended/cancel + scroll top;
+- sticky заголовки дня и by-day toggle;
+- carryover (метка «с … до», время окончания);
+- иконки платформ, RT, spotter, live timing;
+- календарь G / .ics;
+- погода (badge + modal), отсутствие при ended/cancel;
+- расписание комментаторов на Le Mans / GTWEC 24h;
+- zoom controls;
+- mobile bottom sheet и блокировка scroll в модалках.
+
+---
+
+## 31. Связанные документы
+
+- `README.md` — краткий обзор и быстрый старт.
+- `SUBAGENT_PROJECT_STRUCTURE.md` — полное дерево файлов и папок для субагентов (explore / Task).
+- `.env.example` — переменная погоды для CRA.
+
+---
+
+*Последняя синхронизация документа с кодовой базой: актуальное состояние репозитория schedule (React 19, weather, statuses, sticky UI, без режима «Будущие сессии» и без JS floating day headers).*
