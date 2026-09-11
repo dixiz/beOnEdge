@@ -507,6 +507,8 @@ CONTENT_SCALE_STEP = 0.05
 
 Блок `.zoom-controls` fixed снизу; масштаб через CSS `zoom` на `.schedule-content-zoom`. Меню и DaySlider **не** масштабируются.
 
+Кнопки **−** / **+** меняют `contentScale` с шагом `CONTENT_SCALE_STEP`; центральная показывает **текущий** масштаб в процентах (подпись, `title` и часть `aria-label`) и по клику сбрасывает до 100% (неактивна при `contentScale === 1`).
+
 ---
 
 ## 17. Погода (`WeatherBadge`)
