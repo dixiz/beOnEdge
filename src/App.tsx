@@ -889,6 +889,7 @@ function App() {
     '--menu-offset': `${menuOffsetValue}px`,
     '--sticky-day-header-top': `${stickyDayHeaderTop}px`
   } as React.CSSProperties;
+  const contentScalePercentLabel = `${Math.round(contentScale * 100)}%`;
   const scheduleContentStyle = { zoom: contentScale } as React.CSSProperties;
   const appContainerStyle = { '--zoom-controls-offset': `${showMenu ? zoomControlsHeight + 24 : 0}px` } as React.CSSProperties;
 
@@ -992,10 +993,10 @@ function App() {
             className="zoom-controls__button zoom-controls__button--reset"
             onClick={handleZoomReset}
             disabled={contentScale === 1}
-            aria-label="Сбросить масштаб до 100%"
-            title="100%"
+            aria-label={`Сбросить масштаб до 100%. Текущий: ${contentScalePercentLabel}`}
+            title={contentScalePercentLabel}
           >
-            100%
+            {contentScalePercentLabel}
           </button>
           <button
             type="button"
