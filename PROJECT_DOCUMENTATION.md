@@ -74,6 +74,12 @@ npm run deploy
 
 `homepage` в `package.json` задан как `"."` — относительные пути для GitHub Pages.
 
+### 3.1. TypeScript / IDE
+
+- Сборка CRA использует `typescript@^4.9.5` (см. `package.json`) — `target: es5`, `moduleResolution: node` в `tsconfig.json` не меняются.
+- `tsconfig.json` содержит `"ignoreDeprecations": "6.0"` — подавляет предупреждения об устаревании `es5`/`node`-опций, которые показывает языковой сервис TypeScript 6+ в IDE (Cursor/VS Code используют более новый bundled TS, чем зависимость проекта). На сборку `npm run build` (TS 4.9.5) флаг не влияет.
+- `src/react-app-env.d.ts` — помимо стандартной CRA-ссылки (`/// <reference types="react-scripts" />`) содержит `declare module` для `*.css`, `*.scss`, `*.sass`, `*.less`, `*.png`, `*.jpg`, `*.jpeg`, `*.gif`, `*.webp` — устраняет ложные ошибки типов IDE при импорте `App.css` и других статических ассетов.
+
 ---
 
 ## 4. Структура проекта (файлы и папки)
@@ -88,7 +94,7 @@ schedule/
 ├── .env.production
 ├── package.json
 ├── package-lock.json
-├── tsconfig.json
+├── tsconfig.json                   # ignoreDeprecations: 6.0 — тишина IDE-предупреждений TS6+ по es5/node (см. §3.1)
 ├── README.md
 ├── PROJECT_DOCUMENTATION.md        # этот файл
 ├── GIT_BRANCHES_FIX.md             # заметки по веткам git (операционное)
@@ -108,7 +114,7 @@ schedule/
     ├── App.tsx                     # оркестрация: данные, фильтры, режимы, модалки
     ├── App.css                     # layout, фильтры, sticky, by-day toggle, zoom
     ├── App.test.tsx
-    ├── react-app-env.d.ts
+    ├── react-app-env.d.ts          # CRA reference + declare module для *.css/*.svg/*.png/... (типизация статических импортов)
     ├── reportWebVitals.ts
     ├── setupTests.ts
     ├── logo.svg                    # legacy CRA (в UI не используется)
@@ -607,7 +613,7 @@ SVG для G / .ics.
 | --- | --- |
 | `csvParser.ts` | CSV строки с кавычками; `parseCSV`, `parseCommentatorScheduleCSV` |
 | `weatherUtils.ts` | Ключи, map, parse JSON, описания погоды |
-| `dateUtils.ts` | parseDate, today filter, getDayOfWeekFromDate, convertFromGMT3ToLocal |
+| `dateUtils.ts` | parseDate, today filter, getDayOfWeekFromDate, convertFromGMT3ToLocal — см. §20.1 (логирование ошибок) |
 | `timeUtils.ts` | normalizeTime → HH:MM |
 | `flagUtils.ts` | parseBooleanFlag |
 | `iconUtils.ts` | getTgNumbers, getBcuNumbers |
@@ -619,6 +625,12 @@ SVG для G / .ics.
 ### `useBodyScrollLock.ts`
 
 Reference-counted lock: несколько модалок могут держать lock; компенсация ширины scrollbar через `padding-right`.
+
+### 20.1. `dateUtils.ts` — обработка невалидных дат и логирование
+
+- `parseDate` при отсутствующих/некорректных компонентах строки возвращает `new Date(NaN)` **без** побочных эффектов (не бросает, не логирует) — это ожидаемый «пустой» результат для строк, которые ещё не соответствуют формату `DD.MM.YY(YY)`.
+- `isDateEqualOrAfterToday` и `getDayOfWeekFromDate` **тихо** возвращают безопасное значение по умолчанию (`false` / `'неизвестно'`), если `parseDate` дал `NaN` — это штатный случай (например, пустая/не полностью введённая дата), поэтому `console.error` **не** вызывается.
+- `console.error` в `catch`-блоках всех трёх функций (`isDateEqualOrAfterToday`, `getDayOfWeekFromDate`, `convertFromGMT3ToLocal`) остаётся **только** для непредвиденных исключений (не для рутинного invalid-date парсинга) — это убирает спам в консоли браузера/IDE при обычной работе с расписанием и сохраняет диагностику реальных багов.
 
 ---
 
@@ -816,4 +828,4 @@ npm run build
 
 ---
 
-*Последняя синхронизация документа с кодовой базой: актуальное состояние репозитория schedule (React 19, weather, statuses, sticky UI, без режима «Будущие сессии» и без JS floating day headers).*
+*Последняя синхронизация документа с кодовой базой: актуальное состояние репозитория schedule (React 19, weather, statuses, sticky UI, без режима «Будущие сессии» и без JS floating day headers). Учтены IDE/консольные фиксы: `react-app-env.d.ts` declare-модули для статических ассетов, `tsconfig.json` `ignoreDeprecations: "6.0"`, тихая обработка невалидных дат в `dateUtils.ts` (см. §3.1, §20.1).*
