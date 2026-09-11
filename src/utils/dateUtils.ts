@@ -28,11 +28,14 @@ export function getCurrentDate(): Date {
 export function isDateEqualOrAfterToday(dateStr: string): boolean {
   try {
     const scheduleDate = parseDate(dateStr);
+    if (isNaN(scheduleDate.getTime())) {
+      return false;
+    }
     const currentDate = getCurrentDate();
-    
+
     // Сравниваем только даты (без времени)
     const scheduleDateOnly = new Date(scheduleDate.getFullYear(), scheduleDate.getMonth(), scheduleDate.getDate());
-    
+
     return scheduleDateOnly >= currentDate;
   } catch (error) {
     console.error('Error comparing dates:', error, dateStr);
@@ -45,9 +48,7 @@ export function getDayOfWeekFromDate(dateStr: string): string {
   try {
     const date = parseDate(dateStr);
     
-    // Проверяем, что дата валидна
     if (isNaN(date.getTime())) {
-      console.error('Invalid date:', dateStr);
       return 'неизвестно';
     }
     
@@ -72,10 +73,8 @@ export function convertFromGMT3ToLocal(item: ScheduleItem): ScheduleItem {
     const gmt3DateStr = `${fullYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timeStr}:00+03:00`;
     const gmt3Date = new Date(gmt3DateStr);
     
-    // Проверяем, что дата валидна
     if (isNaN(gmt3Date.getTime())) {
-      console.error('Invalid date:', gmt3DateStr);
-      return item; // Возвращаем оригинальный элемент при ошибке
+      return item;
     }
     
     // Конвертируем в локальный часовой пояс пользователя
