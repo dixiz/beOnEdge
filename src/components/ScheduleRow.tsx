@@ -25,6 +25,7 @@ interface ScheduleRowProps {
   bcuNumbers?: number[];
   showRT?: boolean;
   ruTube?: string;
+  videoLink?: string;
   commentator1?: string;
   commentator2?: string;
   optionally?: string;
@@ -70,6 +71,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
   bcuNumbers = [],
   showRT = false,
   ruTube,
+  videoLink,
   commentator1,
   commentator2,
   optionally,
@@ -243,6 +245,7 @@ const ScheduleRow: React.FC<ScheduleRowProps> = ({
           bcuNumbers={bcuNumbers}
           showRT={showRT}
           rtLink={ruTube}
+          videoLink={videoLink}
           isLightTheme={isLightTheme}
         />
         {spotterUrl && (

@@ -30,6 +30,7 @@ const HEADER_MAP: Record<string, keyof ScheduleItem> = {
   'live timing': 'LiveTiming',
   livetiming: 'LiveTiming',
   rutube: 'RuTube',
+  videolink: 'VideoLink',
   spotter: 'Spotter',
 };
 
