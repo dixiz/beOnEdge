@@ -1075,6 +1075,7 @@ function App() {
                           bcuNumbers={getBcuNumbers(row)}
                           showRT={shouldShowRtIcon(row.RT)}
                           ruTube={row.RuTube}
+                          videoLink={row.VideoLink}
                           commentator1={row.Commentator1}
                           commentator2={row.Commentator2}
                           optionally={row.Optionally}
@@ -1133,6 +1134,7 @@ function App() {
                       bcuNumbers={getBcuNumbers(row)}
                       showRT={shouldShowRtIcon(row.RT)}
                       ruTube={row.RuTube}
+                      videoLink={row.VideoLink}
                       commentator1={row.Commentator1}
                       commentator2={row.Commentator2}
                       optionally={row.Optionally}

@@ -27,6 +27,7 @@ export interface ScheduleItem {
   Duration?: string; // длительность (опционально)
   LiveTiming?: string; // ссылка на live timing (опционально)
   RuTube?: string; // ссылка на RuTube (опционально)
+  VideoLink?: string; // ссылка для иконки VK (опционально)
   Spotter?: string; // ссылка на spotter (опционально)
   weatherForecast?: WeatherForecastPoint[];
 }

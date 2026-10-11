@@ -7,6 +7,7 @@ interface ScheduleIconsProps {
   bcuNumbers?: number[]; // массив номеров: [1], [2], [3], [1, 2], [1, 3], [2, 3], [1, 2, 3]
   showRT?: boolean;
   rtLink?: string;
+  videoLink?: string;
   isLightTheme?: boolean;
 }
 
@@ -16,6 +17,7 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
   bcuNumbers = [],
   showRT = false,
   rtLink,
+  videoLink,
   isLightTheme = false,
 }) => {
   const iconSize = 22;
@@ -44,6 +46,11 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
   }
 
   const PC_LINK = 'https://vk.com/be_on_edge';
+  const trimmedVideoLink = videoLink?.trim();
+  const pcHref =
+    trimmedVideoLink && trimmedVideoLink.toLowerCase() !== 'нет'
+      ? trimmedVideoLink
+      : PC_LINK;
   const BCU_LINK = 'https://bcumedia.su/';
 
   const getTgLink = (number: number) => {
@@ -66,7 +73,7 @@ const ScheduleIcons: React.FC<ScheduleIconsProps> = ({
         <div className="icon-row">
           <a
             className="icon-link icon-link--pc"
-            href={PC_LINK}
+            href={pcHref}
             target="_blank"
             rel="noreferrer noopener"
           >
