@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-11-22T06:02:51.925265",
+  "last_updated": "2026-11-22T14:02:27.389569",
   "events": [
     {
       "event_row": 2,
@@ -481,6 +481,47 @@
       ]
     },
     {
+      "event_row": 6,
+      "Date": "20.11.2026",
+      "Start": "07:00",
+      "LocalDate": "19.11.2026",
+      "LocalStart": "20:00",
+      "Championship": "Формула 1",
+      "Stage": "21-й этап",
+      "latitude": 36.11,
+      "longitude": -115.16222222222223,
+      "timezone": "America/Los_Angeles",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-11-20T07:00:00+03:00",
+          "forecast_time_local": "2026-11-19T20:00:00-08:00",
+          "temperature_2m": 12.2,
+          "relative_humidity_2m": 68,
+          "precipitation": 0.0,
+          "wind_speed_10m": 18.6,
+          "weather_code": 1
+        },
+        {
+          "forecast_time_msk": "2026-11-20T07:30:00+03:00",
+          "forecast_time_local": "2026-11-19T20:30:00-08:00",
+          "temperature_2m": 11.5,
+          "relative_humidity_2m": 63,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-11-20T08:00:00+03:00",
+          "forecast_time_local": "2026-11-19T21:00:00-08:00",
+          "temperature_2m": 13.1,
+          "relative_humidity_2m": 59,
+          "precipitation": 0.0,
+          "wind_speed_10m": 30.1,
+          "weather_code": 0
+        }
+      ]
+    },
+    {
       "event_row": 7,
       "Date": "20.11.2026",
       "Start": "08:30",
@@ -757,38 +798,6 @@
       ]
     },
     {
-      "event_row": 13,
-      "Date": "21.11.2026",
-      "Start": "05:15",
-      "LocalDate": "20.11.2026",
-      "LocalStart": "18:15",
-      "Championship": "Ф1 Академия",
-      "Stage": "6-й этап",
-      "latitude": 36.11,
-      "longitude": -115.16222222222223,
-      "timezone": "America/Los_Angeles",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-11-21T05:15:00+03:00",
-          "forecast_time_local": "2026-11-20T18:15:00-08:00",
-          "temperature_2m": 11.6,
-          "relative_humidity_2m": 35,
-          "precipitation": 0.0,
-          "wind_speed_10m": 6.1,
-          "weather_code": 2
-        },
-        {
-          "forecast_time_msk": "2026-11-21T05:45:00+03:00",
-          "forecast_time_local": "2026-11-20T18:45:00-08:00",
-          "temperature_2m": 11.1,
-          "relative_humidity_2m": 37,
-          "precipitation": 0.0,
-          "wind_speed_10m": 6.8,
-          "weather_code": 3
-        }
-      ]
-    },
-    {
       "event_row": 16,
       "Date": "21.11.2026",
       "Start": "07:00",
@@ -866,6 +875,47 @@
           "relative_humidity_2m": 54,
           "precipitation": 0.0,
           "wind_speed_10m": 5.7,
+          "weather_code": 3
+        }
+      ]
+    },
+    {
+      "event_row": 22,
+      "Date": "21.11.2026",
+      "Start": "18:00",
+      "LocalDate": "21.11.2026",
+      "LocalStart": "15:00",
+      "Championship": "Мото ГП",
+      "Stage": "21-й этап",
+      "latitude": 37.231944444444444,
+      "longitude": -8.631944444444445,
+      "timezone": "Europe/Lisbon",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-11-21T18:00:00+03:00",
+          "forecast_time_local": "2026-11-21T15:00:00+00:00",
+          "temperature_2m": 19.9,
+          "relative_humidity_2m": 78,
+          "precipitation": 0.0,
+          "wind_speed_10m": 19.1,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-11-21T18:30:00+03:00",
+          "forecast_time_local": "2026-11-21T15:30:00+00:00",
+          "temperature_2m": 19.6,
+          "relative_humidity_2m": 82,
+          "precipitation": 0.0,
+          "wind_speed_10m": 15.1,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-11-21T19:00:00+03:00",
+          "forecast_time_local": "2026-11-21T16:00:00+00:00",
+          "temperature_2m": 19.2,
+          "relative_humidity_2m": 87,
+          "precipitation": 0.0,
+          "wind_speed_10m": 10.9,
           "weather_code": 3
         }
       ]
@@ -981,27 +1031,27 @@
           "forecast_time_msk": "2026-11-22T03:00:00+03:00",
           "forecast_time_local": "2026-11-22T08:00:00+08:00",
           "temperature_2m": 19.2,
-          "relative_humidity_2m": 74,
+          "relative_humidity_2m": 76,
           "precipitation": 0.0,
-          "wind_speed_10m": 16.0,
+          "wind_speed_10m": 12.8,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-11-22T03:30:00+03:00",
           "forecast_time_local": "2026-11-22T08:30:00+08:00",
-          "temperature_2m": 19.6,
-          "relative_humidity_2m": 73,
+          "temperature_2m": 19.5,
+          "relative_humidity_2m": 76,
           "precipitation": 0.0,
-          "wind_speed_10m": 17.9,
+          "wind_speed_10m": 13.3,
           "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-11-22T04:00:00+03:00",
           "forecast_time_local": "2026-11-22T09:00:00+08:00",
           "temperature_2m": 19.8,
-          "relative_humidity_2m": 73,
+          "relative_humidity_2m": 75,
           "precipitation": 0.0,
-          "wind_speed_10m": 19.6,
+          "wind_speed_10m": 14.0,
           "weather_code": 3
         }
       ]
@@ -1021,20 +1071,79 @@
         {
           "forecast_time_msk": "2026-11-22T03:15:00+03:00",
           "forecast_time_local": "2026-11-22T09:15:00+09:00",
-          "temperature_2m": 7.2,
+          "temperature_2m": 7.4,
           "relative_humidity_2m": 55,
           "precipitation": 0.0,
-          "wind_speed_10m": 13.7,
+          "wind_speed_10m": 13.8,
           "weather_code": 0
         },
         {
           "forecast_time_msk": "2026-11-22T03:45:00+03:00",
           "forecast_time_local": "2026-11-22T09:45:00+09:00",
-          "temperature_2m": 8.1,
-          "relative_humidity_2m": 54,
+          "temperature_2m": 8.0,
+          "relative_humidity_2m": 53,
           "precipitation": 0.0,
-          "wind_speed_10m": 14.3,
+          "wind_speed_10m": 14.8,
           "weather_code": 0
+        }
+      ]
+    },
+    {
+      "event_row": 27,
+      "Date": "22.11.2026",
+      "Start": "04:15",
+      "LocalDate": "22.11.2026",
+      "LocalStart": "09:15",
+      "Championship": "Кубок мира Ф4",
+      "Stage": "",
+      "latitude": 22.197222222222223,
+      "longitude": 113.55083333333333,
+      "timezone": "Asia/Macau",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-11-22T04:15:00+03:00",
+          "forecast_time_local": "2026-11-22T09:15:00+08:00",
+          "temperature_2m": 19.9,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.0,
+          "wind_speed_10m": 14.5,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-11-22T04:45:00+03:00",
+          "forecast_time_local": "2026-11-22T09:45:00+08:00",
+          "temperature_2m": 20.2,
+          "relative_humidity_2m": 74,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.0,
+          "weather_code": 3
+        },
+        {
+          "forecast_time_msk": "2026-11-22T05:15:00+03:00",
+          "forecast_time_local": "2026-11-22T10:15:00+08:00",
+          "temperature_2m": 20.5,
+          "relative_humidity_2m": 73,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.6,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-11-22T05:45:00+03:00",
+          "forecast_time_local": "2026-11-22T10:45:00+08:00",
+          "temperature_2m": 20.7,
+          "relative_humidity_2m": 71,
+          "precipitation": 0.0,
+          "wind_speed_10m": 16.2,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-11-22T06:15:00+03:00",
+          "forecast_time_local": "2026-11-22T11:15:00+08:00",
+          "temperature_2m": 20.9,
+          "relative_humidity_2m": 70,
+          "precipitation": 0.0,
+          "wind_speed_10m": 15.5,
+          "weather_code": 2
         }
       ]
     },
@@ -1053,64 +1162,64 @@
         {
           "forecast_time_msk": "2026-11-22T07:00:00+03:00",
           "forecast_time_local": "2026-11-21T20:00:00-08:00",
-          "temperature_2m": 8.0,
-          "relative_humidity_2m": 41,
+          "temperature_2m": 8.9,
+          "relative_humidity_2m": 35,
           "precipitation": 0.0,
-          "wind_speed_10m": 3.3,
-          "weather_code": 2
+          "wind_speed_10m": 5.3,
+          "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T07:30:00+03:00",
           "forecast_time_local": "2026-11-21T20:30:00-08:00",
-          "temperature_2m": 7.4,
-          "relative_humidity_2m": 42,
+          "temperature_2m": 8.5,
+          "relative_humidity_2m": 36,
           "precipitation": 0.0,
-          "wind_speed_10m": 6.9,
-          "weather_code": 3
+          "wind_speed_10m": 4.9,
+          "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T08:00:00+03:00",
           "forecast_time_local": "2026-11-21T21:00:00-08:00",
-          "temperature_2m": 6.9,
-          "relative_humidity_2m": 42,
+          "temperature_2m": 8.1,
+          "relative_humidity_2m": 37,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.3,
-          "weather_code": 3
+          "wind_speed_10m": 4.7,
+          "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T08:30:00+03:00",
           "forecast_time_local": "2026-11-21T21:30:00-08:00",
-          "temperature_2m": 6.8,
-          "relative_humidity_2m": 42,
+          "temperature_2m": 7.7,
+          "relative_humidity_2m": 38,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.2,
-          "weather_code": 3
+          "wind_speed_10m": 6.3,
+          "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T09:00:00+03:00",
           "forecast_time_local": "2026-11-21T22:00:00-08:00",
-          "temperature_2m": 7.0,
-          "relative_humidity_2m": 42,
+          "temperature_2m": 7.8,
+          "relative_humidity_2m": 39,
           "precipitation": 0.0,
-          "wind_speed_10m": 7.1,
-          "weather_code": 3
+          "wind_speed_10m": 4.1,
+          "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T09:30:00+03:00",
           "forecast_time_local": "2026-11-21T22:30:00-08:00",
-          "temperature_2m": 7.0,
-          "relative_humidity_2m": 42,
+          "temperature_2m": 7.4,
+          "relative_humidity_2m": 41,
           "precipitation": 0.0,
-          "wind_speed_10m": 6.9,
-          "weather_code": 3
+          "wind_speed_10m": 4.3,
+          "weather_code": 2
         },
         {
           "forecast_time_msk": "2026-11-22T10:00:00+03:00",
           "forecast_time_local": "2026-11-21T23:00:00-08:00",
-          "temperature_2m": 7.0,
-          "relative_humidity_2m": 43,
+          "temperature_2m": 7.6,
+          "relative_humidity_2m": 42,
           "precipitation": 0.0,
-          "wind_speed_10m": 5.9,
+          "wind_speed_10m": 3.9,
           "weather_code": 3
         }
       ]
@@ -1130,52 +1239,102 @@
         {
           "forecast_time_msk": "2026-11-22T10:30:00+03:00",
           "forecast_time_local": "2026-11-22T15:30:00+08:00",
-          "temperature_2m": 21.2,
-          "relative_humidity_2m": 72,
+          "temperature_2m": 21.1,
+          "relative_humidity_2m": 77,
           "precipitation": 0.0,
-          "wind_speed_10m": 19.0,
-          "weather_code": 1
+          "wind_speed_10m": 20.8,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-11-22T11:00:00+03:00",
           "forecast_time_local": "2026-11-22T16:00:00+08:00",
-          "temperature_2m": 21.1,
-          "relative_humidity_2m": 73,
+          "temperature_2m": 21.0,
+          "relative_humidity_2m": 78,
           "precipitation": 0.0,
-          "wind_speed_10m": 19.1,
-          "weather_code": 1
+          "wind_speed_10m": 20.5,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-11-22T11:30:00+03:00",
           "forecast_time_local": "2026-11-22T16:30:00+08:00",
-          "temperature_2m": 21.2,
-          "relative_humidity_2m": 73,
+          "temperature_2m": 20.9,
+          "relative_humidity_2m": 79,
           "precipitation": 0.0,
-          "wind_speed_10m": 18.8,
-          "weather_code": 2
+          "wind_speed_10m": 20.7,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-11-22T12:00:00+03:00",
           "forecast_time_local": "2026-11-22T17:00:00+08:00",
-          "temperature_2m": 21.4,
-          "relative_humidity_2m": 73,
+          "temperature_2m": 20.9,
+          "relative_humidity_2m": 79,
           "precipitation": 0.0,
-          "wind_speed_10m": 18.4,
-          "weather_code": 2
+          "wind_speed_10m": 20.7,
+          "weather_code": 3
         },
         {
           "forecast_time_msk": "2026-11-22T12:30:00+03:00",
           "forecast_time_local": "2026-11-22T17:30:00+08:00",
-          "temperature_2m": 21.5,
-          "relative_humidity_2m": 73,
+          "temperature_2m": 21.1,
+          "relative_humidity_2m": 78,
           "precipitation": 0.0,
-          "wind_speed_10m": 18.2,
+          "wind_speed_10m": 19.3,
           "weather_code": 3
         }
       ]
     },
     {
       "event_row": 32,
+      "Date": "22.11.2026",
+      "Start": "13:00",
+      "LocalDate": "22.11.2026",
+      "LocalStart": "10:00",
+      "Championship": "Мото 3",
+      "Stage": "21-й этап",
+      "latitude": 37.231944444444444,
+      "longitude": -8.631944444444445,
+      "timezone": "Europe/Lisbon",
+      "forecast": [
+        {
+          "forecast_time_msk": "2026-11-22T13:00:00+03:00",
+          "forecast_time_local": "2026-11-22T10:00:00+00:00",
+          "temperature_2m": 16.0,
+          "relative_humidity_2m": 75,
+          "precipitation": 0.0,
+          "wind_speed_10m": 4.3,
+          "weather_code": 0
+        },
+        {
+          "forecast_time_msk": "2026-11-22T13:30:00+03:00",
+          "forecast_time_local": "2026-11-22T10:30:00+00:00",
+          "temperature_2m": 16.6,
+          "relative_humidity_2m": 72,
+          "precipitation": 0.0,
+          "wind_speed_10m": 7.2,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-11-22T14:00:00+03:00",
+          "forecast_time_local": "2026-11-22T11:00:00+00:00",
+          "temperature_2m": 16.8,
+          "relative_humidity_2m": 70,
+          "precipitation": 0.0,
+          "wind_speed_10m": 10.1,
+          "weather_code": 2
+        },
+        {
+          "forecast_time_msk": "2026-11-22T14:30:00+03:00",
+          "forecast_time_local": "2026-11-22T11:30:00+00:00",
+          "temperature_2m": 16.9,
+          "relative_humidity_2m": 67,
+          "precipitation": 0.0,
+          "wind_speed_10m": 10.9,
+          "weather_code": 1
+        }
+      ]
+    },
+    {
+      "event_row": 33,
       "Date": "22.11.2026",
       "Start": "14:15",
       "LocalDate": "22.11.2026",
@@ -1189,43 +1348,43 @@
         {
           "forecast_time_msk": "2026-11-22T14:15:00+03:00",
           "forecast_time_local": "2026-11-22T11:15:00+00:00",
-          "temperature_2m": 17.0,
-          "relative_humidity_2m": 63,
+          "temperature_2m": 16.9,
+          "relative_humidity_2m": 68,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.6,
+          "wind_speed_10m": 10.5,
           "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T14:45:00+03:00",
           "forecast_time_local": "2026-11-22T11:45:00+00:00",
-          "temperature_2m": 17.2,
-          "relative_humidity_2m": 62,
+          "temperature_2m": 17.0,
+          "relative_humidity_2m": 65,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.1,
+          "wind_speed_10m": 10.9,
           "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T15:15:00+03:00",
           "forecast_time_local": "2026-11-22T12:15:00+00:00",
-          "temperature_2m": 17.4,
-          "relative_humidity_2m": 61,
+          "temperature_2m": 17.1,
+          "relative_humidity_2m": 64,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.1,
-          "weather_code": 1
+          "wind_speed_10m": 11.3,
+          "weather_code": 2
         },
         {
           "forecast_time_msk": "2026-11-22T15:45:00+03:00",
           "forecast_time_local": "2026-11-22T12:45:00+00:00",
-          "temperature_2m": 17.6,
-          "relative_humidity_2m": 60,
+          "temperature_2m": 17.3,
+          "relative_humidity_2m": 66,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.8,
-          "weather_code": 1
+          "wind_speed_10m": 11.7,
+          "weather_code": 2
         }
       ]
     },
     {
-      "event_row": 33,
+      "event_row": 34,
       "Date": "22.11.2026",
       "Start": "16:00",
       "LocalDate": "22.11.2026",
@@ -1239,97 +1398,47 @@
         {
           "forecast_time_msk": "2026-11-22T16:00:00+03:00",
           "forecast_time_local": "2026-11-22T13:00:00+00:00",
-          "temperature_2m": 17.7,
-          "relative_humidity_2m": 60,
+          "temperature_2m": 17.4,
+          "relative_humidity_2m": 66,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.8,
-          "weather_code": 1
+          "wind_speed_10m": 11.7,
+          "weather_code": 2
         },
         {
           "forecast_time_msk": "2026-11-22T16:30:00+03:00",
           "forecast_time_local": "2026-11-22T13:30:00+00:00",
-          "temperature_2m": 17.8,
-          "relative_humidity_2m": 60,
+          "temperature_2m": 17.3,
+          "relative_humidity_2m": 65,
           "precipitation": 0.0,
-          "wind_speed_10m": 9.9,
+          "wind_speed_10m": 11.8,
           "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T17:00:00+03:00",
           "forecast_time_local": "2026-11-22T14:00:00+00:00",
-          "temperature_2m": 17.8,
-          "relative_humidity_2m": 60,
+          "temperature_2m": 17.2,
+          "relative_humidity_2m": 64,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.5,
+          "wind_speed_10m": 11.5,
           "weather_code": 1
         },
         {
           "forecast_time_msk": "2026-11-22T17:30:00+03:00",
           "forecast_time_local": "2026-11-22T14:30:00+00:00",
-          "temperature_2m": 17.7,
-          "relative_humidity_2m": 60,
+          "temperature_2m": 17.2,
+          "relative_humidity_2m": 64,
           "precipitation": 0.0,
-          "wind_speed_10m": 10.6,
-          "weather_code": 1
+          "wind_speed_10m": 11.4,
+          "weather_code": 2
         },
         {
           "forecast_time_msk": "2026-11-22T18:00:00+03:00",
           "forecast_time_local": "2026-11-22T15:00:00+00:00",
-          "temperature_2m": 17.4,
-          "relative_humidity_2m": 61,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.6,
-          "weather_code": 1
-        }
-      ]
-    },
-    {
-      "event_row": 34,
-      "Date": "22.11.2026",
-      "Start": "17:30",
-      "LocalDate": "22.11.2026",
-      "LocalStart": "14:30",
-      "Championship": "Мото 3",
-      "Stage": "21-й этап",
-      "latitude": 37.231944444444444,
-      "longitude": -8.631944444444445,
-      "timezone": "Europe/Lisbon",
-      "forecast": [
-        {
-          "forecast_time_msk": "2026-11-22T17:30:00+03:00",
-          "forecast_time_local": "2026-11-22T14:30:00+00:00",
-          "temperature_2m": 17.7,
-          "relative_humidity_2m": 60,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.6,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-11-22T18:00:00+03:00",
-          "forecast_time_local": "2026-11-22T15:00:00+00:00",
-          "temperature_2m": 17.4,
-          "relative_humidity_2m": 61,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.6,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-11-22T18:30:00+03:00",
-          "forecast_time_local": "2026-11-22T15:30:00+00:00",
           "temperature_2m": 17.1,
-          "relative_humidity_2m": 63,
+          "relative_humidity_2m": 65,
           "precipitation": 0.0,
           "wind_speed_10m": 10.8,
-          "weather_code": 1
-        },
-        {
-          "forecast_time_msk": "2026-11-22T19:00:00+03:00",
-          "forecast_time_local": "2026-11-22T16:00:00+00:00",
-          "temperature_2m": 16.7,
-          "relative_humidity_2m": 66,
-          "precipitation": 0.0,
-          "wind_speed_10m": 10.0,
-          "weather_code": 1
+          "weather_code": 2
         }
       ]
     }
